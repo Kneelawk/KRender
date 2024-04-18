@@ -1,0 +1,134 @@
+# Performs all releases using a multipart approach
+name: release
+
+env:
+  PROJECT_NAME: Common Render
+  JAVADOC_NAME: common-render
+  SUB_JAVADOC: xplat
+  MAVEN_IDENTIFIER: 'com.kneelawk:common-render-xplat-intermediary'
+
+# Variant: github, maven+javadoc, discord
+
+# Changes:
+# 2023-04-22 - Kneelawk: Added changes & variant comments. Fixed Grab CF File ID task name. Renamed build job to
+#                        build-release. Reformatted.
+# 2023-04-22 - Kneelawk: Fix references to build job to point to build-release job.
+# 2023-04-22 - Kneelawk: Copy gradle caches to prevent re-building in publishing jobs.
+# 2023-05-02 - Kneelawk: Added javadoc publishing. Added maven job step for getting proper tag version by removing 'v'.
+# 2023-05-08 - Kneelawk: Combined maven and javadoc steps.
+# 2023-05-10 - Kneelawk: Copy all javadoc directories in the docs directory.
+# 2023-05-10 - Kneelawk: Use regular publish gradle task.
+# 2023-12-12 - Kneelawk: Switch back to single-job system to avoid uploading massive artifacts.
+
+on:
+  push:
+    tags:
+      # matches things like v0.3.3+1.18.2
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.4.0+1.19
+      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get Tag Version
+        uses: dawidd6/action-get-tag@v1
+        id: tag_version
+      - name: Get Project Version
+        # script to remove the 'v' from the beginning of the tag version
+        uses: actions/github-script@v6
+        id: project_version
+        env:
+          TAG_VERSION: ${{ steps.tag_version.outputs.tag }}
+        with:
+          script: return process.env.TAG_VERSION.substring(1)
+          result-encoding: string
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Validate Gradle Wrapper
+        uses: gradle/wrapper-validation-action@v1
+      - name: Setup JDK 21
+        uses: actions/setup-java@v1
+        with:
+          java-version: 21
+      - name: Make Gradle Wrapper Executable
+        run: chmod +x ./gradlew
+      - name: Build
+        run: ./gradlew build --no-daemon
+        env:
+          RELEASE_TAG: ${{ steps.tag_version.outputs.tag }}
+      - name: Capture Build Directory
+        uses: actions/upload-artifact@v2
+        with:
+          name: build-dir
+          path: build/
+      - name: Github Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: changelogs/changelog-${{ steps.tag_version.outputs.tag }}.md
+          files: build/libs/*
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
+      # Next is the rather cursed maven and javadoc deployment mechanism
+      - name: Checkout Deployment Repository
+        uses: actions/checkout@v3
+        with:
+          repository: Kneelawk/kneelawk.github.io
+          ref: src
+          path: deploy
+          persist-credentials: false
+      - name: Do Javadoc & Maven
+        run: ./gradlew javadoc publish --no-daemon
+        env:
+          RELEASE_TAG: ${{ steps.tag_version.outputs.tag }}
+          PUBLISH_REPO: deploy/src/maven/
+      - name: Create Docs Directory
+        run: mkdir -p deploy/src/docs/${{ env.JAVADOC_NAME }}/${{ steps.project_version.outputs.result }}
+      - name: Copy To Deployment Repository Javadocs
+        run: cp -rf build/docs/* deploy/src/docs/${{ env.JAVADOC_NAME }}/${{ steps.project_version.outputs.result }}/
+      - name: Commit Deployment Repository Changes
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          git commit -m 'Publish ${{ env.PROJECT_NAME }} ${{ steps.tag_version.outputs.tag }}'
+        working-directory: deploy
+      - name: Push Deployment Repository
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.PUBLISH_TOKEN }}
+          branch: src
+          directory: deploy
+          repository: Kneelawk/kneelawk.github.io
+      # This is the mess that publishes discord notifications
+      - name: Read Changelog File
+        uses: juliangruber/read-file-action@v1
+        id: changelog
+        with:
+          path: changelogs/changelog-${{ steps.tag_version.outputs.tag }}.md
+      - name: Process Changelog for Announcement
+        uses: actions/github-script@v6
+        id: announcement_text
+        env:
+          CHANGELOG: ${{ steps.changelog.outputs.content }}
+          TAG_VERSION: ${{ steps.tag_version.outputs.tag }}
+        with:
+          script: |
+            let fullVersion = process.env.TAG_VERSION;
+            let versions = fullVersion.split('+');
+            let mavenVersion = fullVersion.substring(1);
+            let lines = process.env.CHANGELOG.split('\n');
+            let changesStart = lines.findIndex(line => line.startsWith('*'));
+            lines.splice(0, changesStart);
+            lines.unshift(`**${process.env.PROJECT_NAME} ${versions[0]} has been released for Minecraft ${versions[1]}!**`, '', '__Changes:__');
+            lines.push("Available on Kneelawk's maven: https://kneelawk.com/maven/", `With the identifier: \`${process.env.MAVEN_IDENTIFIER}:${mavenVersion}\``);
+            lines.push(`Javadoc available at: https://kneelawk.com/docs/${process.env.JAVADOC_NAME}/${mavenVersion}/${process.env.SUB_JAVADOC}/javadoc/index.html`);
+            return lines.join('\n');
+          result-encoding: string
+      - name: Make Release Announcement
+        uses: Ilshidur/action-discord@0.3.2
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+        with:
+          args: ${{ steps.announcement_text.outputs.result }}

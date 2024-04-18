@@ -15,13 +15,7 @@
   "license": "MIT",
   "icon": "assets/common_render/icon.png",
   "environment": "*",
-  "entrypoints": {
-    "main": [
-      {
-        "value": "com.kneelawk.commonrender.impl.CommonRenderMod"
-      }
-    ]
-  },
+  "entrypoints": { },
   "mixins": [ ],
   "depends": {
     "fabricloader": ">=0.15.0",
