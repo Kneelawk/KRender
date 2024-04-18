@@ -1,0 +1,18 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+license = "MIT"
+
+[[mods]]
+modId = "common-render"
+version = "${version}"
+displayName = "Common Render"
+authors = "Kneelawk"
+description = "Cross-platform Minecraft rendering abstraction."
+logoFile = "assets/common_render/icon.png"
+
+[[dependencies.knet]]
+modId = "neoforge"
+type = "REQUIRED"
+versionRange = "[20.5,)"
+ordering = "NONE"
+side = "BOTH"

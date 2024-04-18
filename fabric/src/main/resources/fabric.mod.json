@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "id": "common_render",
+  "version": "${version}",
+  "name": "Common Render",
+  "description": "Cross-platform rendering abstraction.",
+  "authors": [
+    "Kneelawk"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Kneelawk/Common-Render",
+    "issues": "https://github.com/Kneelawk/Common-Render/issues",
+    "sources": "https://github.com/Kneelawk/Common-Render"
+  },
+  "license": "MIT",
+  "icon": "assets/common_render/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      {
+        "value": "com.kneelawk.commonrender.impl.CommonRenderMod"
+      }
+    ]
+  },
+  "mixins": [ ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "minecraft": ">=1.20.5 <1.21-",
+    "java": ">=17"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [ "library" ]
+    }
+  }
+}
