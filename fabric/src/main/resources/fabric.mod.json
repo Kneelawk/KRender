@@ -16,7 +16,9 @@
   "icon": "assets/common_render/icon.png",
   "environment": "*",
   "entrypoints": { },
-  "mixins": [ ],
+  "mixins": [
+    "common_render.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",

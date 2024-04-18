@@ -2,8 +2,11 @@ modLoader = "javafml"
 loaderVersion = "[1,)"
 license = "MIT"
 
+[[mixins]]
+config = "common_render.mixins.json"
+
 [[mods]]
-modId = "common-render"
+modId = "common_render"
 version = "${version}"
 displayName = "Common Render"
 authors = "Kneelawk"
