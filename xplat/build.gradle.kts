@@ -17,6 +17,7 @@ java.docsDir.set(rootProject.layout.buildDirectory.map { it.dir("docs").dir(proj
 repositories {
     mavenCentral()
     maven("https://maven.quiltmc.org/repository/release") { name = "Quilt" }
+    maven("https://kneelawk.com/maven") { name = "Kneelawk" }
 
     mavenLocal()
 }
@@ -33,6 +34,10 @@ dependencies {
     // Fabric Loader
     val fabric_loader_version: String by project
     modCompileOnly("net.fabricmc:fabric-loader:$fabric_loader_version")
+
+    // Common Events
+    val common_events_version: String by project
+    modImplementation("com.kneelawk:common-events-xplat-intermediary:$common_events_version")
 
     testImplementation("junit:junit:4.13.2")
 }
@@ -69,6 +74,8 @@ tasks {
         from(rootProject.file("LICENSE")) {
             rename { "${it}_${archives_base_name}" }
         }
+
+        archiveClassifier.set("")
     }
 
     named("sourcesJar", Jar::class).configure {
@@ -104,9 +111,15 @@ tasks {
 
 publishing {
     publications {
-        create<MavenPublication>("mavenJava") {
+        create<MavenPublication>("mavenIntermediary") {
             artifactId = "${rootProject.name}-${project.name}-intermediary"
             from(components["java"])
+        }
+        create<MavenPublication>("mavenMojmap") {
+            artifact(tasks.jar)
+            artifact(tasks.named("sourcesJar"))
+            artifact(tasks.named("javadocJar"))
+            artifactId = "${rootProject.name}-${project.name}-mojmap"
         }
     }
 
