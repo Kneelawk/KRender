@@ -17,7 +17,7 @@ java.docsDir.set(rootProject.layout.buildDirectory.map { it.dir("docs").dir(proj
 repositories {
     mavenCentral()
     maven("https://maven.quiltmc.org/repository/release") { name = "Quilt" }
-    maven("https://kneelawk.com/maven") { name = "Kneelawk" }
+    maven("https://maven.kneelawk.com/releases/") { name = "Kneelawk" }
 
     mavenLocal()
 }
@@ -37,7 +37,7 @@ dependencies {
 
     // Common Events
     val common_events_version: String by project
-    modImplementation("com.kneelawk:common-events-xplat-intermediary:$common_events_version")
+    modImplementation("com.kneelawk.common-events:common-events-xplat-intermediary:$common_events_version")
 
     testImplementation("junit:junit:4.13.2")
 }

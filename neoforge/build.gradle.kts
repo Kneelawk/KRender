@@ -29,7 +29,7 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release") { name = "Quilt" }
     maven("https://maven.neoforged.net/releases/") { name = "NeoForged" }
     maven("https://maven.firstdark.dev/snapshots") { name = "FirstDark" }
-    maven("https://kneelawk.com/maven") { name = "Kneelawk" }
+    maven("https://maven.kneelawk.com/releases/") { name = "Kneelawk" }
 
     mavenLocal()
 }
@@ -47,7 +47,7 @@ dependencies {
     
     // Common Events
     val common_events_version: String by project
-    modImplementation("com.kneelawk:common-events-neoforge:$common_events_version")
+    modImplementation("com.kneelawk.common-events:common-events-neoforge:$common_events_version")
 }
 
 java {
