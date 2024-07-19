@@ -1,4 +1,4 @@
-# Common Render
+# KRender
 
 Cross-platform Minecraft rendering abstraction
 

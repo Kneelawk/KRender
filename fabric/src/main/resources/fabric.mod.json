@@ -1,23 +1,23 @@
 {
   "schemaVersion": 1,
-  "id": "common_render",
+  "id": "krender",
   "version": "${version}",
-  "name": "Common Render",
+  "name": "KRender",
   "description": "Cross-platform rendering abstraction.",
   "authors": [
     "Kneelawk"
   ],
   "contact": {
-    "homepage": "https://github.com/Kneelawk/Common-Render",
-    "issues": "https://github.com/Kneelawk/Common-Render/issues",
-    "sources": "https://github.com/Kneelawk/Common-Render"
+    "homepage": "https://github.com/Kneelawk/KRender",
+    "issues": "https://github.com/Kneelawk/KRender/issues",
+    "sources": "https://github.com/Kneelawk/KRender"
   },
   "license": "MIT",
-  "icon": "assets/common_render/icon.png",
+  "icon": "assets/krender/icon.png",
   "environment": "*",
   "entrypoints": { },
   "mixins": [
-    "common_render.mixins.json"
+    "krender.mixins.json"
   ],
   "depends": {
     "fabricloader": ">=0.15.0",

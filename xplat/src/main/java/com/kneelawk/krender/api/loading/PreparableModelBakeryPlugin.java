@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.api.loading;
+package com.kneelawk.krender.api.loading;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;

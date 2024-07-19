@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,8 +16,8 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 
-import com.kneelawk.commonrender.api.loading.ModelBakeryPlugin;
-import com.kneelawk.commonrender.api.loading.ModelLoader;
+import com.kneelawk.krender.api.loading.ModelBakeryPlugin;
+import com.kneelawk.krender.api.loading.ModelLoader;
 
 public class ModelBakeryPluginContext implements ModelBakeryPlugin.Context {
     private final Set<ResourceLocation> extraNames = new LinkedHashSet<>();

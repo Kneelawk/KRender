@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.impl.mixin.impl;
+package com.kneelawk.krender.impl.mixin.impl;
 
 import java.util.List;
 import java.util.Map;
@@ -22,12 +22,12 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import com.kneelawk.commonrender.impl.CRLog;
-import com.kneelawk.commonrender.impl.loading.ModelBakeryPluginContext;
-import com.kneelawk.commonrender.impl.loading.ModelBakeryPluginManager;
-import com.kneelawk.commonrender.impl.loading.ModelBakeryPluginRegistrar;
-import com.kneelawk.commonrender.impl.loading.PreparedModelBakeryPluginList;
-import com.kneelawk.commonrender.impl.mixin.api.ModelBakeryHooks;
+import com.kneelawk.krender.impl.KRLog;
+import com.kneelawk.krender.impl.loading.ModelBakeryPluginContext;
+import com.kneelawk.krender.impl.loading.ModelBakeryPluginManager;
+import com.kneelawk.krender.impl.loading.ModelBakeryPluginRegistrar;
+import com.kneelawk.krender.impl.loading.PreparedModelBakeryPluginList;
+import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 
 // This mixin is heavily based on the Fabric API ModelLoaderMixin class
 // https://github.com/FabricMC/fabric/blob/166f144fc9c322d29edebf5a25c0dda9444295da/fabric-model-loading-api-v1/src/client/java/net/fabricmc/fabric/mixin/client/model/loading/ModelLoaderMixin.java
@@ -60,17 +60,17 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
     protected abstract void loadModel(ResourceLocation arg) throws Exception;
 
     @Unique
-    private int common_render$recursionGuard = 0;
+    private int krender$recursionGuard = 0;
 
     @Unique
-    private ModelBakeryPluginManager common_render$manager;
+    private ModelBakeryPluginManager krender$manager;
 
     @Inject(method = "<init>",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V",
             ordinal = 0))
-    private void common_render$init(BlockColors blockColors, ProfilerFiller profilerFiller,
-                                    Map<ResourceLocation, BlockModel> map,
-                                    Map<ResourceLocation, List<ModelBakery.LoadedJson>> map2, CallbackInfo ci) {
+    private void krender$init(BlockColors blockColors, ProfilerFiller profilerFiller,
+                              Map<ResourceLocation, BlockModel> map,
+                              Map<ResourceLocation, List<ModelBakery.LoadedJson>> map2, CallbackInfo ci) {
         if (!unbakedCache.containsKey(MISSING_MODEL_LOCATION)) {
             throw new AssertionError(
                 "ModelBakery in unexpected state. Something is likely tampering with model loading.");
@@ -81,43 +81,43 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
         if (future != null) {
             // should already be complete by now
             ModelBakeryPluginContext ctx = future.join().loadPlugins();
-            ctx.addExtraNames(this::common_render$addExtraName);
-            ctx.addExtraModels(this::common_render$addExtraModel);
-            common_render$manager = ctx.createManager((ModelBakery) (Object) this);
+            ctx.addExtraNames(this::krender$addExtraName);
+            ctx.addExtraModels(this::krender$addExtraModel);
+            krender$manager = ctx.createManager((ModelBakery) (Object) this);
         } else {
-            common_render$manager = null;
+            krender$manager = null;
         }
     }
 
     @Inject(method = "getModel", at = @At("HEAD"))
-    private void common_render$getModel(ResourceLocation resourceLocation, CallbackInfoReturnable<UnbakedModel> cir) {
-        if (common_render$recursionGuard > 0) {
+    private void krender$getModel(ResourceLocation resourceLocation, CallbackInfoReturnable<UnbakedModel> cir) {
+        if (krender$recursionGuard > 0) {
             throw new IllegalStateException("ModelBakery.getModel called during model loading.");
         }
     }
 
     @Inject(method = "loadModel", at = @At("HEAD"), cancellable = true)
-    private void common_render$loadModel(ResourceLocation resourceLocation, CallbackInfo ci) {
-        if (common_render$manager == null) return;
+    private void krender$loadModel(ResourceLocation resourceLocation, CallbackInfo ci) {
+        if (krender$manager == null) return;
 
-        common_render$recursionGuard++;
+        krender$recursionGuard++;
         try {
-            if (common_render$manager.loadModel(resourceLocation)) {
+            if (krender$manager.loadModel(resourceLocation)) {
                 ci.cancel();
             }
         } finally {
-            common_render$recursionGuard--;
+            krender$recursionGuard--;
         }
     }
 
     @Override
-    public void common_render$putModel(ResourceLocation name, UnbakedModel model) {
+    public void krender$putModel(ResourceLocation name, UnbakedModel model) {
         unbakedCache.put(name, model);
         loadingStack.addAll(model.getDependencies());
     }
 
     @Override
-    public UnbakedModel common_render$getOrLoadModel(ResourceLocation name) {
+    public UnbakedModel krender$getOrLoadModel(ResourceLocation name) {
         if (unbakedCache.containsKey(name)) {
             return unbakedCache.get(name);
         }
@@ -129,7 +129,7 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
         try {
             loadModel(name);
         } catch (Exception e) {
-            CRLog.LOGGER.error("Unable to load model: '{}'", name, e);
+            KRLog.LOGGER.error("Unable to load model: '{}'", name, e);
             unbakedCache.put(name, unbakedCache.get(MISSING_MODEL_LOCATION));
         } finally {
             loadingStack.remove(name);
@@ -139,7 +139,7 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
     }
 
     @Unique
-    private void common_render$addExtraName(ResourceLocation name) {
+    private void krender$addExtraName(ResourceLocation name) {
         if (name instanceof ModelResourceLocation modelName) {
             loadTopLevel(modelName);
         } else {
@@ -150,7 +150,7 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
     }
 
     @Unique
-    private void common_render$addExtraModel(ResourceLocation name, UnbakedModel model) {
+    private void krender$addExtraModel(ResourceLocation name, UnbakedModel model) {
         unbakedCache.put(name, model);
         topLevelModels.put(name, model);
     }

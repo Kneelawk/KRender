@@ -1,9 +1,9 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import java.util.List;
 
-import com.kneelawk.commonrender.api.loading.ModelBakeryPlugin;
-import com.kneelawk.commonrender.impl.CRLog;
+import com.kneelawk.krender.api.loading.ModelBakeryPlugin;
+import com.kneelawk.krender.impl.KRLog;
 
 public record PreparedModelBakeryPluginList(List<ModelBakeryPlugin> plugins,
                                             List<? extends PreparedModelBakeryPlugin<?>> preparedPlugins) {
@@ -14,7 +14,7 @@ public record PreparedModelBakeryPluginList(List<ModelBakeryPlugin> plugins,
             try {
                 plugin.init(ctx);
             } catch (Exception e) {
-                CRLog.LOGGER.error("Error initializing model bakery plugin", e);
+                KRLog.LOGGER.error("Error initializing model bakery plugin", e);
             }
         }
 
@@ -22,7 +22,7 @@ public record PreparedModelBakeryPluginList(List<ModelBakeryPlugin> plugins,
             try {
                 plugin.init(ctx);
             } catch (Exception e) {
-                CRLog.LOGGER.error("Error initializing model bakery plugin", e);
+                KRLog.LOGGER.error("Error initializing model bakery plugin", e);
             }
         }
 

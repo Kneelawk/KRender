@@ -1,11 +1,11 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.resources.ResourceLocation;
 
-import com.kneelawk.commonrender.api.loading.ModelLoader;
-import com.kneelawk.commonrender.impl.CRLog;
-import com.kneelawk.commonrender.impl.mixin.api.ModelBakeryHooks;
+import com.kneelawk.krender.api.loading.ModelLoader;
+import com.kneelawk.krender.impl.KRLog;
+import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 
 public class ModelBakeryPluginManager {
     private final ModelBakery modelBakery;
@@ -24,7 +24,7 @@ public class ModelBakeryPluginManager {
                 loader.loadModels(ctx);
                 if (ctx.loaded) return true;
             } catch (Exception e) {
-                CRLog.LOGGER.error("Error loading model from custom model loader", e);
+                KRLog.LOGGER.error("Error loading model from custom model loader", e);
             }
         }
 

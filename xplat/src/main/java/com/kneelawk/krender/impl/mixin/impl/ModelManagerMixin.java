@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.impl.mixin.impl;
+package com.kneelawk.krender.impl.mixin.impl;
 
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -16,7 +16,7 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import com.kneelawk.commonrender.impl.loading.ModelBakeryPluginRegistrar;
+import com.kneelawk.krender.impl.loading.ModelBakeryPluginRegistrar;
 
 @Mixin(ModelManager.class)
 public class ModelManagerMixin {

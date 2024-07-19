@@ -97,7 +97,7 @@ tasks {
 
     javadoc.configure {
         source(project(":xplat").sourceSets.main.map { it.allJava })
-        exclude("com/kneelawk/commonrender/impl")
+        exclude("com/kneelawk/krender/impl")
 
         val yarn_mappings: String by project
         val jetbrains_annotations_version: String by project

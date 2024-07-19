@@ -3,17 +3,17 @@ loaderVersion = "[1,)"
 license = "MIT"
 
 [[mixins]]
-config = "common_render.mixins.json"
+config = "krender.mixins.json"
 
 [[mods]]
-modId = "common_render"
+modId = "krender"
 version = "${version}"
-displayName = "Common Render"
+displayName = "KRender"
 authors = "Kneelawk"
 description = "Cross-platform Minecraft rendering abstraction."
-logoFile = "assets/common_render/icon.png"
+logoFile = "assets/krender/icon.png"
 
-[[dependencies.knet]]
+[[dependencies.krender]]
 modId = "neoforge"
 type = "REQUIRED"
 versionRange = "[20.5,)"

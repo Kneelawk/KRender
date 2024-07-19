@@ -31,4 +31,4 @@ include(":neoforge")
 //include(":example-neoforge")
 //project(":example-neoforge").projectDir = file("example/neoforge")
 
-rootProject.name = "common-render"
+rootProject.name = "krender"

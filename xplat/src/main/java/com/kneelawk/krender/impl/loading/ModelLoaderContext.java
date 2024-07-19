@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import java.util.Objects;
 
@@ -6,8 +6,8 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 
-import com.kneelawk.commonrender.api.loading.ModelLoader;
-import com.kneelawk.commonrender.impl.mixin.api.ModelBakeryHooks;
+import com.kneelawk.krender.api.loading.ModelLoader;
+import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 
 public class ModelLoaderContext implements ModelLoader.Context {
     private final ResourceLocation location;
@@ -30,14 +30,14 @@ public class ModelLoaderContext implements ModelLoader.Context {
             loaded = true;
         }
 
-        hooks.common_render$putModel(name, model);
+        hooks.krender$putModel(name, model);
     }
 
     @Override
     public UnbakedModel getOrLoadModel(ResourceLocation name) {
         Objects.requireNonNull(name, "name must not be null");
 
-        return hooks.common_render$getOrLoadModel(name);
+        return hooks.krender$getOrLoadModel(name);
     }
 
     @Override

@@ -1,11 +1,11 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import com.kneelawk.commonrender.api.loading.PreparableModelBakeryPlugin;
+import com.kneelawk.krender.api.loading.PreparableModelBakeryPlugin;
 
 public record PreparableModelBakeryPluginHolder<T>(PreparableModelBakeryPlugin.ResourceLoader<T> loader,
                                                    PreparableModelBakeryPlugin<T> plugin) {

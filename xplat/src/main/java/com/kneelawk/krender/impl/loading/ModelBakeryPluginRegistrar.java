@@ -1,4 +1,4 @@
-package com.kneelawk.commonrender.impl.loading;
+package com.kneelawk.krender.impl.loading;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +8,10 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import net.minecraft.server.packs.resources.ResourceManager;
 
-import com.kneelawk.commonrender.api.loading.ModelBakeryPlugin;
-import com.kneelawk.commonrender.api.loading.ModelBakeryPluginCallback;
-import com.kneelawk.commonrender.api.loading.PreparableModelBakeryPlugin;
-import com.kneelawk.commonrender.impl.CRLog;
+import com.kneelawk.krender.api.loading.ModelBakeryPlugin;
+import com.kneelawk.krender.api.loading.ModelBakeryPluginCallback;
+import com.kneelawk.krender.api.loading.PreparableModelBakeryPlugin;
+import com.kneelawk.krender.impl.KRLog;
 
 public class ModelBakeryPluginRegistrar implements ModelBakeryPluginCallback.Context {
     public static final ModelBakeryPluginRegistrar pluginRegistrar = new ModelBakeryPluginRegistrar();
@@ -40,13 +40,13 @@ public class ModelBakeryPluginRegistrar implements ModelBakeryPluginCallback.Con
                         if (ex == null) {
                             return prepared;
                         } else {
-                            CRLog.LOGGER.error("Error preparing plugin", ex);
+                            KRLog.LOGGER.error("Error preparing plugin", ex);
                             return null;
                         }
                     });
                 preparedList.add(load);
             } catch (Exception e) {
-                CRLog.LOGGER.error("Error starting plugin preparation", e);
+                KRLog.LOGGER.error("Error starting plugin preparation", e);
             }
         }
 
@@ -59,7 +59,7 @@ public class ModelBakeryPluginRegistrar implements ModelBakeryPluginCallback.Con
                     PreparedModelBakeryPlugin<?> plugin = preparedModelBakeryPluginCompletableFuture.get();
                     if (plugin != null) list.add(plugin);
                 } catch (Exception e) {
-                    CRLog.LOGGER.error("Error preparing plugin", e);
+                    KRLog.LOGGER.error("Error preparing plugin", e);
                 }
             }
             return new PreparedModelBakeryPluginList(plugins, list);

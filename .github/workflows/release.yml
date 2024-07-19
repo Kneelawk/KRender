@@ -2,10 +2,10 @@
 name: release
 
 env:
-  PROJECT_NAME: Common Render
-  JAVADOC_NAME: common-render
+  PROJECT_NAME: KRender
+  JAVADOC_NAME: krender
   SUB_JAVADOC: xplat
-  MAVEN_IDENTIFIER: 'com.kneelawk:common-render-xplat-intermediary'
+  MAVEN_IDENTIFIER: 'com.kneelawk-krender:krender-xplat-intermediary'
 
 # Variant: github, maven+javadoc, discord
 
