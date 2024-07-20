@@ -1,33 +1,33 @@
 package com.kneelawk.krender.impl.loading;
 
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 
-import com.kneelawk.krender.api.loading.ModelLoader;
+import com.kneelawk.krender.api.loading.ModelProvider;
 import com.kneelawk.krender.impl.KRLog;
-import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 
 public class ModelBakeryPluginManager {
     private final ModelBakery modelBakery;
-    private final ModelLoader[] loaders;
+    private final ModelProvider[] loaders;
 
-    public ModelBakeryPluginManager(ModelBakery modelBakery, ModelLoader[] loaders) {
+    public ModelBakeryPluginManager(ModelBakery modelBakery, ModelProvider[] loaders) {
         this.modelBakery = modelBakery;
         this.loaders = loaders;
     }
 
-    public boolean loadModel(ResourceLocation resourceLocation) {
-        ModelLoaderContext ctx = new ModelLoaderContext(resourceLocation, modelBakery, (ModelBakeryHooks) modelBakery);
+    public UnbakedModel loadModel(ResourceLocation resourceLocation) {
+        ModelLoaderContext ctx = new ModelLoaderContext(resourceLocation, modelBakery);
 
-        for (ModelLoader loader : loaders) {
+        for (ModelProvider loader : loaders) {
             try {
-                loader.loadModels(ctx);
-                if (ctx.loaded) return true;
+                UnbakedModel model = loader.loadModel(ctx);
+                if (model != null) return model;
             } catch (Exception e) {
                 KRLog.LOGGER.error("Error loading model from custom model loader", e);
             }
         }
 
-        return false;
+        return null;
     }
 }

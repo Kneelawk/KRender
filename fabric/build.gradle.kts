@@ -17,6 +17,15 @@ base {
 base.libsDirectory.set(rootProject.layout.buildDirectory.map { it.dir("libs") })
 java.docsDir.set(rootProject.layout.buildDirectory.map { it.dir("docs").dir(project.name) })
 
+loom {
+    runs {
+        named("client").configure {
+            ideConfigGenerated(true)
+            properties(mapOf("mixin.debug.export" to "true"))
+        }
+    }
+}
+
 repositories {
     mavenCentral()
     maven("https://maven.quiltmc.org/repository/release") { name = "Quilt" }
