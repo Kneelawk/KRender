@@ -69,7 +69,7 @@ public class ModelBakeryPluginContextImpl implements ModelBakeryPlugin.Context {
 
     public ModelBakeryPluginManager createManager(ModelBakery bakery) {
         return new ModelBakeryPluginManager(bakery, (ModelBakeryHooks) bakery, extraTopLevelNames, extraTopLevelModels,
-            lowLevelProviders.toArray(LowLevelModelProvider[]::new),
+            extraLowLevelModels, lowLevelProviders.toArray(LowLevelModelProvider[]::new),
             blockStateProviders.toArray(BlockStateModelProvider[]::new));
     }
 }
