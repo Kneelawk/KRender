@@ -28,27 +28,34 @@ public class ModelBakeryPluginManager {
     private final ModelBakeryHooks hooks;
     private final Map<ModelResourceLocation, ResourceLocation> extraTopLevelNames;
     private final Map<ModelResourceLocation, UnbakedModel> extraTopLevelModels;
+    private final Map<ResourceLocation, UnbakedModel> extraLowLevelModels;
     private final LowLevelModelProvider[] lowLevelProviders;
     private final BlockStateModelProvider[] blockStateProviders;
 
     public ModelBakeryPluginManager(ModelBakery modelBakery, ModelBakeryHooks hooks,
                                     Map<ModelResourceLocation, ResourceLocation> extraTopLevelNames,
                                     Map<ModelResourceLocation, UnbakedModel> extraTopLevelModels,
+                                    Map<ResourceLocation, UnbakedModel> extraLowLevelModels,
                                     LowLevelModelProvider[] lowLevelProviders,
                                     BlockStateModelProvider[] blockStateProviders) {
         this.modelBakery = modelBakery;
         this.hooks = hooks;
         this.extraTopLevelNames = extraTopLevelNames;
         this.extraTopLevelModels = extraTopLevelModels;
+        this.extraLowLevelModels = extraLowLevelModels;
         this.lowLevelProviders = lowLevelProviders;
         this.blockStateProviders = blockStateProviders;
     }
 
-    public void addExtraNames(BiConsumer<ModelResourceLocation, ResourceLocation> adder) {
+    public void addExtraLowLevelModels(BiConsumer<ResourceLocation, UnbakedModel> adder) {
+        extraLowLevelModels.forEach(adder);
+    }
+
+    public void addExtraTopLevelNames(BiConsumer<ModelResourceLocation, ResourceLocation> adder) {
         extraTopLevelNames.forEach(adder);
     }
 
-    public void addExtraModels(BiConsumer<ModelResourceLocation, UnbakedModel> adder) {
+    public void addExtraTopLevelModels(BiConsumer<ModelResourceLocation, UnbakedModel> adder) {
         extraTopLevelModels.forEach(adder);
     }
 

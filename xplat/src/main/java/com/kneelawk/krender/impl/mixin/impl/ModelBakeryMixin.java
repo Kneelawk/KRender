@@ -82,6 +82,8 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
             ModelBakeryPluginContextImpl ctx = future.join().loadPlugins();
             krender$manager = ctx.createManager((ModelBakery) (Object) this);
             ModelBakeryPluginManager.CURRENT_MANAGER.set(krender$manager);
+
+            krender$manager.addExtraLowLevelModels(this::krender$addExtraLowLevelModel);
         } else {
             krender$manager = null;
         }
@@ -94,8 +96,8 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
                                     CallbackInfo ci) {
         profilerFiller.popPush("krender_add_extra_models");
         if (krender$manager != null) {
-            krender$manager.addExtraNames(this::krender$addExtraName);
-            krender$manager.addExtraModels(this::krender$addExtraModel);
+            krender$manager.addExtraTopLevelNames(this::krender$addExtraTopLevelName);
+            krender$manager.addExtraTopLevelModels(this::krender$addExtraTopLevelModel);
         }
         ModelBakeryPluginManager.CURRENT_MANAGER.remove();
     }
@@ -134,13 +136,22 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
     }
 
     @Unique
-    private void krender$addExtraName(ModelResourceLocation name, ResourceLocation path) {
+    private void krender$addExtraLowLevelModel(ResourceLocation path, UnbakedModel model) {
+        unbakedCache.put(path, model);
+
+        for (ResourceLocation dependency : model.getDependencies()) {
+            getModel(dependency);
+        }
+    }
+
+    @Unique
+    private void krender$addExtraTopLevelName(ModelResourceLocation name, ResourceLocation path) {
         UnbakedModel model = getModel(path);
         registerModelAndLoadDependencies(name, model);
     }
 
     @Unique
-    private void krender$addExtraModel(ModelResourceLocation name, UnbakedModel model) {
+    private void krender$addExtraTopLevelModel(ModelResourceLocation name, UnbakedModel model) {
         registerModelAndLoadDependencies(name, model);
     }
 

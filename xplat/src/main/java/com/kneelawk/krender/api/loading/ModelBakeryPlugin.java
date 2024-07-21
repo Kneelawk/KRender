@@ -110,7 +110,26 @@ public interface ModelBakeryPlugin {
          *
          * @param models the models to bake.
          */
-        void addTopLevelModels(Map<? extends ModelResourceLocation, ? extends UnbakedModel> models);
+        void addTopLevelModels(Map<ModelResourceLocation, ? extends UnbakedModel> models);
+
+        /**
+         * Adds an already loaded model to the {@link ModelBakery}'s set of lower-level models.
+         * <p>
+         * These models cannot be accessed directly, but can be referenced by a top-level model and used that way.
+         *
+         * @param path  the path to associate the model with.
+         * @param model the model to add.
+         */
+        void addLowLevelModel(ResourceLocation path, UnbakedModel model);
+
+        /**
+         * Adds already loaded models to the {@link ModelBakery}'s set of lower-level models.
+         * <p>
+         * These models cannot be accessed directly, but can be referenced by a top-level model and used that way.
+         *
+         * @param models the models to make available to top-level models.
+         */
+        void addLowLevelModels(Map<ResourceLocation, ? extends UnbakedModel> models);
 
         /**
          * Registers a custom lower-level model provider.

@@ -19,6 +19,7 @@ import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 public class ModelBakeryPluginContextImpl implements ModelBakeryPlugin.Context {
     private final Map<ModelResourceLocation, ResourceLocation> extraTopLevelNames = new LinkedHashMap<>();
     private final Map<ModelResourceLocation, UnbakedModel> extraTopLevelModels = new LinkedHashMap<>();
+    private final Map<ResourceLocation, UnbakedModel> extraLowLevelModels = new LinkedHashMap<>();
     private final List<LowLevelModelProvider> lowLevelProviders = new ArrayList<>();
     private final List<BlockStateModelProvider> blockStateProviders = new ArrayList<>();
 
@@ -38,8 +39,18 @@ public class ModelBakeryPluginContextImpl implements ModelBakeryPlugin.Context {
     }
 
     @Override
-    public void addTopLevelModels(Map<? extends ModelResourceLocation, ? extends UnbakedModel> models) {
+    public void addTopLevelModels(Map<ModelResourceLocation, ? extends UnbakedModel> models) {
         extraTopLevelModels.putAll(models);
+    }
+
+    @Override
+    public void addLowLevelModel(ResourceLocation path, UnbakedModel model) {
+        extraLowLevelModels.put(path, model);
+    }
+
+    @Override
+    public void addLowLevelModels(Map<ResourceLocation, ? extends UnbakedModel> models) {
+        extraLowLevelModels.putAll(models);
     }
 
     @Override
