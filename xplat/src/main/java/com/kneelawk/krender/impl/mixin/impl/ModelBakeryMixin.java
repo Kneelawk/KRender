@@ -26,16 +26,17 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.profiling.ProfilerFiller;
 
-import com.kneelawk.krender.impl.loading.ModelBakeryPluginContext;
+import com.kneelawk.krender.impl.loading.ModelBakeryPluginContextImpl;
 import com.kneelawk.krender.impl.loading.ModelBakeryPluginManager;
 import com.kneelawk.krender.impl.loading.ModelBakeryPluginRegistrar;
 import com.kneelawk.krender.impl.loading.PreparedModelBakeryPluginList;
+import com.kneelawk.krender.impl.mixin.api.ModelBakeryHooks;
 
 // This mixin is heavily based on the Fabric API ModelLoaderMixin class
 // https://github.com/FabricMC/fabric/blob/166f144fc9c322d29edebf5a25c0dda9444295da/fabric-model-loading-api-v1/src/client/java/net/fabricmc/fabric/mixin/client/model/loading/ModelLoaderMixin.java
 
 @Mixin(ModelBakery.class)
-public abstract class ModelBakeryMixin {
+public abstract class ModelBakeryMixin implements ModelBakeryHooks {
     @Shadow
     @Final
     public static ModelResourceLocation MISSING_MODEL_VARIANT;
@@ -62,9 +63,8 @@ public abstract class ModelBakeryMixin {
     @Unique
     private ModelBakeryPluginManager krender$manager;
 
-    @Inject(method = "<init>",
-        at = @At(value = "INVOKE",
-            target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;<init>(Ljava/util/Map;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/resources/model/UnbakedModel;Lnet/minecraft/client/color/block/BlockColors;Ljava/util/function/BiConsumer;)V"))
+    @Inject(method = "<init>", at = @At(value = "INVOKE",
+        target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;<init>(Ljava/util/Map;Lnet/minecraft/util/profiling/ProfilerFiller;Lnet/minecraft/client/resources/model/UnbakedModel;Lnet/minecraft/client/color/block/BlockColors;Ljava/util/function/BiConsumer;)V"))
     private void krender$init(BlockColors blockColors, ProfilerFiller profilerFiller,
                               Map<ResourceLocation, BlockModel> map,
                               Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> map2, CallbackInfo ci) {
@@ -73,19 +73,31 @@ public abstract class ModelBakeryMixin {
                 "ModelBakery in unexpected state. Something is likely tampering with model loading.");
         }
 
-        profilerFiller.popPush("krender");
+        profilerFiller.popPush("krender_create_manager");
 
         CompletableFuture<PreparedModelBakeryPluginList> future =
             ModelBakeryPluginRegistrar.PREPARE_FUTURE.getAndSet(null);
         if (future != null) {
             // should already be complete by now
-            ModelBakeryPluginContext ctx = future.join().loadPlugins();
-            ctx.addExtraNames(this::krender$addExtraName);
-            ctx.addExtraModels(this::krender$addExtraModel);
+            ModelBakeryPluginContextImpl ctx = future.join().loadPlugins();
             krender$manager = ctx.createManager((ModelBakery) (Object) this);
+            ModelBakeryPluginManager.CURRENT_MANAGER.set(krender$manager);
         } else {
             krender$manager = null;
         }
+    }
+
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void krender$initReturn(BlockColors blockColors, ProfilerFiller profilerFiller,
+                                    Map<ResourceLocation, BlockModel> map,
+                                    Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> map2,
+                                    CallbackInfo ci) {
+        profilerFiller.popPush("krender_add_extra_models");
+        if (krender$manager != null) {
+            krender$manager.addExtraNames(this::krender$addExtraName);
+            krender$manager.addExtraModels(this::krender$addExtraModel);
+        }
+        ModelBakeryPluginManager.CURRENT_MANAGER.remove();
     }
 
     @Inject(method = "getModel", at = @At("HEAD"))
@@ -96,7 +108,8 @@ public abstract class ModelBakeryMixin {
     }
 
     @ModifyExpressionValue(method = "getModel",
-        at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z", remap = false, ordinal = 1))
+        at = @At(value = "INVOKE", target = "Ljava/util/Map;containsKey(Ljava/lang/Object;)Z", remap = false,
+            ordinal = 1))
     private boolean krender$wrapLoadBlockModel(boolean skipLoading, @Local(ordinal = 1) ResourceLocation toLoad) {
         return skipLoading || krender$loadModel(toLoad);
     }
@@ -107,7 +120,7 @@ public abstract class ModelBakeryMixin {
 
         krender$recursionGuard++;
         try {
-            UnbakedModel model = krender$manager.loadModel(name);
+            UnbakedModel model = krender$manager.loadLowLevelModel(name);
             if (model != null) {
                 unbakedCache.put(name, model);
                 loadingStack.addAll(model.getDependencies());
@@ -121,13 +134,23 @@ public abstract class ModelBakeryMixin {
     }
 
     @Unique
-    private void krender$addExtraName(ModelResourceLocation name) {
-        UnbakedModel model = getModel(name.id());
+    private void krender$addExtraName(ModelResourceLocation name, ResourceLocation path) {
+        UnbakedModel model = getModel(path);
         registerModelAndLoadDependencies(name, model);
     }
 
     @Unique
     private void krender$addExtraModel(ModelResourceLocation name, UnbakedModel model) {
         registerModelAndLoadDependencies(name, model);
+    }
+
+    @Override
+    public UnbakedModel krender$getOrLoadModel(ResourceLocation name) {
+        return getModel(name);
+    }
+
+    @Override
+    public boolean krender$topLevelModelExists(ModelResourceLocation name) {
+        return topLevelModels.containsKey(name);
     }
 }

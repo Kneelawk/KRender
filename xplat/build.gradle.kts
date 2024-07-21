@@ -87,11 +87,9 @@ tasks {
     javadoc.configure {
         exclude("com/kneelawk/krender/impl")
 
-        val yarn_mappings: String by project
         val jetbrains_annotations_version: String by project
         (options as? StandardJavadocDocletOptions)?.links =
             listOf(
-                "https://maven.fabricmc.net/docs/yarn-${yarn_mappings}/",
                 "https://javadoc.io/doc/org.jetbrains/annotations/${jetbrains_annotations_version}/"
             )
 

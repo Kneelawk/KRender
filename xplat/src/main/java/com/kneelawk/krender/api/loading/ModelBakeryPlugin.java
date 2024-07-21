@@ -1,6 +1,5 @@
 package com.kneelawk.krender.api.loading;
 
-import java.util.Collection;
 import java.util.Map;
 
 import org.jetbrains.annotations.ApiStatus;
@@ -42,6 +41,11 @@ public interface ModelBakeryPlugin {
      * Initialize the model bakery plugin by registering objects with the given context.
      * <p>
      * This may be called multiple times.
+     * <p>
+     * This should not cause the additional loading of models from a resource-manager. All resources should already be
+     * loaded during a preparation stage using {@link #registerPreparable(PreparableModelBakeryPlugin.ResourceLoader, PreparableModelBakeryPlugin)}.
+     * See {@link net.minecraft.resources.FileToIdConverter} for efficient loading of all models that meet a certain
+     * criteria.
      *
      * @param ctx the initialization context used to register various functions.
      */
@@ -53,44 +57,82 @@ public interface ModelBakeryPlugin {
     @ApiStatus.NonExtendable
     interface Context {
         /**
-         * Adds models by their {@link ResourceLocation}s or {@link ModelResourceLocation}s to the {@link ModelBakery}'s
-         * set of models to load and bake.
+         * Loads a model via default means (including via {@link LowLevelModelProvider}s) and then registers it as a top-level
+         * model.
+         * <p>
+         * A top level model is one that can be obtained with {@code Minecraft.getInstance().getModelManager().getModel(name)}.
+         * <p>
+         * A block-state json is a good example of a top-level model.
+         * <p>
+         * Note: These models will be picked up by block-state model association.
          *
-         * @param names the names of models to load and bake.
+         * @param name the name of the model.
+         * @param path where the model is actually found.
          */
-        void addModels(ModelResourceLocation... names);
+        void addTopLevelModelName(ModelResourceLocation name, ResourceLocation path);
 
         /**
-         * Adds a collection of models by their {@link ResourceLocation}s or {@link ModelResourceLocation}s to the
-         * {@link ModelBakery}'s set of models to load and bake.
+         * Loads a collection of models via default means (including via {@link LowLevelModelProvider}s) and then registers
+         * them as top-level models.
+         * <p>
+         * A top level model is one that can be obtained with {@code Minecraft.getInstance().getModelManager().getModel(name)}.
+         * <p>
+         * A block-state json is a good example of a top-level model.
+         * <p>
+         * Note: These models will be picked up by block-state model association.
          *
-         * @param names the names of models to load and bake.
+         * @param models the model names and paths to load and add.
          */
-        void addModels(Collection<? extends ModelResourceLocation> names);
+        void addTopLevelModelNames(Map<ModelResourceLocation, ResourceLocation> models);
 
         /**
-         * Adds an already loaded model to the {@link ModelBakery}'s set of models to bake.
+         * Adds an already loaded model to the {@link ModelBakery}'s set of top-level models to bake.
+         * <p>
+         * A top level model is one that can be obtained with {@code Minecraft.getInstance().getModelManager().getModel(name)}.
+         * <p>
+         * A block-state json is a good example of a top-level model.
+         * <p>
+         * Note: These models will be picked up by block-state model association.
          *
          * @param name  the name of the model.
          * @param model the model to bake.
          */
-        void addModel(ModelResourceLocation name, UnbakedModel model);
+        void addTopLevelModel(ModelResourceLocation name, UnbakedModel model);
 
         /**
          * Adds a collection of already loaded models to the {@link ModelBakery}'s set of models to bake.
+         * <p>
+         * A top level model is one that can be obtained with {@code Minecraft.getInstance().getModelManager().getModel(name)}.
+         * <p>
+         * A block-state json is a good example of a top-level model.
+         * <p>
+         * Note: These models will be picked up by block-state model association.
          *
          * @param models the models to bake.
          */
-        void addModels(Map<? extends ModelResourceLocation, ? extends UnbakedModel> models);
+        void addTopLevelModels(Map<? extends ModelResourceLocation, ? extends UnbakedModel> models);
 
         /**
-         * Registers a custom model loader.
+         * Registers a custom lower-level model provider.
          * <p>
-         * Custom model loaders allow more control over how a model is loaded, but they are also slower than supplying
-         * models ahead of time.
+         * These models are the ones that are typically referenced by block-state models.
+         * <p>
+         * These models are also the ones used by items.
          *
-         * @param loader the loader to register.
+         * @param provider the provider to register.
          */
-        void registerModelLoader(ModelProvider loader);
+        void registerLowLevelModelProvider(LowLevelModelProvider provider);
+
+        /**
+         * Registers a custom block-state model provider.
+         * <p>
+         * These models are ones that can be obtained via {@code Minecraft.getInstance().getModelManager().getModel(name)}.
+         * <p>
+         * This provides more control than registering models via the {@link #addTopLevelModel(ModelResourceLocation, UnbakedModel)}
+         * set of methods.
+         *
+         * @param provider the provider to register.
+         */
+        void registerBlockStateModelProvider(BlockStateModelProvider provider);
     }
 }

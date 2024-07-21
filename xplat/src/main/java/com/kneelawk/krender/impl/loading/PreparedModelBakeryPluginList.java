@@ -7,8 +7,8 @@ import com.kneelawk.krender.impl.KRLog;
 
 public record PreparedModelBakeryPluginList(List<ModelBakeryPlugin> plugins,
                                             List<? extends PreparedModelBakeryPlugin<?>> preparedPlugins) {
-    public ModelBakeryPluginContext loadPlugins() {
-        ModelBakeryPluginContext ctx = new ModelBakeryPluginContext();
+    public ModelBakeryPluginContextImpl loadPlugins() {
+        ModelBakeryPluginContextImpl ctx = new ModelBakeryPluginContextImpl();
 
         for (ModelBakeryPlugin plugin : plugins) {
             try {
