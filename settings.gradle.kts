@@ -84,3 +84,8 @@ module(xplat, "model-loading-xplat")
 module(mojmap, "model-loading-xplat-mojmap")
 module(fabric, "model-loading-fabric")
 module(neoforge, "model-loading-neoforge")
+
+module(xplat, "model-creation-xplat")
+module(mojmap, "model-creation-xplat-mojmap")
+module(fabric, "model-creation-fabric")
+module(neoforge, "model-creation-neoforge")
