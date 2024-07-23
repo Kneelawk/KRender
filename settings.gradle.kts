@@ -89,3 +89,7 @@ module(xplat, "model-creation-xplat")
 module(mojmap, "model-creation-xplat-mojmap")
 module(fabric, "model-creation-fabric")
 module(neoforge, "model-creation-neoforge")
+
+example(xplat, "ct-complicated-xplat")
+example(fabric, "ct-complicated-fabric")
+example(neoforge, "ct-complicated-neoforge")

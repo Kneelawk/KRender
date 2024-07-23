@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "icon": "assets/${mod_id}/icon.png",
-  "environment": "*",
+  "environment": "client",
   "entrypoints": { },
   "mixins": [
     "${mod_id}.mixins.json"
@@ -27,7 +27,14 @@
   },
   "custom": {
     "modmenu": {
-      "badges": [ "library" ]
+      "badges": [ "library" ],
+      "parent": {
+        "id": "krender",
+        "name": "KRender",
+        "description": "Kneelawk's Minecraft Rendering Utilities.",
+        "icon": "assets/${mod_id}/icon.png",
+        "badges": [ "library" ]
+      }
     }
   }
 }

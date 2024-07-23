@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${version}",
-  "name": "KRender Model Creation",
-  "description": "Cross-platform Model Creation Abstraction.",
+  "name": "Connected Textures Complicated",
+  "description": "Complicated cross-platform connected-texture implementation.",
   "authors": [
     "Kneelawk"
   ],
@@ -14,7 +14,7 @@
   },
   "license": "MIT",
   "icon": "assets/${mod_id}/icon.png",
-  "environment": "client",
+  "environment": "*",
   "entrypoints": { },
   "mixins": [ ],
   "depends": {
@@ -22,17 +22,5 @@
     "fabric-api": "*",
     "minecraft": ">=1.21- <1.22-",
     "java": ">=17"
-  },
-  "custom": {
-    "modmenu": {
-      "badges": [ "library" ],
-      "parent": {
-        "id": "krender",
-        "name": "KRender",
-        "description": "Kneelawk's Minecraft Rendering Utilities.",
-        "icon": "assets/${mod_id}/icon.png",
-        "badges": [ "library" ]
-      }
-    }
   }
 }
