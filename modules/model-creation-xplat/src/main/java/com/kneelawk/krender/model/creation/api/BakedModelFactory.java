@@ -2,6 +2,8 @@ package com.kneelawk.krender.model.creation.api;
 
 import net.minecraft.client.resources.model.BakedModel;
 
+import com.kneelawk.krender.model.creation.impl.Platform;
+
 /**
  * This class is responsible for wrapping a {@link BakedModelCore} and creating a {@link BakedModel}.
  */
@@ -15,16 +17,7 @@ public class BakedModelFactory {
      * @param core the core to wrap.
      * @return the created baked model.
      */
-    public BakedModel wrap(BakedModelCore core) {
-        throw new RuntimeException("Not yet implemented");
-    }
-
-    /**
-     * Creates a new {@link BakedModelFactory} for use in creating {@link BakedModel}s.
-     *
-     * @return the new {@link BakedModelFactory}.
-     */
-    public static BakedModelFactory create() {
-        return new BakedModelFactory();
+    public static BakedModel wrap(BakedModelCore core) {
+        return Platform.INSTANCE.wrap(core);
     }
 }
