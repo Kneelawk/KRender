@@ -9,7 +9,7 @@ import com.kneelawk.krender.model.creation.api.material.MaterialView;
 /**
  * Base implementation of {@link MaterialView} that can be used for platforms that don't have an existing implementation.
  */
-public class BaseMaterialView implements MaterialView {
+public abstract class BaseMaterialView implements MaterialView {
     private static final BlendMode[] BLEND_MODES = BlendMode.values();
     private static final int BLEND_MODE_COUNT = BLEND_MODES.length;
     private static final TriState[] TRI_STATES = TriState.values();
@@ -120,28 +120,35 @@ public class BaseMaterialView implements MaterialView {
         this.bits = bits;
     }
 
+    /**
+     * {@return this material view's bits}
+     */
+    public int getBits() {
+        return bits;
+    }
+
     @Override
     public BlendMode getBlendMode() {
-        return null;
+        return BLEND_MODES[(bits & BLEND_MODE_MASK) >>> BLEND_MODE_BIT_OFFSET];
     }
 
     @Override
     public boolean isColorIndexDisabled() {
-        return false;
+        return (bits & COLOR_INDEX_FLAG) != 0;
     }
 
     @Override
     public boolean isEmissive() {
-        return false;
+        return (bits & EMISSIVE_FLAG) != 0;
     }
 
     @Override
     public boolean isDiffuseDisabled() {
-        return false;
+        return (bits & DIFFUSE_FLAG) != 0;
     }
 
     @Override
     public TriState getAmbientOcclusionMode() {
-        return null;
+        return TRI_STATES[(bits & AO_MASK) >>> AO_BIT_OFFSET];
     }
 }
