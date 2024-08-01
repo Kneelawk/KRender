@@ -3,7 +3,6 @@ package com.kneelawk.krender.model.creation.api.material;
 import org.jetbrains.annotations.ApiStatus;
 
 import com.kneelawk.krender.model.creation.api.TriState;
-import com.kneelawk.krender.model.creation.impl.Platform;
 
 /**
  * Used for finding/building materials.
@@ -71,8 +70,4 @@ public interface MaterialFinder extends MaterialView {
      * @return this material finder.
      */
     MaterialFinder copyFrom(MaterialView material);
-    
-    static MaterialFinder get() {
-        return Platform.INSTANCE.getOrCreateMaterialFinder();
-    }
 }

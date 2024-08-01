@@ -24,8 +24,7 @@ public class FabricMaterialFinder implements com.kneelawk.krender.model.creation
 
     @Override
     public RenderMaterial find() {
-        // TODO: optimize this
-        return new FabricRenderMaterial(finder.find());
+        return FabricRenderMaterial.getOrCreate(finder.find());
     }
 
     @Override
@@ -69,7 +68,7 @@ public class FabricMaterialFinder implements com.kneelawk.krender.model.creation
         if (material instanceof FabricMaterialFinder fabric) {
             finder.copyFrom(fabric.finder);
         } else if (material instanceof FabricRenderMaterial fabric) {
-            finder.copyFrom(fabric.material());
+            finder.copyFrom(fabric.material);
         } else {
             setBlendMode(material.getBlendMode()).setColorIndexDisabled(material.isColorIndexDisabled())
                 .setEmissive(material.isEmissive()).setDiffuseDisabled(material.isDiffuseDisabled())
