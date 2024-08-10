@@ -143,15 +143,16 @@ public interface ModelBakeryPlugin {
         void registerLowLevelModelProvider(LowLevelModelProvider provider);
 
         /**
-         * Registers a custom block-state model provider.
+         * Registers a custom block-state model provider for the given block.
          * <p>
          * These models are ones that can be obtained via {@code Minecraft.getInstance().getModelManager().getModel(name)}.
          * <p>
          * This provides more control than registering models via the {@link #addTopLevelModel(ModelResourceLocation, UnbakedModel)}
          * set of methods.
          *
+         * @param blockId  the id of the block the provider is being registered for.
          * @param provider the provider to register.
          */
-        void registerBlockStateModelProvider(BlockStateModelProvider provider);
+        void registerBlockStateModelProvider(ResourceLocation blockId, BlockStateModelProvider provider);
     }
 }
