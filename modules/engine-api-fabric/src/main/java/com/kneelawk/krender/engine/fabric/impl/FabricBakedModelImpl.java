@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.kneelawk.krender.engine.api.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BakedModelCore;
 
 public class FabricBakedModelImpl implements BakedModel {
     private final BakedModelCore core;

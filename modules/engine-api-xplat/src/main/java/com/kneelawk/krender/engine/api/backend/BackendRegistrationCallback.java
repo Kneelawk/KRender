@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 
 import com.kneelawk.commonevents.api.Event;
 import com.kneelawk.krender.engine.impl.KRELog;
+import com.kneelawk.krender.engine.impl.Platform;
 
 /**
  * Callback for registering backends.
@@ -66,6 +67,8 @@ public interface BackendRegistrationCallback {
          *
          * @param modId the mod-id of the mod to check for.
          */
-        void isModLoaded(String modId);
+        default boolean isModLoaded(String modId) {
+            return Platform.INSTANCE.isModLoaded(modId);
+        }
     }
 }
