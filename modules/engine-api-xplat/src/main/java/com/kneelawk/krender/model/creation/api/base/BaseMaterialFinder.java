@@ -14,7 +14,7 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
     /**
      * Creates a new {@link BaseMaterialFinder} with the given default bits.
      *
-     * @param defaultBits
+     * @param defaultBits the default bits for the new material finder.
      */
     public BaseMaterialFinder(int defaultBits) {
         super(defaultBits);

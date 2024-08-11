@@ -20,6 +20,7 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",
+    "common_events": ">=1",
     "minecraft": ">=1.21- <1.22-",
     "java": ">=17"
   },
