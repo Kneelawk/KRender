@@ -1,7 +1,5 @@
 package com.kneelawk.krender.engine.api.material;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import com.kneelawk.krender.engine.api.TriState;
 
 /**
@@ -9,7 +7,6 @@ import com.kneelawk.krender.engine.api.TriState;
  * <p>
  * Values returned may not match those set, but should be more accurate to the material actually rendered.
  */
-@ApiStatus.NonExtendable
 public interface MaterialView {
     /**
      * {@return this material's blend mode}

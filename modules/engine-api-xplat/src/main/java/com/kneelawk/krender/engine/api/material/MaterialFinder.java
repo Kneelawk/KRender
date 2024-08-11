@@ -1,13 +1,10 @@
 package com.kneelawk.krender.engine.api.material;
 
-import org.jetbrains.annotations.ApiStatus;
-
 import com.kneelawk.krender.engine.api.TriState;
 
 /**
  * Used for finding/building materials.
  */
-@ApiStatus.NonExtendable
 public interface MaterialFinder extends MaterialView {
     /**
      * Gets or creates the render material specified by this material finder.
