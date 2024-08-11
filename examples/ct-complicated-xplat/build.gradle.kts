@@ -6,5 +6,5 @@ plugins {
 submodule {
     setRefmaps("ct_complicated")
     xplatProjectDependency(":model-loading")
-    xplatProjectDependency(":model-creation")
+    xplatProjectDependency(":engine-api")
 }

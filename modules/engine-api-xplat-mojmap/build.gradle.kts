@@ -5,8 +5,7 @@ plugins {
 }
 
 submodule {
-    setLibsDirectory()
-    applyXplatConnection(":model-creation-xplat")
+    applyXplatConnection(":engine-api-xplat")
     setupJavadoc()
 }
 

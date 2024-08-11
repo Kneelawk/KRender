@@ -5,11 +5,10 @@ plugins {
 }
 
 submodule {
-    setLibsDirectory()
-    applyXplatConnection(":model-creation-xplat")
+    setRefmaps("krender_engine_api")
     setupJavadoc()
 }
 
 kpublish {
-    createPublication()
+    createPublication("intermediate")
 }
