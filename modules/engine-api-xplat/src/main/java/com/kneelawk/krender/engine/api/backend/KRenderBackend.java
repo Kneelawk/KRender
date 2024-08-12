@@ -1,22 +1,18 @@
 package com.kneelawk.krender.engine.api.backend;
 
-import com.kneelawk.krender.engine.api.material.MaterialManager;
-import com.kneelawk.krender.engine.api.model.BakedModelFactory;
-
 /**
- * Describes an implementation of the KRender Engine API.
+ * Provides access to a {@link KRenderer}.
  */
 public interface KRenderBackend {
+    /**
+     * {@return this backend's renderer}
+     */
+    KRenderer getRenderer();
 
     /**
-     * This gets or creates a baked model factory for this backend.
-     *
-     * @return the requested baked model factory.
+     * {@return this backend's priority}
      */
-    BakedModelFactory bakedModelFactory();
-
-    /**
-     * {@return this backend's material manager}
-     */
-    MaterialManager materialManager();
+    default int getPriority() {
+        return 0;
+    }
 }
