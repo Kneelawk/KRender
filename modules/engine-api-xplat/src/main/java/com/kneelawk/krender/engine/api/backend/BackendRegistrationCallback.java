@@ -66,6 +66,7 @@ public interface BackendRegistrationCallback {
          * Convenience method to check if the given mod exists on the current platform.
          *
          * @param modId the mod-id of the mod to check for.
+         * @return whether the given mod is present in this game instance.
          */
         default boolean isModLoaded(String modId) {
             return Platform.INSTANCE.isModLoaded(modId);

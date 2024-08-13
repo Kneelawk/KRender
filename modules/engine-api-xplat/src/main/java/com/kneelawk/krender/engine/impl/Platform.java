@@ -1,5 +1,6 @@
 package com.kneelawk.krender.engine.impl;
 
+import java.nio.file.Path;
 import java.util.ServiceLoader;
 
 public interface Platform {
@@ -7,4 +8,6 @@ public interface Platform {
         .orElseThrow(() -> new RuntimeException("Unable to find KRender Model Creation platform"));
 
     boolean isModLoaded(String modId);
+
+    Path getConfigDir();
 }
