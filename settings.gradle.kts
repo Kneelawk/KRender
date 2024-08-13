@@ -80,15 +80,17 @@ val mojmap = true
 val fabric = true
 val neoforge = true
 
-module(xplat, "model-loading-xplat")
-module(mojmap, "model-loading-xplat-mojmap")
-module(fabric, "model-loading-fabric")
-module(neoforge, "model-loading-neoforge")
-
 module(xplat, "engine-api-xplat")
 module(mojmap, "engine-api-xplat-mojmap")
 module(fabric, "engine-api-fabric")
 module(neoforge, "engine-api-neoforge")
+
+module(fabric, "engine-backend-frapi")
+
+module(xplat, "model-loading-xplat")
+module(mojmap, "model-loading-xplat-mojmap")
+module(fabric, "model-loading-fabric")
+module(neoforge, "model-loading-neoforge")
 
 example(xplat, "ct-complicated-xplat")
 example(fabric, "ct-complicated-fabric")
