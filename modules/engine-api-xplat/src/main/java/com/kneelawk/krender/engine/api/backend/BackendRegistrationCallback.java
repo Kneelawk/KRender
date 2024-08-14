@@ -80,7 +80,12 @@ public interface BackendRegistrationCallback {
                 throw new RuntimeException("Unable to load KRender backend predicate: " + predicateClassName, e);
             }
 
-            if (!predicate.getAsBoolean()) return;
+            try {
+                if (!predicate.getAsBoolean()) return;
+            } catch (NoClassDefFoundError ignored) {
+                // this exception would generally be thrown by a failed predicate
+                return;
+            }
 
             KRenderBackend backend;
             try {
