@@ -86,6 +86,7 @@ module(fabric, "engine-api-fabric")
 module(neoforge, "engine-api-neoforge")
 
 module(fabric, "engine-backend-frapi")
+module(neoforge, "engine-backend-neoforge")
 
 module(xplat, "model-loading-xplat")
 module(mojmap, "model-loading-xplat-mojmap")

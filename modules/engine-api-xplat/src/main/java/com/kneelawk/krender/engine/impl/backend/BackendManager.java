@@ -11,7 +11,7 @@ import com.kneelawk.krender.engine.impl.KRELog;
 public class BackendManager {
     private static final Map<String, KRenderer> renderers;
     private static final String bestRenderer;
-    private static KRenderer defaultRenderer;
+    private static volatile KRenderer defaultRenderer;
 
     static {
         KRELog.LOG.info("Loading KRender Engine backends...");

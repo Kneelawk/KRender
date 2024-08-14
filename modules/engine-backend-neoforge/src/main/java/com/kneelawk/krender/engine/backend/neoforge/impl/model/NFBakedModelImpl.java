@@ -1,4 +1,4 @@
-package com.kneelawk.krender.engine.neoforge.impl;
+package com.kneelawk.krender.engine.backend.neoforge.impl.model;
 
 import java.util.List;
 
@@ -26,10 +26,10 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
 
-public class NeoForgeBakedModelImpl implements BakedModel {
+public class NFBakedModelImpl implements BakedModel {
     private final BakedModelCore core;
 
-    public NeoForgeBakedModelImpl(BakedModelCore core) {this.core = core;}
+    public NFBakedModelImpl(BakedModelCore core) {this.core = core;}
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction,

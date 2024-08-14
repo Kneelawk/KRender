@@ -18,6 +18,6 @@ public class FRAPIBackend implements KRenderBackend {
 
     @Override
     public int getPriority() {
-        return 500;
+        return 950;
     }
 }
