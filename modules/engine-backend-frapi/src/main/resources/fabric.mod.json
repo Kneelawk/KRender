@@ -1,0 +1,40 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "KRender Engine FRAPI Backend",
+  "description": "Fabric Render API Backend for the KRender Engine.",
+  "authors": [
+    "Kneelawk"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Kneelawk/KRender",
+    "issues": "https://github.com/Kneelawk/KRender/issues",
+    "sources": "https://github.com/Kneelawk/KRender"
+  },
+  "license": "MIT",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "client",
+  "entrypoints": { },
+  "mixins": [ ],
+  "depends": {
+    "fabricloader": ">=0.15.0",
+    "fabric-api": "*",
+    "krender_engine_api": "*",
+    "common_events": ">=1",
+    "minecraft": ">=1.21- <1.22-",
+    "java": ">=17"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [ "library" ],
+      "parent": {
+        "id": "krender",
+        "name": "KRender",
+        "description": "Kneelawk's Minecraft Rendering Utilities.",
+        "icon": "assets/${mod_id}/icon.png",
+        "badges": [ "library" ]
+      }
+    }
+  }
+}

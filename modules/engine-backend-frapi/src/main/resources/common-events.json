@@ -1,0 +1,5 @@
+{
+  "scan": [
+    "com.kneelawk.krender.engine.backend.frapi.impl.FRAPIEntryPoint"
+  ]
+}

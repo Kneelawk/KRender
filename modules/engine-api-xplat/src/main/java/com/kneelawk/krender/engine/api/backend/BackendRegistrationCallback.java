@@ -1,6 +1,7 @@
 package com.kneelawk.krender.engine.api.backend;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.BooleanSupplier;
 
 import com.kneelawk.commonevents.api.Event;
 import com.kneelawk.krender.engine.impl.KRELog;
@@ -49,7 +50,7 @@ public interface BackendRegistrationCallback {
          * <p>
          * The specified class must have a public no-arguments constructor.
          *
-         * @param className the name of the backend implementation class.
+         * @param className the name of the backend implementation class. this must implement {@link KRenderBackend}.
          */
         default void registerBackend(String className) {
             KRenderBackend backend;
@@ -58,6 +59,35 @@ public interface BackendRegistrationCallback {
             } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
                      IllegalAccessException | NoSuchMethodException e) {
                 throw new RuntimeException("Unable to load KRender backend: " + className, e);
+            }
+            registerBackend(backend);
+        }
+
+        /**
+         * Registers the given backend by its class name, checking a predicate first.
+         * <p>
+         * The specified classes must have public no-arguments constructors.
+         *
+         * @param predicateClassName the name of the backend predicate class. This must implement {@link BooleanSupplier}.
+         * @param backendClassName   the name of the backend implementation class. This must implement {@link KRenderBackend}.
+         */
+        default void registerBackend(String predicateClassName, String backendClassName) {
+            BooleanSupplier predicate;
+            try {
+                predicate = (BooleanSupplier) Class.forName(predicateClassName).getConstructor().newInstance();
+            } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException | NoSuchMethodException e) {
+                throw new RuntimeException("Unable to load KRender backend predicate: " + predicateClassName, e);
+            }
+
+            if (!predicate.getAsBoolean()) return;
+
+            KRenderBackend backend;
+            try {
+                backend = (KRenderBackend) Class.forName(backendClassName).getConstructor().newInstance();
+            } catch (ClassNotFoundException | InvocationTargetException | InstantiationException |
+                     IllegalAccessException | NoSuchMethodException e) {
+                throw new RuntimeException("Unable to load KRender backend: " + backendClassName, e);
             }
             registerBackend(backend);
         }

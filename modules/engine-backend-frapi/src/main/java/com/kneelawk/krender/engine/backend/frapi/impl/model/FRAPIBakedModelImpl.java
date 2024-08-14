@@ -1,8 +1,9 @@
-package com.kneelawk.krender.engine.fabric.impl;
+package com.kneelawk.krender.engine.backend.frapi.impl.model;
 
 import java.util.List;
 import java.util.function.Supplier;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -21,13 +22,14 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
 
-public class FabricBakedModelImpl implements BakedModel {
+public class FRAPIBakedModelImpl implements BakedModel {
     private final BakedModelCore core;
 
-    public FabricBakedModelImpl(BakedModelCore core) {this.core = core;}
+    public FRAPIBakedModelImpl(BakedModelCore core) {this.core = core;}
 
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction,
+                                             @NotNull RandomSource random) {
         return List.of();
     }
 
@@ -52,17 +54,17 @@ public class FabricBakedModelImpl implements BakedModel {
     }
 
     @Override
-    public TextureAtlasSprite getParticleIcon() {
+    public @NotNull TextureAtlasSprite getParticleIcon() {
         return core.getParticleIcon();
     }
 
     @Override
-    public ItemTransforms getTransforms() {
+    public @NotNull ItemTransforms getTransforms() {
         return core.getTransforms();
     }
 
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return core.getOverrides();
     }
 

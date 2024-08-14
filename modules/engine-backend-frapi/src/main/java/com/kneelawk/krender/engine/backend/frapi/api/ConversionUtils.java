@@ -1,9 +1,20 @@
-package com.kneelawk.krender.engine.fabric.impl;
+package com.kneelawk.krender.engine.backend.frapi.api;
 
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 
-public class ConversionUtils {
+/**
+ * Utility class for converting between KRender types and FRAPI types.
+ */
+public final class ConversionUtils {
+    private ConversionUtils() {}
+
+    /**
+     * Converts a FRAPI blend-mode to a KRender blend-mode.
+     *
+     * @param blendMode the FRAPI blend mode.
+     * @return the equivalent KRender blend mode.
+     */
     public static BlendMode toKRender(net.fabricmc.fabric.api.renderer.v1.material.BlendMode blendMode) {
         return switch (blendMode) {
             case DEFAULT -> BlendMode.DEFAULT;
@@ -14,6 +25,12 @@ public class ConversionUtils {
         };
     }
 
+    /**
+     * Converts a KRender blend-mode to a FRAPI blend-mode.
+     *
+     * @param blendMode the KRender blend-mode.
+     * @return the equivalent FRAPI blend-mode.
+     */
     public static net.fabricmc.fabric.api.renderer.v1.material.BlendMode toFabric(BlendMode blendMode) {
         return switch (blendMode) {
             case DEFAULT -> net.fabricmc.fabric.api.renderer.v1.material.BlendMode.DEFAULT;
@@ -24,6 +41,12 @@ public class ConversionUtils {
         };
     }
 
+    /**
+     * Converts a FAPI tri-state to a KRender tri-state.
+     *
+     * @param triState the FAPI tri-state.
+     * @return the equivalent KRender tri-state.
+     */
     public static TriState toKRender(net.fabricmc.fabric.api.util.TriState triState) {
         return switch (triState) {
             case FALSE -> TriState.FALSE;
@@ -32,6 +55,12 @@ public class ConversionUtils {
         };
     }
 
+    /**
+     * Converts a KRender tri-state to a FAPI tri-state.
+     *
+     * @param triState the KRender tri-state.
+     * @return the equivalent FAPI tri-state.
+     */
     public static net.fabricmc.fabric.api.util.TriState toFabric(TriState triState) {
         return switch (triState) {
             case FALSE -> net.fabricmc.fabric.api.util.TriState.FALSE;

@@ -1,24 +1,28 @@
-package com.kneelawk.krender.engine.fabric.impl.material;
+package com.kneelawk.krender.engine.backend.frapi.impl.material;
 
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
-import com.kneelawk.krender.engine.fabric.impl.ConversionUtils;
+import com.kneelawk.krender.engine.backend.frapi.api.ConversionUtils;
 
-public final class FabricRenderMaterial
+public final class FRAPIRenderMaterial
     implements com.kneelawk.krender.engine.api.material.RenderMaterial {
-    private static final ConcurrentHashMap<RenderMaterial, FabricRenderMaterial> CACHE = new ConcurrentHashMap<>();
+    private static final ConcurrentHashMap<RenderMaterial, FRAPIRenderMaterial> CACHE = new ConcurrentHashMap<>();
+    public static final FRAPIRenderMaterial DEFAULT = getOrCreate(
+        Objects.requireNonNull(RendererAccess.INSTANCE.getRenderer(), "no renderer").materialFinder().clear().find());
 
-    public static FabricRenderMaterial getOrCreate(RenderMaterial material) {
-        return CACHE.computeIfAbsent(material, FabricRenderMaterial::new);
+    public static FRAPIRenderMaterial getOrCreate(RenderMaterial material) {
+        return CACHE.computeIfAbsent(material, FRAPIRenderMaterial::new);
     }
 
     public final RenderMaterial material;
 
-    private FabricRenderMaterial(RenderMaterial material) {this.material = material;}
+    private FRAPIRenderMaterial(RenderMaterial material) {this.material = material;}
 
     @Override
     public BlendMode getBlendMode() {
