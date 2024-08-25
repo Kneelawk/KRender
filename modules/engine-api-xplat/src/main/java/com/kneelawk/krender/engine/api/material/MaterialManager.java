@@ -1,5 +1,9 @@
 package com.kneelawk.krender.engine.api.material;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.resources.ResourceLocation;
+
 /**
  * Manages materials, material lookups, material caching, and material finding.
  */
@@ -23,4 +27,39 @@ public interface MaterialManager {
      * {@return this backend's material that indicates a missing material}
      */
     RenderMaterial missingMaterial();
+
+    /**
+     * Gets a {@link RenderMaterial} by its id if has been registered.
+     *
+     * @param id the id of the render material to look up.
+     * @return the render material registered with the given id or {@code null} if the requested id has not been
+     * registered with this material manager.
+     */
+    @Nullable RenderMaterial materialById(ResourceLocation id);
+
+    /**
+     * Registers a {@link RenderMaterial} with a {@link ResourceLocation} id if it does not already exist.
+     * <p>
+     * This will only register a material if the id it is being registered with has not already been registered.
+     *
+     * @param id       the id of the render material to register.
+     * @param material the render material to register.
+     * @return {@code false} if a material with the given id was already present.
+     */
+    boolean registerMaterial(ResourceLocation id, RenderMaterial material);
+
+    /**
+     * Registers a {@link RenderMaterial} with a {@link ResourceLocation} id.
+     * <p>
+     * This will replace existing materials with new ones. Though on some platforms, replacement of old materials is
+     * not possible. In those situations, this method behaves exactly like
+     * {@link #registerMaterial(ResourceLocation, RenderMaterial)}.
+     *
+     * @param id       the id of the render material to register.
+     * @param material the render material to register.
+     * @return {@code false} if a material with the given id was already present.
+     */
+    default boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
+        return registerMaterial(id, material);
+    }
 }
