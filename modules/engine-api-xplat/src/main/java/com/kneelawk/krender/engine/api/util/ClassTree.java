@@ -7,6 +7,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
@@ -16,7 +17,7 @@ import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
  * @param <T> the value type this class tree associates with different classes.
  */
 public class ClassTree<T> {
-    private final Map<Class<?>, Set<T>> quickLookup = new HashMap<>();
+    private final Map<Class<?>, Map<Class<?>, Set<T>>> quickLookup = new HashMap<>();
     private final Map<Class<?>, Set<Class<?>>> descendantLookup = new HashMap<>();
     private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
@@ -42,7 +43,7 @@ public class ClassTree<T> {
             // descendant-lookup will have this class too
             for (Class<?> descendant : descendantLookup.get(key)) {
                 // should always have a non-null set for every value in descendant-lookup
-                quickLookup.get(descendant).add(value);
+                quickLookup.get(descendant).computeIfAbsent(key, k -> new ObjectLinkedOpenHashSet<>()).add(value);
             }
         } finally {
             lock.writeLock().lock();
@@ -53,13 +54,13 @@ public class ClassTree<T> {
      * Looks for all values associated with a class any of its ancestors.
      *
      * @param key the class to look up.
-     * @return a set of all collected values.
+     * @return a map of the type's ancestor classes and their associated values.
      */
-    public Set<T> get(Class<?> key) {
+    public Map<Class<?>, Set<T>> get(Class<?> key) {
         lock.readLock().lock();
         try {
             if (quickLookup.containsKey(key)) {
-                return Collections.unmodifiableSet(quickLookup.get(key));
+                return Collections.unmodifiableMap(quickLookup.get(key));
             }
         } finally {
             lock.readLock().unlock();
@@ -69,7 +70,7 @@ public class ClassTree<T> {
         try {
             initClass(key);
             // initClass means that quick-lookup will always contain the specified key
-            return Collections.unmodifiableSet(quickLookup.get(key));
+            return Collections.unmodifiableMap(quickLookup.get(key));
         } finally {
             lock.writeLock().unlock();
         }
@@ -79,7 +80,7 @@ public class ClassTree<T> {
         if (quickLookup.containsKey(key)) return;
 
         // use an array-based set impl
-        Set<T> lookup = new ObjectLinkedOpenHashSet<>();
+        Map<Class<?>, Set<T>> lookup = new Object2ObjectLinkedOpenHashMap<>();
 
         // re-use class queue to save on allocation costs
         classQueue.clear();
@@ -101,7 +102,10 @@ public class ClassTree<T> {
 
             // add all registrations of parents
             if (quickLookup.containsKey(current)) {
-                lookup.addAll(quickLookup.get(current));
+                for (Map.Entry<Class<?>, Set<T>> entry : quickLookup.get(current).entrySet()) {
+                    lookup.computeIfAbsent(entry.getKey(), k -> new ObjectLinkedOpenHashSet<>())
+                        .addAll(entry.getValue());
+                }
             }
 
             // add key as a descendant
