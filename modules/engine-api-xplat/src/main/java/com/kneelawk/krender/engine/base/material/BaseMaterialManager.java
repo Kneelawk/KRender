@@ -1,4 +1,4 @@
-package com.kneelawk.krender.engine.api.base;
+package com.kneelawk.krender.engine.base.material;
 
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import java.util.function.IntFunction;

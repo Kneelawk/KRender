@@ -7,12 +7,13 @@ import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
-import net.minecraft.client.renderer.block.model.BakedQuad;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 
+/**
+ * A view of a buffered quad.
+ */
 public interface QuadView {
     /**
      * The number of 32-bit integers in a vanilla vertex.

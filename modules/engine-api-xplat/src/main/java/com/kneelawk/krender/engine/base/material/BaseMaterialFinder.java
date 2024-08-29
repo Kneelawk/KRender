@@ -1,4 +1,4 @@
-package com.kneelawk.krender.engine.api.base;
+package com.kneelawk.krender.engine.base.material;
 
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;

@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.material;
 
-import com.kneelawk.krender.engine.api.base.BaseMaterialView;
+import com.kneelawk.krender.engine.base.material.BaseMaterialView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 
 public class NFRenderMaterial extends BaseMaterialView implements RenderMaterial {

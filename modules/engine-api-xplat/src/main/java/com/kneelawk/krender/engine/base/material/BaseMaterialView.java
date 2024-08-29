@@ -1,4 +1,4 @@
-package com.kneelawk.krender.engine.api.base;
+package com.kneelawk.krender.engine.base.material;
 
 import net.minecraft.util.Mth;
 
