@@ -7,6 +7,8 @@ import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
@@ -226,4 +228,20 @@ public interface QuadView {
      * {@return the user-defined tag associated with this quad}
      */
     int getTag();
+
+    /**
+     * Copies the vanilla properties of this quad into the given array in vanilla format.
+     *
+     * @param target      the array to copy vanilla properties into.
+     * @param targetIndex the index within the array to start copying to.
+     */
+    void toVanilla(int[] target, int targetIndex);
+
+    /**
+     * Creates a vanilla representation of this quad, using the given sprite.
+     *
+     * @param sprite the sprite to use in the baked quad.
+     * @return the vanilla representation of this quad.
+     */
+    BakedQuad toBakedQuad(TextureAtlasSprite sprite);
 }
