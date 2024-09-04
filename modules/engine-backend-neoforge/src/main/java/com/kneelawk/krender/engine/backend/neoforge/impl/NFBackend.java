@@ -13,7 +13,7 @@ public class NFBackend implements KRenderBackend {
 
     @Override
     public String getName() {
-        return "neoforge";
+        return KRBNFConstants.BACKEND_ID;
     }
 
     @Override

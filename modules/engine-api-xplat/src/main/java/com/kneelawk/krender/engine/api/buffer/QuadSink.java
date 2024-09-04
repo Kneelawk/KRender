@@ -5,12 +5,14 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 
+import com.kneelawk.krender.engine.api.RendererDependent;
+
 /**
  * Universal interface for API-users to send vertex data to a backend.
  * <p>
  * This supports both the per-quad style of the Fabric Render API and the per-vertex style of vanilla.
  */
-public interface QuadSink extends MultiBufferSource {
+public interface QuadSink extends MultiBufferSource, RendererDependent {
     /**
      * {@return a view of this quad sink as a per-quad model-data emitter}
      */

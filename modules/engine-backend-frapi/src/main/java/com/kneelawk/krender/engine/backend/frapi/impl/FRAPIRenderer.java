@@ -20,4 +20,9 @@ public class FRAPIRenderer implements KRenderer {
     public @NotNull MaterialManager materialManager() {
         return FRAPIMaterialManager.INSTANCE;
     }
+
+    @Override
+    public String getName() {
+        return KRBFRConstants.BACKEND_ID;
+    }
 }

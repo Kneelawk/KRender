@@ -9,9 +9,11 @@ import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 
 import net.minecraft.resources.ResourceLocation;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
 public class FRAPIMaterialManager implements MaterialManager {
     public static final FRAPIMaterialManager INSTANCE = new FRAPIMaterialManager();
@@ -53,5 +55,10 @@ public class FRAPIMaterialManager implements MaterialManager {
         } finally {
             lock.writeLock().unlock();
         }
+    }
+
+    @Override
+    public @Nullable KRenderer getRenderer() {
+        return FRAPIRenderer.INSTNACE;
     }
 }

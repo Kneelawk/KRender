@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import net.minecraft.resources.ResourceLocation;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
@@ -24,6 +25,11 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
      * The maximum number of materials possible.
      */
     public static final int MATERIAL_COUNT = 1 << BaseMaterialView.TOTAL_BIT_LENGTH;
+
+    /**
+     * The renderer that his material manager is associated with.
+     */
+    protected final KRenderer renderer;
 
     /**
      * A map of materials by resource-location id.
@@ -72,24 +78,32 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
         public RenderMaterial find() {
             return (RenderMaterial) materials[bits];
         }
+
+        @Override
+        public @Nullable KRenderer getRenderer() {
+            return renderer;
+        }
     }
 
     /**
      * Creates a new {@link BaseMaterialManager}.
      *
+     * @param renderer        the renderer that this material manager is associated with.
      * @param materialFactory the factory for materials.
      */
-    public BaseMaterialManager(IntFunction<M> materialFactory) {
-        this(computeDefaultBits(), materialFactory);
+    public BaseMaterialManager(KRenderer renderer, IntFunction<M> materialFactory) {
+        this(renderer, computeDefaultBits(), materialFactory);
     }
 
     /**
      * Creates a new {@link BaseMaterialManager}.
      *
+     * @param renderer        the renderer that this material manager is associated with.
      * @param defaultBits     the default bits for a material in this material manager.
      * @param materialFactory the factory for materials.
      */
-    protected BaseMaterialManager(int defaultBits, IntFunction<M> materialFactory) {
+    protected BaseMaterialManager(KRenderer renderer, int defaultBits, IntFunction<M> materialFactory) {
+        this.renderer = renderer;
         this.defaultBits = defaultBits;
 
         for (int i = 0; i < MATERIAL_COUNT; i++) {
@@ -160,5 +174,10 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
         } finally {
             materialsByIdLock.writeLock().unlock();
         }
+    }
+
+    @Override
+    public @Nullable KRenderer getRenderer() {
+        return renderer;
     }
 }

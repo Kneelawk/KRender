@@ -3,15 +3,18 @@ package com.kneelawk.krender.engine.backend.frapi.impl.material;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.MaterialFinder;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.MaterialView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.frapi.api.ConversionUtils;
+import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
 public class FRAPIMaterialFinder implements com.kneelawk.krender.engine.api.material.MaterialFinder {
     private static final ThreadLocal<FRAPIMaterialFinder> FINDER_POOL =
@@ -102,5 +105,10 @@ public class FRAPIMaterialFinder implements com.kneelawk.krender.engine.api.mate
     @Override
     public TriState getAmbientOcclusionMode() {
         return ConversionUtils.toKRender(finder.ambientOcclusion());
+    }
+
+    @Override
+    public @Nullable KRenderer getRenderer() {
+        return FRAPIRenderer.INSTNACE;
     }
 }

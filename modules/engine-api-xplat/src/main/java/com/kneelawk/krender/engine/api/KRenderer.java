@@ -2,6 +2,7 @@ package com.kneelawk.krender.engine.api;
 
 import org.jetbrains.annotations.Nullable;
 
+import com.kneelawk.krender.engine.api.backend.KRenderBackend;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.impl.backend.BackendManager;
@@ -57,4 +58,11 @@ public interface KRenderer {
      * {@return this backend's material manager}
      */
     MaterialManager materialManager();
+
+    /**
+     * {@return the name of the backend that supplied this renderer}
+     *
+     * @see KRenderBackend#getName()
+     */
+    String getName();
 }

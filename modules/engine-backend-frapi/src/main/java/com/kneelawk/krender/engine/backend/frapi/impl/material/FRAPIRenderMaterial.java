@@ -3,12 +3,16 @@ package com.kneelawk.krender.engine.backend.frapi.impl.material;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.jetbrains.annotations.Nullable;
+
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.backend.frapi.api.ConversionUtils;
+import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
 public final class FRAPIRenderMaterial
     implements com.kneelawk.krender.engine.api.material.RenderMaterial {
@@ -47,5 +51,10 @@ public final class FRAPIRenderMaterial
     @Override
     public TriState getAmbientOcclusionMode() {
         return ConversionUtils.toKRender(material.ambientOcclusion());
+    }
+
+    @Override
+    public @Nullable KRenderer getRenderer() {
+        return FRAPIRenderer.INSTNACE;
     }
 }

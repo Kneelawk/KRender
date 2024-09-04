@@ -1,5 +1,6 @@
 package com.kneelawk.krender.engine.api.material;
 
+import com.kneelawk.krender.engine.api.RendererDependent;
 import com.kneelawk.krender.engine.api.TriState;
 
 /**
@@ -7,7 +8,7 @@ import com.kneelawk.krender.engine.api.TriState;
  * <p>
  * Values returned may not match those set, but should be more accurate to the material actually rendered.
  */
-public interface MaterialView {
+public interface MaterialView extends RendererDependent {
     /**
      * {@return this material's blend mode}
      */

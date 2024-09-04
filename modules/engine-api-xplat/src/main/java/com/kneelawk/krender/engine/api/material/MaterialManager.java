@@ -4,10 +4,12 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
 
+import com.kneelawk.krender.engine.api.RendererDependent;
+
 /**
  * Manages materials, material lookups, material caching, and material finding.
  */
-public interface MaterialManager {
+public interface MaterialManager extends RendererDependent {
 
     /**
      * This gets or creates a material finder for this backend.

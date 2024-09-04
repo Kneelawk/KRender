@@ -13,7 +13,7 @@ public class FRAPIBackend implements KRenderBackend {
 
     @Override
     public @NotNull String getName() {
-        return "frapi";
+        return KRBFRConstants.BACKEND_ID;
     }
 
     @Override
