@@ -242,6 +242,7 @@ public interface QuadView {
      *
      * @param sprite the sprite to use in the baked quad.
      * @return the vanilla representation of this quad.
+     * @see com.kneelawk.krender.engine.api.texture.SpriteFinder
      */
     BakedQuad toBakedQuad(TextureAtlasSprite sprite);
 }
