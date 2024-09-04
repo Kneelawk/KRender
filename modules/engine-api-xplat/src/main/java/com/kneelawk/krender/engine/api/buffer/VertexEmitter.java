@@ -6,8 +6,6 @@ import org.joml.Vector3f;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
-import net.minecraft.client.renderer.RenderType;
-
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 
 /**
@@ -21,16 +19,6 @@ public interface VertexEmitter extends VertexConsumer, QuadSink {
      * @return this vertex emitter.
      */
     VertexEmitter setDefaultMaterial(RenderMaterial material);
-
-    /**
-     * Sets the default material for this vertex emitter to a material best-effort equivalent to the given render-type.
-     * <p>
-     * Note: it is usually preferred to use the platform's converter to directly convert the render-type to a render-material.
-     *
-     * @param renderType the material to make default.
-     * @return this vertex emitter.
-     */
-    VertexEmitter setDefaultMaterial(RenderType renderType);
 
     /**
      * Sets the current material.

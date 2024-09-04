@@ -1,6 +1,9 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl;
 
+import org.jetbrains.annotations.NotNull;
+
 import com.kneelawk.krender.engine.api.KRenderer;
+import com.kneelawk.krender.engine.api.convert.TypeConverter;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.neoforge.impl.material.NFRenderMaterial;
@@ -13,17 +16,22 @@ public class NFRenderer implements KRenderer {
         new BaseMaterialManager<>(INSTANCE, NFRenderMaterial::new);
 
     @Override
-    public BakedModelFactory bakedModelFactory() {
+    public @NotNull BakedModelFactory bakedModelFactory() {
         return NFBakedModelFactory.INSTANCE;
     }
 
     @Override
-    public MaterialManager materialManager() {
+    public @NotNull MaterialManager materialManager() {
         return MATERIAL_MANAGER;
     }
 
     @Override
-    public String getName() {
+    public @NotNull TypeConverter converter() {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public @NotNull String getName() {
         return KRBNFConstants.BACKEND_ID;
     }
 }

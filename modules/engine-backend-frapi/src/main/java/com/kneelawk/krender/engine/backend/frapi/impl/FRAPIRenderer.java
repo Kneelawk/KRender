@@ -3,6 +3,7 @@ package com.kneelawk.krender.engine.backend.frapi.impl;
 import org.jetbrains.annotations.NotNull;
 
 import com.kneelawk.krender.engine.api.KRenderer;
+import com.kneelawk.krender.engine.api.convert.TypeConverter;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.frapi.impl.material.FRAPIMaterialManager;
@@ -22,7 +23,12 @@ public class FRAPIRenderer implements KRenderer {
     }
 
     @Override
-    public String getName() {
+    public @NotNull TypeConverter converter() {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    @Override
+    public @NotNull String getName() {
         return KRBFRConstants.BACKEND_ID;
     }
 }
