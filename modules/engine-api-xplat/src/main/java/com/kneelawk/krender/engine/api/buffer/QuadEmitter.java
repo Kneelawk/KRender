@@ -18,6 +18,46 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
  */
 public interface QuadEmitter extends QuadView, QuadSink {
     /**
+     * No-rotation bake options.
+     */
+    int BAKE_ROTATE_NONE = 0;
+
+    /**
+     * Rotate the texture clockwise by 90 degrees.
+     */
+    int BAKE_ROTATE_90 = 1;
+
+    /**
+     * Rotate the texture clockwise by 180 degrees.
+     */
+    int BAKE_ROTATE_180 = 2;
+
+    /**
+     * Rotate the texture clockwise by 270 degrees.
+     */
+    int BAKE_ROTATE_270 = 3;
+
+    /**
+     * Derive texture coordinates based on vertex position.
+     */
+    int BAKE_LOCK_UV = 4;
+
+    /**
+     * Flip U texture coordinates.
+     */
+    int BAKE_FLIP_U = 8;
+
+    /**
+     * Flip V texture coordinates.
+     */
+    int BAKE_FLIP_V = 16;
+
+    /**
+     * Indicates that UV values are 0-1 instead of 0-16 like they would be normally.
+     */
+    int BAKE_NORMALIZED = 32;
+
+    /**
      * Finishes one quad, emitting it to the backend and moving on to the next quad.
      *
      * @return this quad emitter.
