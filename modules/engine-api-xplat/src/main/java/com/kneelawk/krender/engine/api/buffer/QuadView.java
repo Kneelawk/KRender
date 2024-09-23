@@ -194,7 +194,7 @@ public interface QuadView extends RendererDependent {
     /**
      * {@return the current quad's cull face}
      */
-    @Nullable Direction fetCullFace();
+    @Nullable Direction getCullFace();
 
     /**
      * Gets the quad's lighting face.

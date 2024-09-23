@@ -20,14 +20,14 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
  *
  * @param <M> the type of {@link RenderMaterial} implementation this uses.
  */
-public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager {
+public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager, BaseMaterialManagerApi<M> {
     /**
      * The maximum number of materials possible.
      */
-    public static final int MATERIAL_COUNT = 1 << BaseMaterialView.TOTAL_BIT_LENGTH;
+    public static final int MATERIAL_COUNT = 1 << BaseMaterialViewApi.TOTAL_BIT_LENGTH;
 
     /**
-     * The renderer that his material manager is associated with.
+     * The renderer that this material manager is associated with.
      */
     protected final KRenderer renderer;
 
@@ -107,7 +107,7 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
         this.defaultBits = defaultBits;
 
         for (int i = 0; i < MATERIAL_COUNT; i++) {
-            if (BaseMaterialView.isValid(i)) {
+            if (BaseMaterialViewApi.isValid(i)) {
                 materials[i] = materialFactory.apply(i);
             }
         }
@@ -120,9 +120,15 @@ public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> im
     private static int computeDefaultBits() {
         int defaultBits = 0;
 
-        defaultBits = defaultBits | (TriState.DEFAULT.ordinal() << BaseMaterialView.AO_BIT_OFFSET);
+        defaultBits = defaultBits | (TriState.DEFAULT.ordinal() << BaseMaterialViewApi.AO_BIT_OFFSET);
 
         return defaultBits;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public M getMaterialByBits(int bits) {
+        return (M) materials[bits];
     }
 
     @Override
