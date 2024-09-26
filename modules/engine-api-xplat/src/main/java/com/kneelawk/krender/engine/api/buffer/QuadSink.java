@@ -61,4 +61,10 @@ public interface QuadSink extends MultiBufferSource, RendererDependent {
     default VertexConsumer getBuffer(RenderType renderType) {
         return asVertexEmitter().setDefaultMaterial(getRendererOrDefault().converter().toRenderMaterial(renderType));
     }
+
+    /**
+     * If this quad sink was previously used as a vertex consumer or multi-buffer source, then this flushes the last
+     * vertex, emitting the final quad.
+     */
+    void flushVertices();
 }

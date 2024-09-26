@@ -90,11 +90,20 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setPos(int vertexIndex, float x, float y, float z) {
-        finishVertices();
+        flushVertices();
         return setPosImpl(vertexIndex, x, y, z);
     }
 
-    private @NotNull BaseQuadEmitter setPosImpl(int vertexIndex, float x, float y, float z) {
+    /**
+     * Version of {@link #setPos(int, float, float, float)} that does not flush vertices.
+     *
+     * @param vertexIndex the index of the vertex to position.
+     * @param x           the x position.
+     * @param y           the y position.
+     * @param z           the z position.
+     * @return this quad emitter.
+     */
+    protected @NotNull BaseQuadEmitter setPosImpl(int vertexIndex, float x, float y, float z) {
         final int index = baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_X;
         data[index] = Float.floatToRawIntBits(x);
         data[index + 1] = Float.floatToRawIntBits(y);
@@ -105,7 +114,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setPosByIndex(int vertexIndex, int coordinateIndex, float value) {
-        finishVertices();
+        flushVertices();
         data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_X + coordinateIndex] =
             Float.floatToRawIntBits(value);
         geometryInvalid = true;
@@ -114,22 +123,37 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setColor(int vertexIndex, int color) {
-        finishVertices();
+        flushVertices();
         return setColorImpl(vertexIndex, color);
     }
 
-    private @NotNull BaseQuadEmitter setColorImpl(int vertexIndex, int color) {
+    /**
+     * Version of {@link #setColor(int, int)} that does not flush vertices.
+     *
+     * @param vertexIndex the index of the vertex to color.
+     * @param color       the color to set.
+     * @return this quad emitter.
+     */
+    protected @NotNull BaseQuadEmitter setColorImpl(int vertexIndex, int color) {
         data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_COLOR] = color;
         return this;
     }
 
     @Override
     public QuadEmitter setUv(int vertexIndex, float u, float v) {
-        finishVertices();
+        flushVertices();
         return setUvImpl(vertexIndex, u, v);
     }
 
-    private @NotNull BaseQuadEmitter setUvImpl(int vertexIndex, float u, float v) {
+    /**
+     * Version of {@link #setUv(int, float, float)} that does not flush vertices.
+     *
+     * @param vertexIndex the index of the vertex to set the uv of.
+     * @param u           the u component.
+     * @param v           the v component.
+     * @return this quad emitter.
+     */
+    protected @NotNull BaseQuadEmitter setUvImpl(int vertexIndex, float u, float v) {
         final int index = baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_U;
         data[index] = Float.floatToRawIntBits(u);
         data[index + 1] = Float.floatToRawIntBits(v);
@@ -138,7 +162,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setUvByIndex(int vertexIndex, int coordinateIndex, float value) {
-        finishVertices();
+        flushVertices();
         data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_U + coordinateIndex] =
             Float.floatToRawIntBits(value);
         return this;
@@ -146,28 +170,44 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
-        finishVertices();
+        flushVertices();
         // TODO
         return this;
     }
 
     @Override
     public QuadEmitter setLightmap(int vertexIndex, int lightmap) {
-        finishVertices();
+        flushVertices();
         return setLightmapImpl(vertexIndex, lightmap);
     }
 
-    private @NotNull BaseQuadEmitter setLightmapImpl(int vertexIndex, int lightmap) {
+    /**
+     * Version of {@link #setLightmap(int, int)} that does not flush vertices.
+     *
+     * @param vertexIndex the index of the vertex to set the lightmap of.
+     * @param lightmap    the lightmap value to set.
+     * @return this quad emitter.
+     */
+    protected @NotNull BaseQuadEmitter setLightmapImpl(int vertexIndex, int lightmap) {
         data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_LIGHTMAP] = lightmap;
         return this;
     }
 
     @Override
     public QuadEmitter setNormal(int vertexIndex, float x, float y, float z) {
-        finishVertices();
+        flushVertices();
         return setNormalImpl(vertexIndex, x, y, z);
     }
 
+    /**
+     * Version of {@link #setNormal(int, float, float, float)} that does not flush vertices.
+     *
+     * @param vertexIndex the index of the vertex to set the normal of.
+     * @param x           the normal x component.
+     * @param y           the normal y component.
+     * @param z           the normal z component.
+     * @return this quad emitter.
+     */
     private @NotNull BaseQuadEmitter setNormalImpl(int vertexIndex, float x, float y, float z) {
         setNormal(vertexIndex);
         data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL] =
@@ -177,7 +217,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setNormalByIndex(int vertexIndex, int coordinateIndex, float value) {
-        finishVertices();
+        flushVertices();
         setNormal(vertexIndex);
         final int index = baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL;
         data[index] = NormalHelper.packNormal(data[index], value, coordinateIndex);
@@ -186,20 +226,25 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter removeNormal(int vertexIndex) {
-        finishVertices();
+        flushVertices();
         final int index = baseIndex + HEADER_BITS;
         data[index] = BaseQuadFormat.setNormalPresent(data[index], vertexIndex, false);
         return this;
     }
 
-    private void setNormal(int vertexIndex) {
+    /**
+     * Sets that the normal for the given vertex is indeed present.
+     *
+     * @param vertexIndex the index of the vertex to mark the normal as present for.
+     */
+    protected void setNormal(int vertexIndex) {
         final int index = baseIndex + HEADER_BITS;
         data[index] = BaseQuadFormat.setNormalPresent(data[index], vertexIndex, true);
     }
 
     @Override
     public QuadEmitter setCullFace(@Nullable Direction face) {
-        finishVertices();
+        flushVertices();
         final int index = baseIndex + HEADER_BITS;
         data[index] = BaseQuadFormat.setCullFace(data[index], face);
         setNominalFace(face);
@@ -208,28 +253,28 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public QuadEmitter setNominalFace(@Nullable Direction face) {
-        finishVertices();
+        flushVertices();
         nominalFace = face;
         return this;
     }
 
     @Override
     public QuadEmitter setColorIndex(int colorIndex) {
-        finishVertices();
+        flushVertices();
         data[baseIndex + HEADER_COLOR_INDEX] = colorIndex;
         return this;
     }
 
     @Override
     public QuadEmitter setTag(int tag) {
-        finishVertices();
+        flushVertices();
         data[baseIndex + HEADER_TAG] = tag;
         return this;
     }
 
     @Override
     public QuadEmitter fromVanilla(int[] quadData, int startIndex) {
-        finishVertices();
+        flushVertices();
 
         // KRender and vanilla have mostly compatible vertex formats
         System.arraycopy(quadData, startIndex, data, baseIndex + HEADER_STRIDE, VANILLA_QUAD_STRIDE);
@@ -364,7 +409,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     @Override
     public void putBulkData(PoseStack.Pose pose, BakedQuad quad, float[] brightness, float red, float green, float blue,
                             float alpha, int[] lightmap, int packedOverlay, boolean respectExistingColors) {
-        finishVertices();
+        flushVertices();
 
         // KRender and vanilla have mostly compatible vertex formats
         System.arraycopy(quad.getVertices(), 0, data, baseIndex + HEADER_STRIDE, VANILLA_QUAD_STRIDE);
@@ -418,7 +463,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     /**
      * Ensures that the previous vertex is finished and that we are in vertex-building mode.
      */
-    public void startVertex() {
+    protected void startVertex() {
         if (buildingVertex) {
             if (vertexIndex >= 3) {
                 emit();
@@ -432,7 +477,8 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     /**
      * Ensures that all vertices are finished and emitted.
      */
-    public void finishVertices() {
+    @Override
+    public void flushVertices() {
         if (buildingVertex) {
             buildingVertex = false;
             emit();
