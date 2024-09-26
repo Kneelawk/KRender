@@ -6,10 +6,10 @@ import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 
+import com.kneelawk.krender.engine.api.buffer.QuadView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManagerApi;
-import com.kneelawk.krender.engine.base.material.BaseMaterialView;
 import com.kneelawk.krender.engine.base.material.BaseMaterialViewApi;
 
 import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_BIT_COUNT;
@@ -95,6 +95,11 @@ public final class BaseQuadFormat {
     public static final int TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
 
     /**
+     * Empty vertex data.
+     */
+    public static final int[] EMPTY = new int[TOTAL_STRIDE];
+
+    /**
      * The bit offset of the cull face in the header bits.
      */
     public static final int CULL_SHIFT = 0;
@@ -148,6 +153,12 @@ public final class BaseQuadFormat {
     public static final int MATERIAL_INVERSE_MASK = ~(BaseMaterialViewApi.FULL_BIT_MASK << MATERIAL_SHIFT);
 
     static {
+        // We check that our vertices are the same size and format as vanilla's because that makes translation a lot easier
+        Preconditions.checkState(VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE,
+            "KRender Engine base vertex format (%s ints) is incompatible with vanilla vertex format (%s ints)",
+            VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
+
+        // Check that there are enough bits in the header to hold everything
         Preconditions.checkState(MATERIAL_SHIFT + BaseMaterialViewApi.TOTAL_BIT_LENGTH <= 32,
             "KRender Engine base quad format header bit count (%s) has exceeded 32 bits",
             MATERIAL_SHIFT + BaseMaterialViewApi.TOTAL_BIT_LENGTH);
@@ -262,7 +273,7 @@ public final class BaseQuadFormat {
      * @return the render material.
      */
     public static <M extends BaseMaterialViewApi & RenderMaterial> M getMaterial(int bits,
-                                                                              BaseMaterialManagerApi<M> manager) {
+                                                                                 BaseMaterialManagerApi<M> manager) {
         return manager.getMaterialByBits((bits >>> MATERIAL_SHIFT) & BaseMaterialViewApi.FULL_BIT_MASK);
     }
 

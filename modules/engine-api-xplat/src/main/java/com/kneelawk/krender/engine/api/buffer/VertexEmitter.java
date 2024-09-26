@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.buffer;
 
+import org.jetbrains.annotations.Nullable;
+
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 
@@ -28,7 +30,7 @@ public interface VertexEmitter extends VertexConsumer, QuadSink {
      * @param material the material to set.
      * @return this vertex emitter.
      */
-    VertexEmitter setMaterial(RenderMaterial material);
+    VertexEmitter setMaterial(@Nullable RenderMaterial material);
 
     @Override
     VertexEmitter addVertex(float x, float y, float z);

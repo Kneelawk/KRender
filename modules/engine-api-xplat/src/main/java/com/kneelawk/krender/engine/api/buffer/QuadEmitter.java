@@ -125,7 +125,7 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @param c3 vertex 3 color.
      * @return this quad emitter.
      */
-    default QuadEmitter setColor(int c0, int c1, int c2, int c3) {
+    default QuadEmitter setQuadColor(int c0, int c1, int c2, int c3) {
         setColor(0, c0);
         setColor(1, c1);
         setColor(2, c2);
@@ -254,6 +254,14 @@ public interface QuadEmitter extends QuadView, QuadSink {
     }
 
     /**
+     * Invalidates the normal for a given vertex on the current quad.
+     *
+     * @param vertexIndex the index of the vertex to invalidate the normal on.
+     * @return this quad emitter.
+     */
+    QuadEmitter removeNormal(int vertexIndex);
+
+    /**
      * Sets the cull face for this quad.
      *
      * @param face the direction that this quad will be culled from if any.
@@ -270,6 +278,14 @@ public interface QuadEmitter extends QuadView, QuadSink {
     QuadEmitter setNominalFace(@Nullable Direction face);
 
     /**
+     * Sets this quad emitter's default material for new quads.
+     *
+     * @param material the emitter's new default material.
+     * @return this quad emitter.
+     */
+    QuadEmitter setDefaultMaterial(RenderMaterial material);
+
+    /**
      * Sets this quad's material.
      * <p>
      * If no material is set, then this quad will use the default material.
@@ -277,7 +293,7 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @param material the new material for this quad.
      * @return this quad emitter.
      */
-    QuadEmitter setMaterial(RenderMaterial material);
+    QuadEmitter setMaterial(@Nullable RenderMaterial material);
 
     /**
      * Sets this quad's color index.

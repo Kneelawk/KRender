@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
@@ -13,11 +14,17 @@ import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.api.util.ColorUtil;
+import com.kneelawk.krender.engine.base.BaseKRendererApi;
 
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_BITS;
+import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_COLOR_INDEX;
+import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_FACE_NORMAL;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_STRIDE;
+import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_TAG;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_COLOR;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_LIGHTMAP;
+import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_NORMAL;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_STRIDE;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_U;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_V;
@@ -35,7 +42,7 @@ public class BaseQuadView implements QuadView {
     /**
      * The renderer associated with this quad view.
      */
-    protected final @Nullable KRenderer renderer;
+    protected final BaseKRendererApi renderer;
 
     /**
      * Header and quad data.
@@ -47,11 +54,106 @@ public class BaseQuadView implements QuadView {
      */
     protected int baseIndex = 0;
 
-    public BaseQuadView(@Nullable KRenderer renderer) {this.renderer = renderer;}
+    /**
+     * The current nominal face of this quad.
+     */
+    protected @Nullable Direction nominalFace;
+    /**
+     * Whether the current quad's geometry bits are incorrect.
+     */
+    protected boolean geometryInvalid = true;
+    /**
+     * The calculated, cached face normal.
+     */
+    protected final Vector3f faceNormal = new Vector3f();
+
+    /**
+     * Creates a new base quad view using the given KRenderer for things like material lookup.
+     *
+     * @param renderer the KRenderer to associate this quad view with.
+     */
+    public BaseQuadView(BaseKRendererApi renderer) {
+        this.renderer = renderer;
+    }
+
+    /**
+     * Loads the given data buffer into this quad view.
+     *
+     * @param data      the new data buffer.
+     * @param baseIndex the index of the first int of the quad in the buffer.
+     */
+    public void load(int[] data, int baseIndex) {
+        this.data = data;
+        this.baseIndex = baseIndex;
+        load();
+    }
+
+    /**
+     * Loads the cache from the data buffer.
+     */
+    public void load() {
+        geometryInvalid = false;
+        nominalFace = getLightFace();
+        NormalHelper.unpackNormal(getPackedFaceNormal(), faceNormal);
+    }
+
+    /**
+     * Calculates the cache based on existing data and writes it to the data buffer.
+     */
+    protected void computeGeometry() {
+        if (geometryInvalid) {
+            geometryInvalid = false;
+
+            NormalHelper.computeFaceNormal(faceNormal, this);
+            data[baseIndex + HEADER_FACE_NORMAL] = NormalHelper.packNormal(faceNormal);
+
+            data[baseIndex + HEADER_BITS] =
+                BaseQuadFormat.setLightFace(data[baseIndex + HEADER_BITS], GeometryHelper.computeLightFace(this));
+
+            data[baseIndex + HEADER_BITS] =
+                BaseQuadFormat.setGeometryFlags(data[baseIndex + HEADER_BITS],
+                    GeometryHelper.computeGeometryFlags(this));
+        }
+    }
 
     @Override
     public void copyTo(QuadEmitter target) {
-        // TODO
+        computeGeometry();
+
+        if (target instanceof BaseQuadEmitter quad) {
+            System.arraycopy(data, baseIndex, quad.data, quad.baseIndex, BaseQuadFormat.TOTAL_STRIDE);
+            quad.faceNormal.set(faceNormal);
+            quad.nominalFace = nominalFace;
+            quad.geometryInvalid = false;
+        } else {
+            Vector3f vec3 = new Vector3f();
+            Vector2f vec2 = new Vector2f();
+
+            target.setCullFace(getCullFace());
+            target.setNominalFace(getNominalFace());
+            target.setMaterial(getMaterial());
+            target.setColorIndex(getColorIndex());
+            target.setTag(getTag());
+
+            for (int i = 0; i < 4; i++) {
+                copyPos(i, vec3);
+                target.setPos(i, vec3);
+
+                target.setColor(i, getColor(i));
+
+                copyUv(i, vec2);
+                target.setUv(i, vec2);
+
+                target.setLightmap(i, getLightmap(i));
+
+                if (hasNormal(i)) {
+                    copyNormal(i, vec3);
+                    target.setNormal(i, vec3);
+                } else {
+                    target.removeNormal(i);
+                }
+            }
+        }
     }
 
     @Override
@@ -71,7 +173,8 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public float getPosByIndex(int vertexIndex, int coordinateIndex) {
-        return Float.intBitsToFloat(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_X + coordinateIndex]);
+        return Float.intBitsToFloat(
+            data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_X + coordinateIndex]);
     }
 
     @Override
@@ -103,7 +206,8 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public float getUvByIndex(int vertexIndex, int coordinateIndex) {
-        return Float.intBitsToFloat(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_U + coordinateIndex]);
+        return Float.intBitsToFloat(
+            data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_U + coordinateIndex]);
     }
 
     @Override
@@ -129,72 +233,119 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public float getNormalX(int vertexIndex) {
-        return 0;
+        return hasNormal(vertexIndex) ?
+            NormalHelper.unpackNormalX(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL]) :
+            Float.NaN;
     }
 
     @Override
     public float getNormalY(int vertexIndex) {
-        return 0;
+        return hasNormal(vertexIndex) ?
+            NormalHelper.unpackNormalY(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL]) :
+            Float.NaN;
     }
 
     @Override
     public float getNormalZ(int vertexIndex) {
-        return 0;
+        return hasNormal(vertexIndex) ?
+            NormalHelper.unpackNormalZ(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL]) :
+            Float.NaN;
     }
 
     @Override
     public float getNormalByIndex(int vertexIndex, int coordinateIndex) {
-        return 0;
+        return hasNormal(vertexIndex) ?
+            NormalHelper.unpackNormal(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL],
+                coordinateIndex) : Float.NaN;
     }
 
     @Override
     public @Nullable Vector3f copyNormal(int vertexIndex, @Nullable Vector3f target) {
-        return null;
+        if (!hasNormal(vertexIndex)) return null;
+
+        if (target == null) {
+            target = new Vector3f();
+        }
+
+        NormalHelper.unpackNormal(data[baseIndex + HEADER_STRIDE + vertexIndex * VERTEX_STRIDE + VERTEX_NORMAL],
+            target);
+
+        return target;
     }
 
     @Override
     public @Nullable Direction getCullFace() {
-        return null;
+        return BaseQuadFormat.getCullFace(data[baseIndex + HEADER_BITS]);
     }
 
     @Override
     public Direction getLightFace() {
-        return null;
+        return BaseQuadFormat.getLightFace(data[baseIndex + HEADER_BITS]);
     }
 
     @Override
     public @Nullable Direction getNominalFace() {
-        return null;
+        return nominalFace;
     }
 
     @Override
     public Vector3f getFaceNormal() {
-        return null;
+        computeGeometry();
+        return faceNormal;
+    }
+
+    /**
+     * {@return the packed face normal of this quad}
+     */
+    public int getPackedFaceNormal() {
+        computeGeometry();
+        return data[baseIndex + HEADER_FACE_NORMAL];
     }
 
     @Override
     public RenderMaterial getMaterial() {
-        return null;
+        return BaseQuadFormat.getMaterial(data[baseIndex + HEADER_BITS], renderer.materialManager());
     }
 
     @Override
     public int getColorIndex() {
-        return 0;
+        return data[baseIndex + HEADER_COLOR_INDEX];
     }
 
     @Override
     public int getTag() {
-        return 0;
+        return data[baseIndex + HEADER_TAG];
     }
 
     @Override
     public void toVanilla(int[] target, int targetIndex) {
-
+        toVanilla(target, targetIndex, getMaterial());
     }
 
     @Override
     public BakedQuad toBakedQuad(TextureAtlasSprite sprite) {
-        return null;
+        int[] quad = new int[VANILLA_QUAD_STRIDE];
+        final RenderMaterial material = getMaterial();
+
+        toVanilla(quad, 0, material);
+        int tintIndex = material.isColorIndexDisabled() ? -1 : getColorIndex();
+        boolean shade = !material.isDiffuseDisabled();
+        return new BakedQuad(quad, tintIndex, getLightFace(), sprite, shade);
+    }
+
+    private void toVanilla(int[] target, int targetIndex, RenderMaterial material) {
+        // we use roughly the same vertex format vanilla uses
+        System.arraycopy(data, baseIndex + HEADER_STRIDE, target, targetIndex, VANILLA_QUAD_STRIDE);
+
+        for (int i = 0; i < 4; i++) {
+            // convert colors 
+            target[i + VERTEX_COLOR] = ColorUtil.toVanilla(target[i + VERTEX_COLOR]);
+
+            // handle emissives
+            if (material.isEmissive()) {
+                target[i + VERTEX_LIGHTMAP] = LightTexture.FULL_BRIGHT;
+            }
+        }
     }
 
     @Override
