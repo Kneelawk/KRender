@@ -6,6 +6,8 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
 /**
  * Exposes base-specific material manager api that managers should implement in order to be compatible with other base
  * implementations.
+ *
+ * @param <M> the type of render material managed by this material manager.
  */
 public interface BaseMaterialManagerApi<M extends BaseMaterialViewApi & RenderMaterial> extends MaterialManager {
     /**

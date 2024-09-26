@@ -55,6 +55,9 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
      */
     protected boolean buildingVertex = false;
 
+    /**
+     * The default material that is applied for every new quad.
+     */
     protected RenderMaterial defaultMaterial = renderer.materialManager().defaultMaterial();
 
     /**
