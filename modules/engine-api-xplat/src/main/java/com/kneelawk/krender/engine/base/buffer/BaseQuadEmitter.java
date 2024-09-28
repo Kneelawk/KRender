@@ -174,7 +174,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     @Override
     public QuadEmitter spriteBake(TextureAtlasSprite sprite, int bakeFlags) {
         flushVertices();
-        // TODO
+        SpriteHelper.bakeSprite(this, sprite, bakeFlags);
         return this;
     }
 

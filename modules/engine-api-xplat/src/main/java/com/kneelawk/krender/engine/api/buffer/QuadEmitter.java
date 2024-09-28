@@ -53,9 +53,9 @@ public interface QuadEmitter extends QuadView, QuadSink {
     int BAKE_FLIP_V = 16;
 
     /**
-     * Indicates that UV values are 0-1 instead of 0-16 like they would be normally.
+     * Indicates that UV values are 0-16 like they are in model jsons instead of 0-1 like they are when using sprites directly.
      */
-    int BAKE_NORMALIZED = 32;
+    int BAKE_DENORMALIZED = 32;
 
     /**
      * Finishes one quad, emitting it to the backend and moving on to the next quad.
@@ -177,6 +177,11 @@ public interface QuadEmitter extends QuadView, QuadSink {
 
     /**
      * Assigns atlas-based texture coordinates to the current quad.
+     * <p>
+     * Unless {@link #BAKE_LOCK_UV} is passed to {@code bakeFlags}, then the new coordinates within the sprite will be
+     * based on the previous uv coordinates for this quad. If {@link #BAKE_DENORMALIZED} is passed to {@code bakeFlags},
+     * then the quad's previous uv coordinates are expected to be denormalized (0.0-16.0), like they are in model json
+     * files. Otherwise, uv coordinates are expected to be normalized (0.0-1.0).
      *
      * @param sprite    the sprite to bake the texture coordinates of.
      * @param bakeFlags the bake flags that control locking, rotation, interpolation, etc.

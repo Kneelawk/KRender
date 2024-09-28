@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.buffer;
 
+import org.jetbrains.annotations.UnknownNullability;
+
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,7 +33,7 @@ public interface QuadSink extends MultiBufferSource, RendererDependent {
      * @param <C>       the type of context to be passed to the transform.
      * @return the per-quad model-data emitter that transforms quads.
      */
-    <C> PooledQuadEmitter withTransformQuad(C context, QuadTransform<C> transform);
+    <C> PooledQuadEmitter withTransformQuad(@UnknownNullability C context, QuadTransform<C> transform);
 
     /**
      * Gets a view of this quad sink as a per-vertex model-data emitter that transforms its quads with the given transform.
@@ -41,7 +43,7 @@ public interface QuadSink extends MultiBufferSource, RendererDependent {
      * @param <C>       the type of context to be passed to the transform.
      * @return the per-vertex model-data emitter that transforms quads.
      */
-    <C> PooledVertexEmitter withTransformVertex(C context, QuadTransform<C> transform);
+    <C> PooledVertexEmitter withTransformVertex(@UnknownNullability C context, QuadTransform<C> transform);
 
     /**
      * Close this quad sink.

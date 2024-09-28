@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.buffer;
 
+import org.jetbrains.annotations.UnknownNullability;
+
 /**
  * Used to transform quads as they are being emitted.
  *
@@ -18,5 +20,5 @@ public interface QuadTransform<C> {
      * @param input   the quad view to copy the quad from.
      * @param output  the quad emitter to copy the quad to.
      */
-    void transform(C context, QuadView input, QuadEmitter output);
+    void transform(@UnknownNullability C context, QuadView input, QuadEmitter output);
 }
