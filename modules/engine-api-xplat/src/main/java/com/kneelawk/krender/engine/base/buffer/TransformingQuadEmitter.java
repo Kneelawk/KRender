@@ -48,6 +48,14 @@ public class TransformingQuadEmitter extends BaseQuadEmitter implements PooledQu
         this.transformStack = transformStack;
     }
 
+    /**
+     * Prepares this transforming quad emitter for use in a transform stack.
+     *
+     * @param context   the context to pass to the quad transform.
+     * @param transform the quad transform itself.
+     * @param output    the quad emitter to emit finished quads to.
+     * @return this quad emitter.
+     */
     public TransformingQuadEmitter prepare(@UnknownNullability Object context, QuadTransform<?> transform,
                                            QuadEmitter output) {
         clear();
@@ -78,13 +86,11 @@ public class TransformingQuadEmitter extends BaseQuadEmitter implements PooledQu
     }
 
     @Override
-    @SuppressWarnings("unchecked")
-    public QuadEmitter emit() {
+    public void emitDirectly() {
         Objects.requireNonNull(transform, "This TransformingQuadEmitter has not been prepared!");
         Objects.requireNonNull(output, "This TransformingQuadEmitter has not been prepared!");
 
         ((QuadTransform<Object>) transform).transform(context, this, output);
-        return this;
     }
 
     @Override

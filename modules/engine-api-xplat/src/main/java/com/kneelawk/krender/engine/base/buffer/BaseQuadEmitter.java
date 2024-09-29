@@ -70,6 +70,19 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     }
 
     /**
+     * Initializes this quad emitter to use the given array, but makes no assumptions about the validity of any data
+     * existing in the buffer, unlike {@link #load(int[], int)}.
+     *
+     * @param data      the new buffer to use.
+     * @param baseIndex the new base index to use.
+     */
+    public void begin(int[] data, int baseIndex) {
+        this.data = data;
+        this.baseIndex = baseIndex;
+        clear();
+    }
+
+    /**
      * Resets the quad data.
      */
     public void clear() {
@@ -84,11 +97,31 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     }
 
     /**
-     * Call before emitting.
+     * Called by {@link #emit()}. This is where implementations should handle the emitted geometry.
+     * <p>
+     * Note, geometry flags should be valid when this is called.
      */
-    public void complete() {
-        computeGeometry();
+    public abstract void emitDirectly();
+
+    @Override
+    public QuadEmitter emit() {
+        buildingVertex = false;
         vertexIndex = 0;
+        computeGeometry();
+        emitDirectly();
+        clear();
+        return this;
+    }
+
+    /**
+     * Directly copies a quad's data to this emitter's buffer.
+     *
+     * @param data      the buffer to copy from.
+     * @param baseIndex the position within the buffer to start copying.
+     */
+    public void copyFrom(int[] data, int baseIndex) {
+        System.arraycopy(data, baseIndex, this.data, this.baseIndex, TOTAL_STRIDE);
+        load();
     }
 
     @Override
@@ -483,7 +516,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     @Override
     public void flushVertices() {
         if (buildingVertex) {
-            buildingVertex = false;
+            // buildingVertex is reset by emit
             emit();
         }
     }

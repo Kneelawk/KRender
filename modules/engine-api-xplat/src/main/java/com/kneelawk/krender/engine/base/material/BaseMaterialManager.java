@@ -20,7 +20,7 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
  *
  * @param <M> the type of {@link RenderMaterial} implementation this uses.
  */
-public class BaseMaterialManager<M extends BaseMaterialView & RenderMaterial> implements MaterialManager, BaseMaterialManagerApi<M> {
+public class BaseMaterialManager<M extends BaseMaterialViewApi & RenderMaterial> implements MaterialManager, BaseMaterialManagerApi<M> {
     /**
      * The maximum number of materials possible.
      */

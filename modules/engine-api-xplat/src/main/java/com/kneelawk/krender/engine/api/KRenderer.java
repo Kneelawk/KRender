@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import com.kneelawk.krender.engine.api.backend.KRenderBackend;
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
+import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.impl.backend.BackendManager;
 
@@ -49,11 +50,14 @@ public interface KRenderer {
     }
 
     /**
-     * This gets or creates a baked model factory for this backend.
-     *
-     * @return the requested baked model factory.
+     * {@return a baked model factory associated with this backend}
      */
     BakedModelFactory bakedModelFactory();
+
+    /**
+     * {@return a mesh builder for meshes associated with this backend}
+     */
+    MeshBuilder meshBuilder();
 
     /**
      * {@return this backend's material manager}

@@ -78,6 +78,8 @@ public class BaseQuadView implements QuadView {
 
     /**
      * Loads the given data buffer into this quad view.
+     * <p>
+     * This assumes that the data buffer contains valid geometry flags and that they do not need to be recalculated.
      *
      * @param data      the new data buffer.
      * @param baseIndex the index of the first int of the quad in the buffer.
