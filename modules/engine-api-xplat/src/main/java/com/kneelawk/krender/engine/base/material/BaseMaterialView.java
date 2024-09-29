@@ -1,5 +1,9 @@
 package com.kneelawk.krender.engine.base.material;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.renderer.RenderType;
+
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.MaterialView;
@@ -50,5 +54,10 @@ public abstract class BaseMaterialView implements MaterialView, BaseMaterialView
     @Override
     public TriState getAmbientOcclusionMode() {
         return TRI_STATES[(bits & AO_MASK) >>> AO_BIT_OFFSET];
+    }
+
+    @Override
+    public @Nullable RenderType toVanilla() {
+        return getBlendMode().blockRenderType;
     }
 }

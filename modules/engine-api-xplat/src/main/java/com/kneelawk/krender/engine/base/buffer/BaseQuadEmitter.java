@@ -5,6 +5,8 @@ import org.jetbrains.annotations.Nullable;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
+import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 
@@ -14,6 +16,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
+import com.kneelawk.krender.engine.api.buffer.QuadView;
 import com.kneelawk.krender.engine.api.buffer.VertexEmitter;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.util.ColorUtil;
@@ -122,6 +125,47 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     public void copyFrom(int[] data, int baseIndex) {
         System.arraycopy(data, baseIndex, this.data, this.baseIndex, TOTAL_STRIDE);
         load();
+    }
+
+    /**
+     * Equivalent to {@link #copyTo(QuadEmitter)} except that it puts the onus of copying on this quad emitter instead
+     * of on the quad view being copied from.
+     *
+     * @param quad the quad view to copy from.
+     */
+    public void copyFrom(QuadView quad) {
+        if (quad instanceof BaseQuadView base) {
+            base.computeGeometry();
+            load(base.data, base.baseIndex);
+        } else {
+            Vector3f vec3 = new Vector3f();
+            Vector2f vec2 = new Vector2f();
+
+            setCullFace(quad.getCullFace());
+            setNominalFace(quad.getNominalFace());
+            setMaterial(renderer.converter().toAssociated(quad.getMaterial()));
+            setColorIndex(quad.getColorIndex());
+            setTag(quad.getTag());
+
+            for (int i = 0; i < 4; i++) {
+                quad.copyPos(i, vec3);
+                setPos(i, vec3);
+
+                setColor(i, quad.getColor(i));
+
+                quad.copyUv(i, vec2);
+                setUv(i, vec2);
+
+                setLightmap(i, quad.getLightmap(i));
+
+                if (quad.hasNormal(i)) {
+                    quad.copyNormal(i, vec3);
+                    setNormal(i, vec3);
+                } else {
+                    removeNormal(i);
+                }
+            }
+        }
     }
 
     @Override

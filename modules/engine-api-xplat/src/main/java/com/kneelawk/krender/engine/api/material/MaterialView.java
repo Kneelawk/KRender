@@ -1,5 +1,9 @@
 package com.kneelawk.krender.engine.api.material;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.renderer.RenderType;
+
 import com.kneelawk.krender.engine.api.RendererDependent;
 import com.kneelawk.krender.engine.api.TriState;
 
@@ -35,4 +39,11 @@ public interface MaterialView extends RendererDependent {
      * {@return whether ambient occlusion is enabled}
      */
     TriState getAmbientOcclusionMode();
+
+    /**
+     * Makes a best-effort attempt to convert this material view to a {@link RenderType}.
+     *
+     * @return the vanilla render type closest to this material if any.
+     */
+    @Nullable RenderType toVanilla();
 }

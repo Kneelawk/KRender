@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.material;
 
+import net.minecraft.client.renderer.RenderType;
+
 import com.kneelawk.krender.engine.api.TriState;
 
 /**
@@ -67,4 +69,12 @@ public interface MaterialFinder extends MaterialView {
      * @return this material finder.
      */
     MaterialFinder copyFrom(MaterialView material);
+
+    /**
+     * Makes a best-effort attempt to copy material information from a {@link RenderType}.
+     *
+     * @param type the render type to copy material information from.
+     * @return this material finder.
+     */
+    MaterialFinder fromVanilla(RenderType type);
 }

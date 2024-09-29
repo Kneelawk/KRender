@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.base.material;
 
+import net.minecraft.client.renderer.RenderType;
+
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
@@ -66,6 +68,22 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
                 .setEmissive(material.isEmissive()).setDiffuseDisabled(material.isDiffuseDisabled())
                 .setAmbientOcclusionMode(material.getAmbientOcclusionMode());
         }
+        return this;
+    }
+
+    @Override
+    public MaterialFinder fromVanilla(RenderType type) {
+        clear();
+        if (type == RenderType.solid()) {
+            setBlendMode(BlendMode.SOLID);
+        } else if (type == RenderType.cutout()) {
+            setBlendMode(BlendMode.CUTOUT);
+        } else if (type == RenderType.cutoutMipped()) {
+            setBlendMode(BlendMode.CUTOUT_MIPPED);
+        } else if (type == RenderType.translucent()) {
+            setBlendMode(BlendMode.TRANSLUCENT);
+        }
+
         return this;
     }
 }

@@ -133,7 +133,7 @@ public class BaseQuadView implements QuadView {
 
             target.setCullFace(getCullFace());
             target.setNominalFace(getNominalFace());
-            target.setMaterial(getMaterial());
+            target.setMaterial(target.getRendererOrDefault().converter().toAssociated(getMaterial()));
             target.setColorIndex(getColorIndex());
             target.setTag(getTag());
 
