@@ -2,7 +2,8 @@ package com.kneelawk.krender.engine.impl.backend;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Set;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import com.google.gson.Gson;
 
@@ -18,18 +19,16 @@ public class BackendConfig {
 
     private static BackendConfig instance;
 
-    public boolean keepCurrentBackend;
-    public String defaultBackend;
-    public String[] __presentBackends;
+    public Map<String, Integer> backendPriorities;
 
-    public static String getDefaultBackend(String bestBackend, Set<String> presentBackends) {
-        load(bestBackend, presentBackends);
-        return instance.defaultBackend;
+    public static Map<String, Integer> getDefaultBackend(Map<String, Integer> priorities) {
+        load(priorities);
+        return instance.backendPriorities;
     }
 
-    public static void load(String bestBackend, Set<String> presentBackends) {
+    public static void load(Map<String, Integer> priorities) {
         BackendConfig config = loadImpl();
-        initImpl(config, bestBackend, presentBackends);
+        initImpl(config, priorities);
         saveImpl(config);
         instance = config;
     }
@@ -39,21 +38,26 @@ public class BackendConfig {
     }
 
     private static BackendConfig loadImpl() {
-        try {
-            return gson.fromJson(Files.newBufferedReader(CONFIG_FILE), BackendConfig.class);
-        } catch (Exception e) {
-            KRELog.LOG.warn("Error loading KRender Backend config", e);
+        if (Files.exists(CONFIG_FILE)) {
+            try {
+                return gson.fromJson(Files.newBufferedReader(CONFIG_FILE), BackendConfig.class);
+            } catch (Exception e) {
+                KRELog.LOG.warn("Error loading KRender Backend config", e);
+                return new BackendConfig();
+            }
+        } else {
             return new BackendConfig();
         }
     }
 
-    private static void initImpl(BackendConfig initTo, String bestBackend, Set<String> presentBackends) {
-        if (!initTo.keepCurrentBackend || initTo.defaultBackend == null) {
-            initTo.defaultBackend = bestBackend;
-        } else if (presentBackends.contains(initTo.defaultBackend)) {
-            initTo.defaultBackend = bestBackend;
+    private static void initImpl(BackendConfig initTo, Map<String, Integer> priorities) {
+        if (initTo.backendPriorities == null) {
+            initTo.backendPriorities = new LinkedHashMap<>(priorities);
+        } else {
+            for (var entry : priorities.entrySet()) {
+                initTo.backendPriorities.putIfAbsent(entry.getKey(), entry.getValue());
+            }
         }
-        initTo.__presentBackends = presentBackends.toArray(String[]::new);
     }
 
     private static void saveImpl(BackendConfig toSave) {

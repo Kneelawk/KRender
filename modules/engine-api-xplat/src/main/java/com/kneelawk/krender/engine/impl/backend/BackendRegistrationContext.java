@@ -5,16 +5,12 @@ import java.util.Map;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.backend.BackendRegistrationCallback;
 import com.kneelawk.krender.engine.api.backend.KRenderBackend;
 
 public class BackendRegistrationContext implements BackendRegistrationCallback.Context {
-    private final Map<String, KRenderer> renderers = new LinkedHashMap<>();
-    private @Nullable String best = null;
-    private int bestPriority = Integer.MAX_VALUE;
+    private final Map<String, KRenderBackend> renderers = new LinkedHashMap<>();
 
     @Override
     public void registerBackend(@NotNull KRenderBackend backend) {
@@ -26,19 +22,10 @@ public class BackendRegistrationContext implements BackendRegistrationCallback.C
                     renderers.get(backend.getName()).getClass() + " and " + backend.getRenderer().getClass() + ")");
         }
 
-        if (best == null || backend.getPriority() < bestPriority) {
-            best = backend.getName();
-            bestPriority = backend.getPriority();
-        }
-
-        renderers.put(backend.getName(), backend.getRenderer());
+        renderers.put(backend.getName(), backend);
     }
 
-    public Map<String, KRenderer> getRenderers() {
+    public Map<String, KRenderBackend> getBackends() {
         return renderers;
-    }
-
-    public @Nullable String getBest() {
-        return best;
     }
 }

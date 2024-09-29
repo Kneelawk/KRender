@@ -68,11 +68,4 @@ public interface KRenderer {
      * {@return this backend's type converter}
      */
     TypeConverter converter();
-
-    /**
-     * {@return the name of the backend that supplied this renderer}
-     *
-     * @see KRenderBackend#getName()
-     */
-    String getName();
 }
