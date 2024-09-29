@@ -10,8 +10,6 @@ import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
 
 public class NFBakedModelFactory implements BakedModelFactory {
-    public static final NFBakedModelFactory INSTANCE = new NFBakedModelFactory();
-
     @Override
     public BakedModel wrap(BakedModelCore core) {
         return new NFBakedModelImpl(core);

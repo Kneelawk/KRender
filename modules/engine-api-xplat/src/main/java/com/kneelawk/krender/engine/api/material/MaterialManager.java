@@ -2,6 +2,7 @@ package com.kneelawk.krender.engine.api.material;
 
 import org.jetbrains.annotations.Nullable;
 
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
@@ -63,5 +64,17 @@ public interface MaterialManager extends RendererDependent {
      */
     default boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
         return registerMaterial(id, material);
+    }
+
+    /**
+     * Shortcut for finding a render material from a vanilla render type.
+     * <p>
+     * This makes a best-effort attempt to find a render material equivalent to the given render type.
+     *
+     * @param type the render type to find the render material equivalent to.
+     * @return the roughly equivalent render material.
+     */
+    default RenderMaterial fromVanilla(RenderType type) {
+        return materialFinder().fromVanilla(type).find();
     }
 }

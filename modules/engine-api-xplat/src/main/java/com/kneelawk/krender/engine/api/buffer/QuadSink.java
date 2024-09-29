@@ -61,7 +61,7 @@ public interface QuadSink extends MultiBufferSource, RendererDependent {
 
     @Override
     default VertexConsumer getBuffer(RenderType renderType) {
-        return asVertexEmitter().setDefaultMaterial(getRendererOrDefault().converter().toRenderMaterial(renderType));
+        return asVertexEmitter().setDefaultMaterial(getRendererOrDefault().materialManager().fromVanilla(renderType));
     }
 
     /**

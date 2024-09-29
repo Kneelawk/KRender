@@ -51,7 +51,7 @@ public class BackendConfig {
     }
 
     private static void initImpl(BackendConfig initTo, Map<String, Integer> priorities) {
-        if (initTo.backendPriorities == null) {
+        if (initTo.backendPriorities == null || initTo.backendPriorities.isEmpty()) {
             initTo.backendPriorities = new LinkedHashMap<>(priorities);
         } else {
             for (var entry : priorities.entrySet()) {

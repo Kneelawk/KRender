@@ -31,5 +31,6 @@ public class ConvertingQuadEmitter extends RootQuadEmitter {
     public void emitDirectly() {
         // base copyTo impl can handle copying to other impls
         copyTo(target);
+        target.emit();
     }
 }

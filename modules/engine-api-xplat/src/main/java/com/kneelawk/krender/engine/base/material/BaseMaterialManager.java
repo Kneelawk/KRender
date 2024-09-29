@@ -20,7 +20,8 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
  *
  * @param <M> the type of {@link RenderMaterial} implementation this uses.
  */
-public class BaseMaterialManager<M extends BaseMaterialViewApi & RenderMaterial> implements MaterialManager, BaseMaterialManagerApi<M> {
+public class BaseMaterialManager<M extends BaseMaterialViewApi & RenderMaterial>
+    implements MaterialManager, BaseMaterialManagerApi<M> {
     /**
      * The maximum number of materials possible.
      */
@@ -161,14 +162,25 @@ public class BaseMaterialManager<M extends BaseMaterialViewApi & RenderMaterial>
     public boolean registerMaterial(ResourceLocation id, RenderMaterial material) {
         materialsByIdLock.writeLock().lock();
         try {
-            if (materialsById.containsKey(id)) return false;
-
-            materialsById.put(id, (M) material);
-
-            return true;
+            return registerMaterialImpl(id, (M) material);
         } finally {
             materialsByIdLock.writeLock().unlock();
         }
+    }
+
+    /**
+     * Registers the material in a thread-safe environment.
+     *
+     * @param id       the id of the material.
+     * @param material the material to register.
+     * @return whether the material was registered.
+     */
+    protected boolean registerMaterialImpl(ResourceLocation id, M material) {
+        if (materialsById.containsKey(id)) return false;
+
+        materialsById.put(id, material);
+
+        return true;
     }
 
     @Override
@@ -176,10 +188,21 @@ public class BaseMaterialManager<M extends BaseMaterialViewApi & RenderMaterial>
     public boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
         materialsByIdLock.writeLock().lock();
         try {
-            return materialsById.put(id, (M) material) == null;
+            return registerOrUpdateMaterialImpl(id, (M) material);
         } finally {
             materialsByIdLock.writeLock().unlock();
         }
+    }
+
+    /**
+     * Registers or replaces a material in a thread-safe environment.
+     *
+     * @param id       the id of the material.
+     * @param material the material to register.
+     * @return whether this was the first material to be registered with the given id.
+     */
+    protected boolean registerOrUpdateMaterialImpl(ResourceLocation id, M material) {
+        return materialsById.put(id, material) == null;
     }
 
     @Override

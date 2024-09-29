@@ -11,8 +11,6 @@ import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
 public class FRAPIBakedModelFactory implements BakedModelFactory {
-    public static final FRAPIBakedModelFactory INSTANCE = new FRAPIBakedModelFactory();
-
     @Override
     public @NotNull BakedModel wrap(@NotNull BakedModelCore core) {
         return new FRAPIBakedModelImpl(core);

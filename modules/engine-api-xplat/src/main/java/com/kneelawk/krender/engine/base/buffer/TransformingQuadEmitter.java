@@ -86,6 +86,7 @@ public class TransformingQuadEmitter extends BaseQuadEmitter implements PooledQu
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void emitDirectly() {
         Objects.requireNonNull(transform, "This TransformingQuadEmitter has not been prepared!");
         Objects.requireNonNull(output, "This TransformingQuadEmitter has not been prepared!");
