@@ -64,6 +64,9 @@ public class BaseMeshBuilder implements MeshBuilder {
 
     @Override
     public Mesh build() {
+        // just make sure everything's flushed
+        maker.flushVertices();
+
         final int[] packed = new int[index];
         System.arraycopy(data, 0, packed, 0, index);
         index = 0;
