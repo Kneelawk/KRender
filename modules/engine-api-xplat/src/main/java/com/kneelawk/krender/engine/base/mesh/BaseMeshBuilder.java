@@ -37,8 +37,7 @@ public class BaseMeshBuilder implements MeshBuilder {
     public BaseMeshBuilder(BaseKRendererApi renderer) {
         this.maker = new Maker(renderer);
         this.renderer = renderer;
-        maker.load(data, index);
-        maker.clear();
+        maker.begin(data, index);
     }
 
     /**

@@ -16,14 +16,13 @@ import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 public class NFRenderer implements BaseKRendererApi {
     public static final NFRenderer INSTANCE = new NFRenderer();
 
-    public final NFBakedModelFactory bakedModelFactory = new NFBakedModelFactory();
     public final BaseMaterialManager<NFRenderMaterial> materialManater =
         new BaseMaterialManager<>(INSTANCE, NFRenderMaterial::new);
     public final BaseTypeConverter typeConverter = new BaseTypeConverter(this);
 
     @Override
     public @NotNull BakedModelFactory bakedModelFactory() {
-        return bakedModelFactory;
+        return new NFBakedModelFactory();
     }
 
     @Override

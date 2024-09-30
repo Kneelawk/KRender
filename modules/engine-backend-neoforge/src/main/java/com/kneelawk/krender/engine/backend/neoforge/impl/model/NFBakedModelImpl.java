@@ -24,17 +24,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.base.model.BaseModelBlockContext;
 
+/**
+ * Non-Caching implementation that calls {@link BakedModelCore#renderBlock(QuadEmitter, Object)} multiple times.
+ */
 public class NFBakedModelImpl implements BakedModel {
-    private final BakedModelCore core;
+    private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
 
-    public NFBakedModelImpl(BakedModelCore core) {this.core = core;}
+    private final BakedModelCore<?> core;
+
+    public NFBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction,
                                     RandomSource randomSource) {
-        return List.of();
+        return getQuads(blockState, direction, randomSource, ModelData.EMPTY, null);
     }
 
     @Override
@@ -73,10 +80,21 @@ public class NFBakedModelImpl implements BakedModel {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction side, RandomSource rand,
                                     ModelData data, @Nullable RenderType renderType) {
-        // TODO
-        return BakedModel.super.getQuads(state, side, rand, data, renderType);
+        if (state != null) {
+            // we're in block mode
+            ModelKeyHolder holder = data.get(ModelKeyHolder.PROPERTY);
+            if (holder == null) return List.of();
+
+            FilteringQuadBaker baker = FilteringQuadBaker.get(side, renderType, state);
+            ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), holder.modelKey());
+            return baker.bake();
+        } else {
+            // TODO: item mode
+            return List.of();
+        }
     }
 
     @Override
@@ -94,8 +112,10 @@ public class NFBakedModelImpl implements BakedModel {
 
     @Override
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData) {
-        // TODO
-        return BakedModel.super.getModelData(level, pos, state, modelData);
+        RandomSource random = RANDOM_SOURCES.get();
+        random.setSeed(state.getSeed(pos));
+        Object key = core.getBlockKey(new BaseModelBlockContext(level, pos, state, random));
+        return modelData.derive().with(ModelKeyHolder.PROPERTY, new ModelKeyHolder(key)).build();
     }
 
     @Override
@@ -105,9 +125,14 @@ public class NFBakedModelImpl implements BakedModel {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public ChunkRenderTypeSet getRenderTypes(BlockState state, RandomSource rand, ModelData data) {
-        // TODO
-        return BakedModel.super.getRenderTypes(state, rand, data);
+        ModelKeyHolder holder = data.get(ModelKeyHolder.PROPERTY);
+        if (holder == null) return ChunkRenderTypeSet.none();
+
+        RenderTypeCollector collector = RenderTypeCollector.get(state);
+        ((BakedModelCore<Object>) core).renderBlock(collector.emitter(), holder.modelKey());
+        return collector.getRenderTypes();
     }
 
     @Override

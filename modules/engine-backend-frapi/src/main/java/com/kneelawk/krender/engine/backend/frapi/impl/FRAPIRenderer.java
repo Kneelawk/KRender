@@ -16,13 +16,12 @@ import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 public class FRAPIRenderer implements BaseKRendererApi {
     public static final FRAPIRenderer INSTNACE = new FRAPIRenderer();
 
-    private final FRAPIBakedModelFactory bakedModelFactory = new FRAPIBakedModelFactory();
     private final FRAPIMaterialManager materialManager = new FRAPIMaterialManager();
     private final BaseTypeConverter typeConverter = new BaseTypeConverter(this);
 
     @Override
     public @NotNull BakedModelFactory bakedModelFactory() {
-        return bakedModelFactory;
+        return new FRAPIBakedModelFactory();
     }
 
     @Override
