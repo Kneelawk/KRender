@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.model;
 
+import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -25,7 +27,7 @@ public interface ModelBlockContext {
     BlockState getState();
 
     /**
-     * {@return a random for this block position and state}
+     * {@return a random supplier for this block position and state}
      */
-    RandomSource getRandom();
+    Supplier<RandomSource> getRandom();
 }

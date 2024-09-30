@@ -21,11 +21,16 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.backend.frapi.impl.buffer.FRAPIQuadEmitter;
+import com.kneelawk.krender.engine.base.model.BaseModelBlockContext;
 
+/**
+ * Basic non-caching baked model impl.
+ */
 public class FRAPIBakedModelImpl implements BakedModel {
-    private final BakedModelCore core;
+    private final BakedModelCore<?> core;
 
-    public FRAPIBakedModelImpl(BakedModelCore core) {this.core = core;}
+    public FRAPIBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
 
     @Override
     public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction,
@@ -74,13 +79,16 @@ public class FRAPIBakedModelImpl implements BakedModel {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos,
                                Supplier<RandomSource> randomSupplier, RenderContext context) {
-        BakedModel.super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
+        Object key = core.getBlockKey(new BaseModelBlockContext(blockView, pos, state, randomSupplier));
+        ((BakedModelCore<Object>) core).renderBlock(new FRAPIQuadEmitter(context.getEmitter()), key);
     }
 
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        // TODO
         BakedModel.super.emitItemQuads(stack, randomSupplier, context);
     }
 }

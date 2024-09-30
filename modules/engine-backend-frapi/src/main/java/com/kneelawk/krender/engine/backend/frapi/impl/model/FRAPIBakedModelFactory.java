@@ -12,7 +12,7 @@ import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
 public class FRAPIBakedModelFactory implements BakedModelFactory {
     private boolean caching = true;
-    
+
     @Override
     public BakedModelFactory setCaching(boolean caching) {
         this.caching = caching;
@@ -25,8 +25,12 @@ public class FRAPIBakedModelFactory implements BakedModelFactory {
     }
 
     @Override
-    public @NotNull BakedModel wrap(@NotNull BakedModelCore core) {
-        return new FRAPIBakedModelImpl(core);
+    public @NotNull BakedModel wrap(@NotNull BakedModelCore<?> core) {
+        if (caching) {
+            throw new UnsupportedOperationException("Not implemented yet");
+        } else {
+            return new FRAPIBakedModelImpl(core);
+        }
     }
 
     @Override

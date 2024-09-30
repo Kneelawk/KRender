@@ -138,8 +138,8 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
             base.computeGeometry();
             load(base.data, base.baseIndex);
         } else {
-            Vector3f vec3 = new Vector3f();
-            Vector2f vec2 = new Vector2f();
+            Vector3f vec3 = scratch3;
+            Vector2f vec2 = scratch2;
 
             setCullFace(quad.getCullFace());
             setNominalFace(quad.getNominalFace());

@@ -68,6 +68,15 @@ public class BaseQuadView implements QuadView {
     protected final Vector3f faceNormal = new Vector3f();
 
     /**
+     * Vec3 scratch vector for copying.
+     */
+    protected final Vector3f scratch3 = new Vector3f();
+    /**
+     * Vec2 scratch vector for copying.
+     */
+    protected final Vector2f scratch2 = new Vector2f();
+
+    /**
      * Creates a new base quad view using the given KRenderer for things like material lookup.
      *
      * @param renderer the KRenderer to associate this quad view with.
@@ -128,8 +137,8 @@ public class BaseQuadView implements QuadView {
             quad.nominalFace = nominalFace;
             quad.geometryInvalid = false;
         } else {
-            Vector3f vec3 = new Vector3f();
-            Vector2f vec2 = new Vector2f();
+            Vector3f vec3 = scratch3;
+            Vector2f vec2 = scratch2;
 
             target.setCullFace(getCullFace());
             target.setNominalFace(getNominalFace());

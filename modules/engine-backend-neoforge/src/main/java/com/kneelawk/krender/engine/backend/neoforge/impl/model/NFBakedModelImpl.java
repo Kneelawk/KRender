@@ -113,8 +113,11 @@ public class NFBakedModelImpl implements BakedModel {
     @Override
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData) {
         RandomSource random = RANDOM_SOURCES.get();
-        random.setSeed(state.getSeed(pos));
-        Object key = core.getBlockKey(new BaseModelBlockContext(level, pos, state, random));
+        long seed = state.getSeed(pos);
+        Object key = core.getBlockKey(new BaseModelBlockContext(level, pos, state, () -> {
+            random.setSeed(seed);
+            return random;
+        }));
         return modelData.derive().with(ModelKeyHolder.PROPERTY, new ModelKeyHolder(key)).build();
     }
 

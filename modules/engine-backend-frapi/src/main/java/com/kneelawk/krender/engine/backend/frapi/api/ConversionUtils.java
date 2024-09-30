@@ -1,7 +1,11 @@
 package com.kneelawk.krender.engine.backend.frapi.api;
 
+import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
+
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
+import com.kneelawk.krender.engine.api.material.RenderMaterial;
 
 /**
  * Utility class for converting between KRender types and FRAPI types.
@@ -67,5 +71,33 @@ public final class ConversionUtils {
             case DEFAULT -> net.fabricmc.fabric.api.util.TriState.DEFAULT;
             case TRUE -> net.fabricmc.fabric.api.util.TriState.TRUE;
         };
+    }
+
+    /**
+     * Converts a FRAPI render material to a KRender render material.
+     *
+     * @param renderer the KRenderer to make the render material for.
+     * @param material the FRAPI render material.
+     * @return the equivalent KRender render material.
+     */
+    public static RenderMaterial toKRender(KRenderer renderer,
+                                           net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material) {
+        return renderer.materialManager().materialFinder().setBlendMode(toKRender(material.blendMode()))
+            .setColorIndexDisabled(material.disableColorIndex()).setEmissive(material.emissive())
+            .setDiffuseDisabled(material.disableDiffuse())
+            .setAmbientOcclusionMode(toKRender(material.ambientOcclusion())).find();
+    }
+
+    /**
+     * Converts a KRender render material to a FRAPI render material.
+     *
+     * @param material the KRender render material.
+     * @return the equivalent FRAPI render material.
+     */
+    public static net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial toFabric(RenderMaterial material) {
+        return RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(toFabric(material.getBlendMode()))
+            .disableColorIndex(material.isColorIndexDisabled()).emissive(material.isEmissive())
+            .disableDiffuse(material.isDiffuseDisabled()).ambientOcclusion(toFabric(material.getAmbientOcclusionMode()))
+            .find();
     }
 }

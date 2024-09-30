@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.base.model;
 
+import java.util.function.Supplier;
+
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -28,7 +30,7 @@ public class BaseModelBlockContext implements ModelBlockContext {
     /**
      * The random for the given block state and position.
      */
-    protected final RandomSource random;
+    protected final Supplier<RandomSource> random;
 
     /**
      * Create a new base block model context.
@@ -38,7 +40,8 @@ public class BaseModelBlockContext implements ModelBlockContext {
      * @param state  the state of the block being rendered.
      * @param random the random for the given block state and position.
      */
-    public BaseModelBlockContext(BlockAndTintGetter level, BlockPos pos, BlockState state, RandomSource random) {
+    public BaseModelBlockContext(BlockAndTintGetter level, BlockPos pos, BlockState state,
+                                 Supplier<RandomSource> random) {
         this.level = level;
         this.pos = pos;
         this.state = state;
@@ -61,7 +64,7 @@ public class BaseModelBlockContext implements ModelBlockContext {
     }
 
     @Override
-    public RandomSource getRandom() {
+    public Supplier<RandomSource> getRandom() {
         return random;
     }
 }
