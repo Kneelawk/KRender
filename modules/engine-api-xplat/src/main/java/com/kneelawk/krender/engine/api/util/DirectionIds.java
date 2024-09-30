@@ -43,6 +43,11 @@ public final class DirectionIds {
     public static final int NULL = 6;
 
     /**
+     * The number of directions possible.
+     */
+    public static final int DIRECTION_COUNT = NULL + 1;
+
+    /**
      * The bit mask for a direction id.
      */
     public static final int DIRECTION_MASK = Mth.smallestEncompassingPowerOfTwo(NULL) - 1;
