@@ -27,7 +27,7 @@ public class FRAPIBakedModelFactory implements BakedModelFactory {
     @Override
     public @NotNull BakedModel wrap(@NotNull BakedModelCore<?> core) {
         if (caching) {
-            throw new UnsupportedOperationException("Not implemented yet");
+            return new FRAPICachedBakedModelImpl(core);
         } else {
             return new FRAPIBakedModelImpl(core);
         }

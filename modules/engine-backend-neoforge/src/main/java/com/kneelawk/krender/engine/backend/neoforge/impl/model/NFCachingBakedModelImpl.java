@@ -39,23 +39,23 @@ public class NFCachingBakedModelImpl implements BakedModel {
 
     private final BakedModelCore<?> core;
 
-    private final LoadingCache<ModelKeyHolder, SplittingQuadBaker.Result> quadCache =
-        CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(
-            new CacheLoader<>() {
-                @Override
-                @SuppressWarnings("unchecked")
-                public SplittingQuadBaker.Result load(ModelKeyHolder key) {
-                    SplittingQuadBaker baker = SplittingQuadBaker.get();
-                    try {
-                        ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), key.modelKey());
-                    } catch (Exception e) {
-                        KRBNFLog.LOG.error("Error rendering cached quads for model {}", core, e);
-                    }
-                    return baker.bake();
-                }
-            });
-
     public NFCachingBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
+
+    private final LoadingCache<ModelKeyHolder, SplittingQuadBaker.Result> quadCache =
+        CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(CacheLoader.from(key -> {
+            SplittingQuadBaker baker = SplittingQuadBaker.get();
+            render(key, baker);
+            return baker.bake();
+        }));
+
+    @SuppressWarnings("unchecked")
+    private void render(ModelKeyHolder key, SplittingQuadBaker baker) {
+        try {
+            ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), key.modelKey());
+        } catch (Exception e) {
+            KRBNFLog.LOG.error("Error rendering cached quads for model {}", core, e);
+        }
+    }
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction,
