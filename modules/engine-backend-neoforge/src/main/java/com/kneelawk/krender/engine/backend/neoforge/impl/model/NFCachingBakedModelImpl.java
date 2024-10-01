@@ -1,6 +1,7 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.model;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import com.google.common.cache.CacheBuilder;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.backend.neoforge.impl.KRBNFLog;
 import com.kneelawk.krender.engine.base.model.BaseModelBlockContext;
 
 public class NFCachingBakedModelImpl implements BakedModel {
@@ -41,8 +43,15 @@ public class NFCachingBakedModelImpl implements BakedModel {
         CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(
             new CacheLoader<>() {
                 @Override
+                @SuppressWarnings("unchecked")
                 public SplittingQuadBaker.Result load(ModelKeyHolder key) {
-                    return null;
+                    SplittingQuadBaker baker = SplittingQuadBaker.get();
+                    try {
+                        ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), key.modelKey());
+                    } catch (Exception e) {
+                        KRBNFLog.LOG.error("Error rendering cached quads for model {}", core, e);
+                    }
+                    return baker.bake();
                 }
             });
 
@@ -98,9 +107,12 @@ public class NFCachingBakedModelImpl implements BakedModel {
             ModelKeyHolder holder = data.get(ModelKeyHolder.PROPERTY);
             if (holder == null) return List.of();
 
-            FilteringQuadBaker baker = FilteringQuadBaker.get(side, renderType, state);
-            ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), holder.modelKey());
-            return baker.bake();
+            try {
+                return quadCache.get(holder).getMesh(side, renderType);
+            } catch (ExecutionException e) {
+                KRBNFLog.LOG.error("Error caching model", e);
+                return List.of();
+            }
         } else {
             // TODO: item mode
             return List.of();
@@ -143,9 +155,12 @@ public class NFCachingBakedModelImpl implements BakedModel {
         ModelKeyHolder holder = data.get(ModelKeyHolder.PROPERTY);
         if (holder == null) return ChunkRenderTypeSet.none();
 
-        RenderTypeCollector collector = RenderTypeCollector.get(state);
-        ((BakedModelCore<Object>) core).renderBlock(collector.emitter(), holder.modelKey());
-        return collector.getRenderTypes();
+        try {
+            return quadCache.get(holder).getRenderTypes();
+        } catch (ExecutionException e) {
+            KRBNFLog.LOG.error("Error caching model", e);
+            return ChunkRenderTypeSet.none();
+        }
     }
 
     @Override

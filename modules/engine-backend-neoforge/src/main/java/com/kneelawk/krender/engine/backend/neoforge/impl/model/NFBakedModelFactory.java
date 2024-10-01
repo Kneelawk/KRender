@@ -26,7 +26,7 @@ public class NFBakedModelFactory implements BakedModelFactory {
     @Override
     public BakedModel wrap(BakedModelCore core) {
         if (caching) {
-            throw new UnsupportedOperationException("Caching not implemented yet");
+            return new NFCachingBakedModelImpl(core);
         } else {
             return new NFBakedModelImpl(core);
         }
