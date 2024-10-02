@@ -85,7 +85,12 @@ public class SplittingQuadBaker {
         for (int i = 0; i < RENDER_TYPE_COUNT; i++) {
             for (int j = 0; j < DIRECTION_COUNT; j++) {
                 final int index = getIndex(j, i);
-                meshes[index] = ImmutableList.copyOf(datas[index]);
+                List<BakedQuad> data = datas[index];
+                if (data.isEmpty()) {
+                    meshes[index] = List.of();
+                } else {
+                    meshes[index] = ImmutableList.copyOf(datas[index]);
+                }
             }
         }
 

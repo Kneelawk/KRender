@@ -5,9 +5,9 @@ license = "MIT"
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
-displayName = "KRender Engine API"
+displayName = "KRender Engine NeoForge Backend"
 authors = "Kneelawk"
-description = "Cross-platform Render System Abstraction."
+description = "NeoForge Backend for the KRender Engine."
 logoFile = "assets/${mod_id}/icon.png"
 
 [[dependencies.${mod_id}]]
