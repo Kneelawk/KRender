@@ -53,7 +53,7 @@ public class BackendManager {
             BackendRegistrationCallback.EVENT.invoker().registerBackends(ctx);
             Map<String, KRenderBackend> backends = ctx.getBackends();
 
-            KRELog.LOG.info("[KRender] KRender backends: {}", backends.keySet());
+            KRELog.LOG.info("[KRender] KRender Engine backends: {}", backends.keySet());
 
             Map<String, Integer> priorities = backends.entrySet().stream()
                 .collect(ImmutableMap.toImmutableMap(Map.Entry::getKey, e -> e.getValue().getPriority()));
@@ -71,6 +71,8 @@ public class BackendManager {
                 ArrayList<String> sortedBackends = new ArrayList<>(backends.keySet());
                 sortedBackends.sort(Comparator.comparing(newPriorities::get));
                 String defaultName = sortedBackends.getFirst();
+
+                KRELog.LOG.info("[KRender] Sorted KRender Engine Backends: {}", sortedBackends);
 
                 KRELog.LOG.info("[KRender] Default KRender Engine backend: {}", defaultName);
 
