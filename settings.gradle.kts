@@ -93,6 +93,11 @@ module(mojmap, "model-loading-xplat-mojmap")
 module(fabric, "model-loading-fabric")
 module(neoforge, "model-loading-neoforge")
 
+module(xplat, "reload-listener-xplat")
+module(mojmap, "reload-listener-xplat-mojmap")
+module(fabric, "reload-listener-fabric")
+module(neoforge, "reload-listener-neoforge")
+
 example(xplat, "ct-complicated-xplat")
 example(fabric, "ct-complicated-fabric")
 example(neoforge, "ct-complicated-neoforge")
