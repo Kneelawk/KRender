@@ -15,7 +15,13 @@
   "license": "MIT",
   "icon": "assets/${mod_id}/icon.png",
   "environment": "*",
-  "entrypoints": { },
+  "entrypoints": {
+    "main": [
+      {
+        "value": "com.kneelawk.krender.ctcomplicated.fabric.FabricMod"
+      }
+    ]
+  },
   "mixins": [ ],
   "depends": {
     "fabricloader": ">=0.15.0",
