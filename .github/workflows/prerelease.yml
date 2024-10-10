@@ -1,5 +1,4 @@
-# Performs all releases using a multipart approach
-name: release
+name: prerelease
 
 env:
   PROJECT_NAME: KRender
@@ -7,35 +6,28 @@ env:
   MAVEN_IDENTIFIER: 'com.kneelawk.krender:krender-engine-api-xplat-intermediary'
   ROLE_ID: '1239439830979710988'
 
-# Variant: github, maven+javadoc, discord
-
-# Changes:
-# 2023-04-22 - Kneelawk: Added changes & variant comments. Fixed Grab CF File ID task name. Renamed build job to
-#                        build-release. Reformatted.
-# 2023-04-22 - Kneelawk: Fix references to build job to point to build-release job.
-# 2023-04-22 - Kneelawk: Copy gradle caches to prevent re-building in publishing jobs.
-# 2023-05-02 - Kneelawk: Added javadoc publishing. Added maven job step for getting proper tag version by removing 'v'.
-# 2023-05-08 - Kneelawk: Combined maven and javadoc steps.
-# 2023-05-10 - Kneelawk: Copy all javadoc directories in the docs directory.
-# 2023-05-10 - Kneelawk: Use regular publish gradle task.
-# 2023-12-12 - Kneelawk: Switch back to single-job system to avoid uploading massive artifacts.
-
 on:
   push:
     tags:
-      # matches things like v0.3.3+1.18.2
-      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
-      # matches things like v0.4.0+1.19
-      - 'v[0-9]+.[0-9]+.[0-9]+\+[0-9]+.[0-9]+'
+      # matches things like v0.1.2-alpha.1+1.18.2
+      - 'v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.1.2-beta.1+1.18.2
+      - 'v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.1.2-pre.1+1.18.2
+      - 'v[0-9]+.[0-9]+.[0-9]+-pre.[0-9]+\+[0-9]+.[0-9]+.[0-9]+'
+      # matches things like v0.3.0-alpha.1+1.19
+      - 'v[0-9]+.[0-9]+.[0-9]+-alpha.[0-9]+\+[0-9]+.[0-9]+'
+      # matches things like v0.3.0-beta.1+1.19
+      - 'v[0-9]+.[0-9]+.[0-9]+-beta.[0-9]+\+[0-9]+.[0-9]+'
+      # matches things like v0.3.0-pre.1+1.19
+      - 'v[0-9]+.[0-9]+.[0-9]+-pre.[0-9]+\+[0-9]+.[0-9]+'
 
 jobs:
-  release:
+  prerelease:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
       - name: Setup JDK 21
         uses: actions/setup-java@v4
         with:
@@ -47,15 +39,9 @@ jobs:
         run: ./gradlew build
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-      - name: Capture Build Directory
-        uses: actions/upload-artifact@v4
-        with:
-          name: build-dir
-          path: build/
       - name: Github Release
         uses: softprops/action-gh-release@v2
         with:
-          body_path: changelogs/changelog-${{ github.ref_name }}.md
           files: build/libs/*
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLISH_TOKEN }}
@@ -64,26 +50,19 @@ jobs:
         env:
           RELEASE_TAG: ${{ github.ref_name }}
       # This is the mess that publishes discord notifications
-      - name: Read Changelog File
-        uses: juliangruber/read-file-action@v1
-        id: changelog
-        with:
-          path: changelogs/changelog-${{ github.ref_name }}.md
-      - name: Process Changelog for Announcement
+      - name: Process for Announcement
         uses: actions/github-script@v7
         id: announcement_text
         env:
-          CHANGELOG: ${{ steps.changelog.outputs.content }}
           TAG_VERSION: ${{ github.ref_name }}
         with:
           script: |
             let fullVersion = process.env.TAG_VERSION;
             let versions = fullVersion.split('+');
             let mavenVersion = fullVersion.substring(1);
-            let lines = process.env.CHANGELOG.split('\n');
-            let changesStart = lines.findIndex(line => line.startsWith('*'));
-            lines.splice(0, changesStart);
-            lines.unshift(`# ${process.env.PROJECT_NAME} Release`, `**<@&${process.env.ROLE_ID}> ${process.env.PROJECT_NAME} ${versions[0]} has been released for Minecraft ${versions[1]}!**`, '', '__Changes:__');
+            let lines = [];
+            lines.push(`# ${process.env.PROJECT_NAME} Prerelease`);
+            lines.push(`**<@&${process.env.ROLE_ID}> ${process.env.PROJECT_NAME} prerelease ${versions[0]} has been published for Minecraft ${versions[1]}!**`);
             lines.push("Available on Kneelawk's maven: https://maven.kneelawk.com/releases/", `With the identifier: \`${process.env.MAVEN_IDENTIFIER}:${mavenVersion}\``);
             lines.push(`Javadoc available at: https://maven.kneelawk.com/javadoc/releases/${process.env.JAVADOC_DIR}/${mavenVersion}`);
             return lines.join('\n');
