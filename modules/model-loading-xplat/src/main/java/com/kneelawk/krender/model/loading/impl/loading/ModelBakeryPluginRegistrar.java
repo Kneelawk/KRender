@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.ReentrantLock;
 
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -17,6 +18,7 @@ public class ModelBakeryPluginRegistrar {
     public static final AtomicReference<CompletableFuture<PreparedModelBakeryPluginList>> PREPARE_FUTURE =
         new AtomicReference<>();
 
+    private static final ReentrantLock lock = new ReentrantLock();
     private static final List<ModelBakeryPlugin> plugins = new ArrayList<>();
     private static final List<PreparableModelBakeryPluginHolder<?>> preparables = new ArrayList<>();
 
@@ -25,7 +27,7 @@ public class ModelBakeryPluginRegistrar {
     }
 
     private static CompletableFuture<PreparedModelBakeryPluginList> prepare(ResourceManager resourceManager,
-                                                                    Executor prepareExecutor) {
+                                                                            Executor prepareExecutor) {
         List<CompletableFuture<? extends PreparedModelBakeryPlugin<?>>> preparedList = new ArrayList<>();
         for (PreparableModelBakeryPluginHolder<?> preparable : preparables) {
             try {
@@ -61,11 +63,21 @@ public class ModelBakeryPluginRegistrar {
     }
 
     public static void register(ModelBakeryPlugin plugin) {
-        plugins.add(plugin);
+        lock.lock();
+        try {
+            plugins.add(plugin);
+        } finally {
+            lock.unlock();
+        }
     }
 
     public static <T> void registerPreparable(PreparableModelBakeryPlugin.ResourceLoader<T> loader,
-                                       PreparableModelBakeryPlugin<T> plugin) {
-        preparables.add(new PreparableModelBakeryPluginHolder<>(loader, plugin));
+                                              PreparableModelBakeryPlugin<T> plugin) {
+        lock.lock();
+        try {
+            preparables.add(new PreparableModelBakeryPluginHolder<>(loader, plugin));
+        } finally {
+            lock.unlock();
+        }
     }
 }
