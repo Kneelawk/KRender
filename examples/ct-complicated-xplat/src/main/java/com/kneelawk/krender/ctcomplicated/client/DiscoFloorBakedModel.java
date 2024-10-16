@@ -1,21 +1,24 @@
 package com.kneelawk.krender.ctcomplicated.client;
 
-import org.jetbrains.annotations.UnknownNullability;
-
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
+import com.kneelawk.krender.engine.api.KRenderer;
+import com.kneelawk.krender.engine.api.TriState;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
+import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 
-import static java.lang.Math.abs;
-
-public record CTGlassBakedModel(boolean doCorners, boolean interiorBorder, TextureAtlasSprite particle,
-                                TextureAtlasSprite[] sprites, RenderMaterial material)
-    implements BakedModelCore<CTUtils.Data> {
+public record DiscoFloorBakedModel(TextureAtlasSprite particle, TextureAtlasSprite[] baseSprites,
+                                   TextureAtlasSprite[] glowingSprites) implements BakedModelCore<CTUtils.Data> {
+    private static final RenderMaterial BASE_MATERIAL =
+        KRenderer.getDefault().materialManager().materialFinder().setBlendMode(BlendMode.CUTOUT).find();
+    private static final RenderMaterial GLOW_MATERIAL =
+        KRenderer.getDefault().materialManager().materialFinder().setBlendMode(BlendMode.CUTOUT).setEmissive(true)
+            .setDiffuseDisabled(true).setAmbientOcclusionMode(TriState.FALSE).find();
 
     @Override
     public boolean useAmbientOcclusion() {
@@ -54,11 +57,12 @@ public record CTGlassBakedModel(boolean doCorners, boolean interiorBorder, Textu
 
     @Override
     public CTUtils.Data getBlockKey(ModelBlockContext ctx) {
-        return CTUtils.getData(doCorners, interiorBorder, ctx);
+        return CTUtils.getData(true, true, ctx);
     }
 
     @Override
     public void renderBlock(QuadEmitter renderTo, CTUtils.Data blockKey) {
-        CTUtils.render(material, sprites, renderTo, blockKey);
+        CTUtils.render(BASE_MATERIAL, baseSprites, renderTo, blockKey);
+        CTUtils.render(GLOW_MATERIAL, glowingSprites, renderTo, blockKey);
     }
 }

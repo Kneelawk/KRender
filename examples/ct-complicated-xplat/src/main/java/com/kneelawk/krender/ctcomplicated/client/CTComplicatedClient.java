@@ -8,6 +8,7 @@ public class CTComplicatedClient {
     public static void init() {
         ModelBakeryPlugin.register(ctx -> {
             ctx.addLowLevelModel(rl("block/ct_glass"), new CTGlassUnbakedModel());
+            ctx.addLowLevelModel(rl("block/disco_floor"), new DiscoFloorUnbakedModel());
         });
     }
 

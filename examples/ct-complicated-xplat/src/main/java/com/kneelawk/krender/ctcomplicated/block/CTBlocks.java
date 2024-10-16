@@ -27,6 +27,11 @@ public class CTBlocks {
             .isSuffocating(CTBlocks::never).isViewBlocking(CTBlocks::never)));
     public static final Supplier<BlockItem> CT_GLASS_ITEM =
         ITEMS.register("ct_glass", () -> new BlockItem(CT_GLASS.get(), new Item.Properties()));
+    public static final Supplier<Block> DISCO_FLOOR = BLOCKS.register("disco_floor", () -> new Block(
+        BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.DRAGON).strength(0.3f).sound(SoundType.GLASS)
+            .isValidSpawn(CTBlocks::never).isSuffocating(CTBlocks::never)));
+    public static final Supplier<BlockItem> DISCO_FLOOR_ITEM =
+        ITEMS.register("disco_floor", () -> new BlockItem(DISCO_FLOOR.get(), new Item.Properties()));
 
     public static void register() {
     }

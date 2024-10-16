@@ -8,7 +8,7 @@ submodule {
     setRefmaps("krender_reload_listener")
     setupJavadoc()
     val common_events_version: String by project
-    xplatExternalDependency(include = false) { "com.kneelawk.common-events:common-events-$it:$common_events_version" }
+    xplatExternalDependency { "com.kneelawk.common-events:common-events-$it:$common_events_version" }
 }
 
 kpublish {

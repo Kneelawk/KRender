@@ -16,11 +16,10 @@ import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 
 import com.kneelawk.krender.engine.api.KRenderer;
-import com.kneelawk.krender.engine.api.material.BlendMode;
 
 import static com.kneelawk.krender.ctcomplicated.CTConstants.rl;
 
-public class CTGlassUnbakedModel implements UnbakedModel {
+public class DiscoFloorUnbakedModel implements UnbakedModel {
     @Override
     public Collection<ResourceLocation> getDependencies() {
         return List.of();
@@ -37,12 +36,18 @@ public class CTGlassUnbakedModel implements UnbakedModel {
         Function<String, TextureAtlasSprite> material =
             (String str) -> spriteGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, rl(str)));
         return KRenderer.getDefault().bakedModelFactory()
-            .wrap(new CTGlassBakedModel(true, true, material.apply("block/ct_glass"), new TextureAtlasSprite[]{
-                material.apply("block/ct_glass_convex"),
-                material.apply("block/ct_glass_horizontal"),
-                material.apply("block/ct_glass_vertical"),
-                material.apply("block/ct_glass_concave"),
-                material.apply("block/ct_glass_center")
-            }, KRenderer.getDefault().materialManager().materialFinder().setBlendMode(BlendMode.CUTOUT).find()));
+            .wrap(new DiscoFloorBakedModel(material.apply("block/disco_floor"), new TextureAtlasSprite[]{
+                material.apply("block/disco_floor_convex"),
+                material.apply("block/disco_floor_horizontal"),
+                material.apply("block/disco_floor_vertical"),
+                material.apply("block/disco_floor_concave"),
+                material.apply("block/disco_floor_center")
+            }, new TextureAtlasSprite[]{
+                material.apply("block/disco_floor_glow_convex"),
+                material.apply("block/disco_floor_glow_horizontal"),
+                material.apply("block/disco_floor_glow_vertical"),
+                material.apply("block/disco_floor_glow_concave"),
+                material.apply("block/disco_floor_glow_center")
+            }));
     }
 }

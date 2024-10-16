@@ -20,6 +20,7 @@ public class CTCreativeTabs {
         () -> CreativeModeTab.builder(null, -1).title(tt("itemGroup", "ct_main"))
             .displayItems((params, output) -> {
                 output.accept(CTBlocks.CT_GLASS_ITEM.get());
+                output.accept(CTBlocks.DISCO_FLOOR_ITEM.get());
             }).icon(() -> new ItemStack(CTBlocks.CT_GLASS_ITEM.get())).build());
 
     public static void register() {
