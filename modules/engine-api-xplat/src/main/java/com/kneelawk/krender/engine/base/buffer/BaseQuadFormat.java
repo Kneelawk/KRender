@@ -114,7 +114,7 @@ public final class BaseQuadFormat {
     /**
      * The inverse mask of the light face.
      */
-    public static final int LIGHT_INVERSE_MASK = ~(DIRECTION_MASK << CULL_SHIFT);
+    public static final int LIGHT_INVERSE_MASK = ~(DIRECTION_MASK << LIGHT_SHIFT);
     /**
      * The bit offset of the normal presence flags in the header bits.
      */
