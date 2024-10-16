@@ -38,7 +38,7 @@ public interface Mesh extends RendererDependent {
      *
      * @param sink the sink to emit all quads to.
      */
-    default void output(QuadSink sink) {
+    default void outputTo(QuadSink sink) {
         outputTo(sink.asQuadEmitter());
     }
 }
