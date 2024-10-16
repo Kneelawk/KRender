@@ -20,6 +20,11 @@
       {
         "value": "com.kneelawk.krender.ctcomplicated.fabric.FabricMod"
       }
+    ],
+    "client": [
+      {
+        "value": "com.kneelawk.krender.ctcomplicated.fabric.FabricClientMod"
+      }
     ]
   },
   "mixins": [ ],
