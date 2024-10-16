@@ -350,11 +350,11 @@ public class BaseQuadView implements QuadView {
 
         for (int i = 0; i < 4; i++) {
             // convert colors 
-            target[i + VERTEX_COLOR] = ColorUtil.toVanilla(target[i + VERTEX_COLOR]);
+            target[i * VERTEX_STRIDE + VERTEX_COLOR] = ColorUtil.toVanilla(target[i * VERTEX_STRIDE + VERTEX_COLOR]);
 
             // handle emissives
             if (material.isEmissive()) {
-                target[i + VERTEX_LIGHTMAP] = LightTexture.FULL_BRIGHT;
+                target[i * VERTEX_STRIDE + VERTEX_LIGHTMAP] = LightTexture.FULL_BRIGHT;
             }
         }
     }
