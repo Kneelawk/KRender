@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.base.buffer;
 
+import java.util.function.BiFunction;
+
 import org.jetbrains.annotations.UnknownNullability;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -25,11 +27,30 @@ public class TransformStack {
     protected final BaseKRendererApi renderer;
 
     /**
+     * The constructor for the type of transforming quad emitter this transform stack deals in.
+     */
+    protected final BiFunction<BaseKRendererApi, TransformStack, TransformingQuadEmitter> ctor;
+
+    /**
      * Creates a new transform stack.
      *
      * @param renderer the renderer that all quad emitters from this stack will be associated with.
      */
-    public TransformStack(BaseKRendererApi renderer) {this.renderer = renderer;}
+    public TransformStack(BaseKRendererApi renderer) {
+        this(renderer, TransformingQuadEmitter::new);
+    }
+
+    /**
+     * Creates a new transform stack.
+     *
+     * @param renderer the renderer that all quad emitters from this stack will be associated with.
+     * @param ctor     constructor for the type of transforming quad emitter this transform stack deals in.
+     */
+    protected TransformStack(BaseKRendererApi renderer,
+                             BiFunction<BaseKRendererApi, TransformStack, TransformingQuadEmitter> ctor) {
+        this.renderer = renderer;
+        this.ctor = ctor;
+    }
 
     /**
      * Gets or creates a new transforming quad emitter with the given context, transform, and output.
@@ -41,7 +62,7 @@ public class TransformStack {
      */
     public TransformingQuadEmitter getTransform(@UnknownNullability Object context, QuadTransform<?> transform,
                                                 QuadEmitter output) {
-        return (pool.isEmpty() ? new TransformingQuadEmitter(renderer, this) : pool.pop()).prepare(context, transform,
+        return (pool.isEmpty() ? ctor.apply(renderer, this) : pool.pop()).prepare(context, transform,
             output);
     }
 

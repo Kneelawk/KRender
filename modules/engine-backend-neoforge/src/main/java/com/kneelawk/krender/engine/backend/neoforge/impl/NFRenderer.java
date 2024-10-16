@@ -6,12 +6,12 @@ import com.kneelawk.krender.engine.api.convert.TypeConverter;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.neoforge.impl.material.NFRenderMaterial;
+import com.kneelawk.krender.engine.backend.neoforge.impl.mesh.NFMeshBuilder;
 import com.kneelawk.krender.engine.backend.neoforge.impl.model.NFBakedModelFactory;
 import com.kneelawk.krender.engine.base.BaseKRendererApi;
 import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManagerApi;
-import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 
 public class NFRenderer implements BaseKRendererApi {
     public static final NFRenderer INSTANCE = new NFRenderer();
@@ -27,7 +27,7 @@ public class NFRenderer implements BaseKRendererApi {
 
     @Override
     public @NotNull MeshBuilder meshBuilder() {
-        return new BaseMeshBuilder(this);
+        return new NFMeshBuilder(this);
     }
 
     @Override

@@ -11,8 +11,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
+import com.kneelawk.krender.engine.backend.neoforge.impl.mesh.NFRootQuadEmitter;
 import com.kneelawk.krender.engine.base.buffer.BaseQuadFormat;
-import com.kneelawk.krender.engine.base.buffer.RootQuadEmitter;
 
 public class RenderTypeCollector {
     private static final ThreadLocal<RenderTypeCollector> POOL =
@@ -39,7 +39,7 @@ public class RenderTypeCollector {
         return ChunkRenderTypeSet.of(renderTypes);
     }
 
-    private class Maker extends RootQuadEmitter {
+    private class Maker extends NFRootQuadEmitter {
         public Maker() {
             super(NFRenderer.INSTANCE);
             begin(new int[BaseQuadFormat.TOTAL_STRIDE], 0);

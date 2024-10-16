@@ -1,11 +1,12 @@
 package com.kneelawk.krender.engine.api.mesh;
 
+import com.kneelawk.krender.engine.api.RendererDependent;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 
 /**
  * Builds a static mesh that can store geometry for later use.
  */
-public interface MeshBuilder {
+public interface MeshBuilder extends RendererDependent {
     /**
      * Gets a {@link QuadEmitter} that can be used to append the current mesh.
      * <p>

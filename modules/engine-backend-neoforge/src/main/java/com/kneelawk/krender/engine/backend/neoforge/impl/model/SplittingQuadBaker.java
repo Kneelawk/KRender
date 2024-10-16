@@ -25,8 +25,8 @@ import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.texture.SpriteFinder;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
+import com.kneelawk.krender.engine.backend.neoforge.impl.mesh.NFRootQuadEmitter;
 import com.kneelawk.krender.engine.base.buffer.BaseQuadFormat;
-import com.kneelawk.krender.engine.base.buffer.RootQuadEmitter;
 
 public class SplittingQuadBaker {
     private static final ThreadLocal<SplittingQuadBaker> POOL = ThreadLocal.withInitial(SplittingQuadBaker::new);
@@ -97,7 +97,7 @@ public class SplittingQuadBaker {
         return new Result(meshes, ChunkRenderTypeSet.of(renderTypes));
     }
 
-    private class Maker extends RootQuadEmitter {
+    private class Maker extends NFRootQuadEmitter {
         public Maker() {
             super(NFRenderer.INSTANCE);
             begin(new int[BaseQuadFormat.TOTAL_STRIDE], 0);

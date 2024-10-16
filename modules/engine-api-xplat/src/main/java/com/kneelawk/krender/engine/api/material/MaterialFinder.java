@@ -56,6 +56,9 @@ public interface MaterialFinder extends MaterialView {
 
     /**
      * Sets whether ambient occlusion is force enabled, disabled, or left up to the model.
+     * <p>
+     * Note: not all backends may respect this value, or some may only respect a {@code FALSE} value, treating a
+     * {@code TRUE} value the same as a {@code DEFAULT} value.
      *
      * @param mode whether ambient occlusion is force enabled, disabled, or left up to the model.
      * @return this material finder.

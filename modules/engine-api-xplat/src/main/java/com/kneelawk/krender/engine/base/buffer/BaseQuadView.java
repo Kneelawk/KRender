@@ -344,7 +344,14 @@ public class BaseQuadView implements QuadView {
         return new BakedQuad(quad, tintIndex, getLightFace(), sprite, shade);
     }
 
-    private void toVanilla(int[] target, int targetIndex, RenderMaterial material) {
+    /**
+     * Converts this quad to vanilla quad data, but using the given render material.
+     *
+     * @param target      the array to copy vanilla vertex data to.
+     * @param targetIndex the index within the array to start copying to.
+     * @param material    the material to use for emissive-ness calculations.
+     */
+    protected void toVanilla(int[] target, int targetIndex, RenderMaterial material) {
         // we use roughly the same vertex format vanilla uses
         System.arraycopy(data, baseIndex + HEADER_STRIDE, target, targetIndex, VANILLA_QUAD_STRIDE);
 
