@@ -31,8 +31,9 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.ModelBlockContext;
+import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.neoforge.impl.KRBNFLog;
-import com.kneelawk.krender.engine.base.model.BaseModelBlockContext;
 
 public class NFCachingBakedModelImpl implements BakedModel {
     private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
@@ -136,7 +137,7 @@ public class NFCachingBakedModelImpl implements BakedModel {
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData) {
         RandomSource random = RANDOM_SOURCES.get();
         long seed = state.getSeed(pos);
-        Object key = core.getBlockKey(new BaseModelBlockContext(level, pos, state, () -> {
+        Object key = core.getBlockKey(new ModelBlockContext(level, pos, state, () -> {
             random.setSeed(seed);
             return random;
         }));
@@ -164,14 +165,13 @@ public class NFCachingBakedModelImpl implements BakedModel {
     }
 
     @Override
-    public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-        // TODO
-        return BakedModel.super.getRenderTypes(itemStack, fabulous);
-    }
-
-    @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        // default impl for now
-        return BakedModel.super.getRenderPasses(itemStack, fabulous);
+        RandomSource random = RANDOM_SOURCES.get();
+        ItemSplittingQuadBaker baker = ItemSplittingQuadBaker.get();
+        core.renderItem(baker.emitter(), new ModelItemContext(itemStack, () -> {
+            random.setSeed(42L);
+            return random;
+        }));
+        return baker.bake(core);
     }
 }

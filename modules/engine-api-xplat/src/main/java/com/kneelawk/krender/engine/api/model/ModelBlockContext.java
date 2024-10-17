@@ -8,26 +8,15 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * Holds access to all available context when preparing to render a model.
+ * Context for use when rendering blocks.
+ * <p>
+ * The data contained may change, but changing or removing a constructor is considered an API-breaking change.
+ *
+ * @param level  The level access.
+ * @param pos    The position of the block being rendered.
+ * @param state  The state of the block being rendered.
+ * @param random The random for the given block state and position.
  */
-public interface ModelBlockContext {
-    /**
-     * {@return the level view for this chunk building thread}
-     */
-    BlockAndTintGetter getLevel();
-
-    /**
-     * {@return the position of the block being rendered}
-     */
-    BlockPos getPos();
-
-    /**
-     * {@return the blockstate of the block being rendered}
-     */
-    BlockState getState();
-
-    /**
-     * {@return a random supplier for this block position and state}
-     */
-    Supplier<RandomSource> getRandom();
+public record ModelBlockContext(BlockAndTintGetter level, BlockPos pos, BlockState state,
+                                Supplier<RandomSource> random) {
 }

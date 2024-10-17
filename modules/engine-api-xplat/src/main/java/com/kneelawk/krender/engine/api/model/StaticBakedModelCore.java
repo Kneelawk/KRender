@@ -24,4 +24,9 @@ public interface StaticBakedModelCore extends BakedModelCore<Void> {
     default void renderBlock(QuadEmitter renderTo, @UnknownNullability Void blockKey) {
         getMesh().outputTo(renderTo);
     }
+
+    @Override
+    default void renderItem(QuadEmitter renderTo, ModelItemContext ctx) {
+        getMesh().outputTo(renderTo);
+    }
 }

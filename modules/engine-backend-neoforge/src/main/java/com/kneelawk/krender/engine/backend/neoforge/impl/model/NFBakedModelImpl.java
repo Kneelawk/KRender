@@ -26,7 +26,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
-import com.kneelawk.krender.engine.base.model.BaseModelBlockContext;
+import com.kneelawk.krender.engine.api.model.ModelBlockContext;
+import com.kneelawk.krender.engine.api.model.ModelItemContext;
 
 /**
  * Non-Caching implementation that calls {@link BakedModelCore#renderBlock(QuadEmitter, Object)} multiple times.
@@ -114,7 +115,7 @@ public class NFBakedModelImpl implements BakedModel {
     public ModelData getModelData(BlockAndTintGetter level, BlockPos pos, BlockState state, ModelData modelData) {
         RandomSource random = RANDOM_SOURCES.get();
         long seed = state.getSeed(pos);
-        Object key = core.getBlockKey(new BaseModelBlockContext(level, pos, state, () -> {
+        Object key = core.getBlockKey(new ModelBlockContext(level, pos, state, () -> {
             random.setSeed(seed);
             return random;
         }));
@@ -139,14 +140,13 @@ public class NFBakedModelImpl implements BakedModel {
     }
 
     @Override
-    public List<RenderType> getRenderTypes(ItemStack itemStack, boolean fabulous) {
-        // TODO
-        return BakedModel.super.getRenderTypes(itemStack, fabulous);
-    }
-
-    @Override
     public List<BakedModel> getRenderPasses(ItemStack itemStack, boolean fabulous) {
-        // default impl for now
-        return BakedModel.super.getRenderPasses(itemStack, fabulous);
+        RandomSource random = RANDOM_SOURCES.get();
+        ItemSplittingQuadBaker baker = ItemSplittingQuadBaker.get();
+        core.renderItem(baker.emitter(), new ModelItemContext(itemStack, () -> {
+            random.setSeed(42L);
+            return random;
+        }));
+        return baker.bake(core);
     }
 }

@@ -34,6 +34,9 @@ public interface BakedModelCore<BK> {
 
     /**
      * {@return whether this model is hardcoded ({@code true}) or resource-based ({@code false})}
+     * <p>
+     * Note: returning {@code true} from this method may prevent {@link #renderItem(QuadEmitter, ModelItemContext)}
+     * from being called on some platforms.
      */
     boolean isCustomRenderer();
 
@@ -72,4 +75,12 @@ public interface BakedModelCore<BK> {
      * @param blockKey the block data to render.
      */
     void renderBlock(QuadEmitter renderTo, @UnknownNullability BK blockKey);
+
+    /**
+     * Render the item.
+     *
+     * @param renderTo the quad emitter to render to.
+     * @param ctx      the context used to access the item stack.
+     */
+    void renderItem(QuadEmitter renderTo, ModelItemContext ctx);
 }

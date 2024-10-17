@@ -1,7 +1,5 @@
 package com.kneelawk.krender.ctcomplicated.client;
 
-import org.jetbrains.annotations.UnknownNullability;
-
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
@@ -10,6 +8,7 @@ import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
+import com.kneelawk.krender.engine.api.model.ModelItemContext;
 
 import static java.lang.Math.abs;
 
@@ -60,5 +59,9 @@ public record CTGlassBakedModel(boolean doCorners, boolean interiorBorder, Textu
     @Override
     public void renderBlock(QuadEmitter renderTo, CTUtils.Data blockKey) {
         CTUtils.render(material, sprites, renderTo, blockKey);
+    }
+
+    @Override
+    public void renderItem(QuadEmitter renderTo, ModelItemContext ctx) {
     }
 }
