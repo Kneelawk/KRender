@@ -37,7 +37,7 @@ public final class DiscoFloorBakedModel implements BakedModelCore<CTUtils.Data> 
         MeshBuilder meshBuilder = KRenderer.getDefault().meshBuilder();
         QuadEmitter emitter = meshBuilder.emitter();
         for (Direction side : Direction.values()) {
-            CTUtils.square(emitter, side, 0f, 0f, 1f, 1f, 0f);
+            emitter.square(side, 0f, 0f, 1f, 1f, 0f);
             emitter.setUv(0, 0f, 0f);
             emitter.setUv(1, 0f, 1f);
             emitter.setUv(2, 1f, 1f);
@@ -48,7 +48,7 @@ public final class DiscoFloorBakedModel implements BakedModelCore<CTUtils.Data> 
             emitter.setMaterial(BASE_MATERIAL);
             emitter.emit();
 
-            CTUtils.square(emitter, side, 0f, 0f, 1f, 1f, 0f);
+            emitter.square(side, 0f, 0f, 1f, 1f, 0f);
             emitter.setUv(0, 0f, 0f);
             emitter.setUv(1, 0f, 1f);
             emitter.setUv(2, 1f, 1f);

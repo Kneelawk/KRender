@@ -131,71 +131,11 @@ public class CTUtils {
 
     public record FacePos(float left, float bottom, float right, float top, float depth) {
         public void emit(QuadEmitter emitter, Direction face) {
-            square(emitter, face, left, bottom, right, top, depth);
+            emitter.square(face, left, bottom, right, top, depth);
             emitter.setUv(0, left, 1f - top);
             emitter.setUv(1, left, 1f - bottom);
             emitter.setUv(2, right, 1f - bottom);
             emitter.setUv(3, right, 1f - top);
-        }
-    }
-
-    public static void square(QuadEmitter emitter, Direction face, float left, float bottom, float right,
-                               float top, float depth) {
-        if (abs(depth) < 0.00001) {
-            depth = 0;
-            emitter.setCullFace(face);
-        } else {
-            emitter.setCullFace(null);
-        }
-
-        emitter.setNominalFace(face);
-
-        switch (face) {
-            case DOWN -> {
-                emitter.setPos(0, left, depth, top);
-                emitter.setPos(1, left, depth, bottom);
-                emitter.setPos(2, right, depth, bottom);
-                emitter.setPos(3, right, depth, top);
-            }
-            case UP -> {
-                depth = 1f - depth;
-                top = 1f - top;
-                bottom = 1f - bottom;
-                emitter.setPos(0, left, depth, top);
-                emitter.setPos(1, left, depth, bottom);
-                emitter.setPos(2, right, depth, bottom);
-                emitter.setPos(3, right, depth, top);
-            }
-            case NORTH -> {
-                left = 1f - left;
-                right = 1f - right;
-                emitter.setPos(0, left, top, depth);
-                emitter.setPos(1, left, bottom, depth);
-                emitter.setPos(2, right, bottom, depth);
-                emitter.setPos(3, right, top, depth);
-            }
-            case SOUTH -> {
-                depth = 1f - depth;
-                emitter.setPos(0, left, top, depth);
-                emitter.setPos(1, left, bottom, depth);
-                emitter.setPos(2, right, bottom, depth);
-                emitter.setPos(3, right, top, depth);
-            }
-            case WEST -> {
-                emitter.setPos(0, depth, top, left);
-                emitter.setPos(1, depth, bottom, left);
-                emitter.setPos(2, depth, bottom, right);
-                emitter.setPos(3, depth, top, right);
-            }
-            case EAST -> {
-                depth = 1f - depth;
-                left = 1f - left;
-                right = 1f - right;
-                emitter.setPos(0, depth, top, left);
-                emitter.setPos(1, depth, bottom, left);
-                emitter.setPos(2, depth, bottom, right);
-                emitter.setPos(3, depth, top, right);
-            }
         }
     }
 }

@@ -2,6 +2,10 @@ package com.kneelawk.krender.engine.api.buffer;
 
 import org.jetbrains.annotations.Nullable;
 
+import org.joml.Matrix3f;
+import org.joml.Matrix3fc;
+import org.joml.Matrix4f;
+import org.joml.Matrix4fc;
 import org.joml.Vector2f;
 import org.joml.Vector2fc;
 import org.joml.Vector3f;
@@ -17,6 +21,11 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
  * Per-quad Fabric Render API style model emitter.
  */
 public interface QuadEmitter extends QuadView, QuadSink {
+    /**
+     * The smallest value that can be counted as non-zero for reasonable cases.
+     */
+    float EPSILON = 1f / 65536f;
+
     /**
      * No-rotation bake options.
      */
@@ -65,6 +74,133 @@ public interface QuadEmitter extends QuadView, QuadSink {
     QuadEmitter emit();
 
     /**
+     * Sets the vertex positions in a square on the given face.
+     *
+     * @param nominalFace the face that the square is on.
+     * @param left        the left position of the square from 0 to 1.
+     * @param bottom      the bottom position of the square from 0 to 1.
+     * @param right       the right position of the square from 0 to 1.
+     * @param top         the top position of the square from 0 to 1.
+     * @param depth       the depth of the square.
+     * @return this quad emitter.
+     */
+    default QuadEmitter square(Direction nominalFace, float left, float bottom, float right, float top, float depth) {
+        if (Math.abs(depth) < EPSILON) {
+            setCullFace(nominalFace);
+            depth = 0;
+        } else {
+            setCullFace(null);
+        }
+
+        setNominalFace(nominalFace);
+
+        switch (nominalFace) {
+            case UP:
+                depth = 1f - depth;
+                top = 1f - top;
+                bottom = 1f - bottom;
+            case DOWN:
+                setPos(0, left, depth, top);
+                setPos(1, left, depth, bottom);
+                setPos(2, right, depth, bottom);
+                setPos(3, right, depth, top);
+                return this;
+
+            case NORTH:
+                depth = 1f - depth;
+                left = 1f - left;
+                right = 1f - right;
+            case SOUTH:
+                depth = 1f - depth;
+                setPos(0, left, top, depth);
+                setPos(1, left, bottom, depth);
+                setPos(2, right, bottom, depth);
+                setPos(3, right, top, depth);
+                return this;
+
+            case EAST:
+                depth = 1f - depth;
+                left = 1f - left;
+                right = 1f - right;
+            case WEST:
+                setPos(0, depth, top, left);
+                setPos(1, depth, bottom, left);
+                setPos(2, depth, bottom, right);
+                setPos(3, depth, top, right);
+        }
+
+        return this;
+    }
+
+    /**
+     * Sets the vertex positions in a square on the given face.
+     *
+     * @param nominalFace the face that the square is on.
+     * @param left        the left position of the square from 0 to 1.
+     * @param bottom      the bottom position of the square from 0 to 1.
+     * @param right       the right position of the square from 0 to 1.
+     * @param top         the top position of the square from 0 to 1.
+     * @param depth       the depth of the square.
+     * @param transform   the transform matrix applied to the square.
+     * @param granularity the smallest value that each transformed position must be a multiple of. This helps
+     *                    prevent rounding errors that can cause quads to not overlay properly.
+     * @return this quad emitter.
+     */
+    default QuadEmitter square(Direction nominalFace, float left, float bottom, float right, float top, float depth,
+                               @Nullable Matrix4f transform, float granularity) {
+        if (transform == null) {
+            return square(nominalFace, left, bottom, right, top, depth);
+        }
+
+        nominalFace = Direction.rotate(transform, nominalFace);
+        if (Math.abs(depth) < EPSILON) {
+            setCullFace(nominalFace);
+            depth = 0;
+        } else {
+            setCullFace(null);
+        }
+
+        setNominalFace(nominalFace);
+
+        switch (nominalFace) {
+            case UP:
+                depth = 1f - depth;
+                top = 1f - top;
+                bottom = 1f - bottom;
+            case DOWN:
+                setPos(0, left, depth, top, transform, granularity);
+                setPos(1, left, depth, bottom, transform, granularity);
+                setPos(2, right, depth, bottom, transform, granularity);
+                setPos(3, right, depth, top, transform, granularity);
+                return this;
+
+            case NORTH:
+                depth = 1f - depth;
+                left = 1f - left;
+                right = 1f - right;
+            case SOUTH:
+                depth = 1f - depth;
+                setPos(0, left, top, depth, transform, granularity);
+                setPos(1, left, bottom, depth, transform, granularity);
+                setPos(2, right, bottom, depth, transform, granularity);
+                setPos(3, right, top, depth, transform, granularity);
+                return this;
+
+            case EAST:
+                depth = 1f - depth;
+                left = 1f - left;
+                right = 1f - right;
+            case WEST:
+                setPos(0, depth, top, left, transform, granularity);
+                setPos(1, depth, bottom, left, transform, granularity);
+                setPos(2, depth, bottom, right, transform, granularity);
+                setPos(3, depth, top, right, transform, granularity);
+        }
+
+        return this;
+    }
+
+    /**
      * Sets a vertex position of the current quad.
      *
      * @param vertexIndex the index of the vertex to set the position of.
@@ -74,6 +210,36 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @return this quad emitter.
      */
     QuadEmitter setPos(int vertexIndex, float x, float y, float z);
+
+    /**
+     * Sets a vertex position of the current quad.
+     *
+     * @param vertexIndex    the index of the vertex to set the position of.
+     * @param x              the x position.
+     * @param y              the y position.
+     * @param z              the z position.
+     * @param positionMatrix the matrix to use to transform the position.
+     * @param granularity    the smallest value that each transformed position must be a multiple of. This helps
+     *                       prevent rounding errors that can cause quads to not overlay properly.
+     * @return this quad emitter.
+     */
+    default QuadEmitter setPos(int vertexIndex, float x, float y, float z, Matrix4fc positionMatrix,
+                               float granularity) {
+        float tx =
+            x * positionMatrix.m00() + y * positionMatrix.m01() + z * positionMatrix.m02() + positionMatrix.m03();
+        float ty =
+            x * positionMatrix.m10() + y * positionMatrix.m11() + z * positionMatrix.m12() + positionMatrix.m13();
+        float tz =
+            x * positionMatrix.m20() + y * positionMatrix.m21() + z * positionMatrix.m22() + positionMatrix.m23();
+
+        if (Math.abs(granularity) >= EPSILON) {
+            tx = Math.round(tx / granularity) * granularity;
+            ty = Math.round(ty / granularity) * granularity;
+            tz = Math.round(tz / granularity) * granularity;
+        }
+
+        return setPos(vertexIndex, tx, ty, tz);
+    }
 
     /**
      * Sets a coordinate value of a vertex of the current quad.
@@ -225,6 +391,40 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @return this quad emitter.
      */
     QuadEmitter setNormal(int vertexIndex, float x, float y, float z);
+
+    /**
+     * Adds a vertex normal to a vertex on the current quad.
+     *
+     * @param vertexIndex  the index of the vertex to add the normal to.
+     * @param x            the x component of the normal.
+     * @param y            the y component of the normal.
+     * @param z            the z component of the normal.
+     * @param normalMatrix the matrix to apply to the normal position.
+     * @return this quad emitter.
+     */
+    default QuadEmitter setNormal(int vertexIndex, float x, float y, float z, Matrix3f normalMatrix) {
+        final float nx = x * normalMatrix.m00 + y * normalMatrix.m01 + z * normalMatrix.m02;
+        final float ny = x * normalMatrix.m10 + y * normalMatrix.m11 + z * normalMatrix.m12;
+        final float nz = x * normalMatrix.m20 + y * normalMatrix.m21 + z * normalMatrix.m22;
+        return setNormal(vertexIndex, nx, ny, nz);
+    }
+
+    /**
+     * Adds a vertex normal to a vertex on the current quad.
+     *
+     * @param vertexIndex  the index of the vertex to add the normal to.
+     * @param x            the x component of the normal.
+     * @param y            the y component of the normal.
+     * @param z            the z component of the normal.
+     * @param normalMatrix the matrix to apply to the normal position.
+     * @return this quad emitter.
+     */
+    default QuadEmitter setNormal(int vertexIndex, float x, float y, float z, Matrix3fc normalMatrix) {
+        final float nx = x * normalMatrix.m00() + y * normalMatrix.m01() + z * normalMatrix.m02();
+        final float ny = x * normalMatrix.m10() + y * normalMatrix.m11() + z * normalMatrix.m12();
+        final float nz = x * normalMatrix.m20() + y * normalMatrix.m21() + z * normalMatrix.m22();
+        return setNormal(vertexIndex, nx, ny, nz);
+    }
 
     /**
      * Sets a normal value of a vertex of the current quad.
