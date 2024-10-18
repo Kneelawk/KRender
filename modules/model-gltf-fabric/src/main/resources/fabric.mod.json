@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${version}",
-  "name": "Connected Textures Complicated",
-  "description": "Complicated cross-platform connected-texture implementation.",
+  "name": "KRender glTF Model Loading",
+  "description": "Cross-platform glTF Model Loader.",
   "authors": [
     "Kneelawk"
   ],
@@ -14,19 +14,8 @@
   },
   "license": "MIT",
   "icon": "assets/${mod_id}/icon.png",
-  "environment": "*",
-  "entrypoints": {
-    "main": [
-      {
-        "value": "com.kneelawk.krender.ctcomplicated.fabric.FabricMod"
-      }
-    ],
-    "client": [
-      {
-        "value": "com.kneelawk.krender.ctcomplicated.fabric.FabricClientMod"
-      }
-    ]
-  },
+  "environment": "client",
+  "entrypoints": { },
   "mixins": [ ],
   "depends": {
     "fabricloader": ">=0.15.0",
@@ -35,5 +24,17 @@
     "krender_engine_api": "*",
     "minecraft": ">=1.21- <1.22-",
     "java": ">=17"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [ "library" ],
+      "parent": {
+        "id": "krender",
+        "name": "KRender",
+        "description": "Kneelawk's Minecraft Rendering Utilities.",
+        "icon": "assets/${mod_id}/icon.png",
+        "badges": [ "library" ]
+      }
+    }
   }
 }

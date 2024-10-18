@@ -16,3 +16,17 @@ type = "REQUIRED"
 versionRange = "[21.0,)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "krender_model_loading"
+type = "REQUIRED"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "krender_engine_api"
+type = "REQUIRED"
+versionRange = "*"
+ordering = "NONE"
+side = "BOTH"
