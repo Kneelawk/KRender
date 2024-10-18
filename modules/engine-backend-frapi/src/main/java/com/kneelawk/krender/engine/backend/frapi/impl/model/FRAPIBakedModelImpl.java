@@ -24,11 +24,12 @@ import com.kneelawk.krender.engine.api.model.BakedModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.frapi.impl.buffer.FRAPIQuadEmitter;
+import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 /**
  * Basic non-caching baked model impl.
  */
-public class FRAPIBakedModelImpl implements BakedModel {
+public class FRAPIBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private final BakedModelCore<?> core;
 
     public FRAPIBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
@@ -90,5 +91,10 @@ public class FRAPIBakedModelImpl implements BakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         core.renderItem(new FRAPIQuadEmitter(context.getEmitter()), new ModelItemContext(stack, randomSupplier));
+    }
+
+    @Override
+    public BakedModelCore<?> krender$getCore() {
+        return core;
     }
 }

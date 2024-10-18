@@ -28,11 +28,12 @@ import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.model.BakedModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
+import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 /**
  * Non-Caching implementation that calls {@link BakedModelCore#renderBlock(QuadEmitter, Object)} multiple times.
  */
-public class NFBakedModelImpl implements BakedModel {
+public class NFBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
 
     private final BakedModelCore<?> core;
@@ -148,5 +149,10 @@ public class NFBakedModelImpl implements BakedModel {
             return random;
         }));
         return baker.bake(core);
+    }
+
+    @Override
+    public BakedModelCore<?> krender$getCore() {
+        return core;
     }
 }

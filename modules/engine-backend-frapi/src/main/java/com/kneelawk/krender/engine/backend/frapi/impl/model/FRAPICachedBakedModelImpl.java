@@ -34,8 +34,9 @@ import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.frapi.impl.KRBFRLog;
 import com.kneelawk.krender.engine.backend.frapi.impl.buffer.FRAPIQuadEmitter;
+import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
-public class FRAPICachedBakedModelImpl implements BakedModel {
+public class FRAPICachedBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private final BakedModelCore<?> core;
 
     private final LoadingCache<Object, Mesh> meshCache =
@@ -117,5 +118,10 @@ public class FRAPICachedBakedModelImpl implements BakedModel {
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         core.renderItem(new FRAPIQuadEmitter(context.getEmitter()), new ModelItemContext(stack, randomSupplier));
+    }
+
+    @Override
+    public BakedModelCore<?> krender$getCore() {
+        return core;
     }
 }

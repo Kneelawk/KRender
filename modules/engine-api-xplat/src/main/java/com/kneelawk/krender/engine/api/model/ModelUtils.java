@@ -1,15 +1,37 @@
 package com.kneelawk.krender.engine.api.model;
 
+import org.jetbrains.annotations.Nullable;
+
 import org.joml.Vector3f;
 
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
+
+import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 /**
  * Utilities for models.
  */
 public final class ModelUtils {
     private ModelUtils() {}
+
+    /**
+     * Tries to obtain a {@link BakedModelCore} from a {@link BakedModel} if that baked model either contains a baked
+     * model core or can be converted into one.
+     *
+     * @param model the baked model to get the core of.
+     * @return the core of the given baked model or {@code null} if the given baked model did not contain and could not
+     * be converted into a model core.
+     */
+    public static @Nullable BakedModelCore<?> getCore(BakedModel model) {
+        if (model instanceof BakedModelCoreProvider provider) {
+            return provider.krender$getCore();
+        }
+
+        // TODO: maybe do backend checks? I.e. maybe a backend will know specific things about converting models
+        return null;
+    }
 
     /**
      * Creates a transform accepting the same values that would be in a json {@code display} block.

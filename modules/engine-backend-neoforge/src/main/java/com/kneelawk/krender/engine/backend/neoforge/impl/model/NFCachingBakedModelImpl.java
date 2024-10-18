@@ -34,8 +34,9 @@ import com.kneelawk.krender.engine.api.model.BakedModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.neoforge.impl.KRBNFLog;
+import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
-public class NFCachingBakedModelImpl implements BakedModel {
+public class NFCachingBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
 
     private final BakedModelCore<?> core;
@@ -173,5 +174,10 @@ public class NFCachingBakedModelImpl implements BakedModel {
             return random;
         }));
         return baker.bake(core);
+    }
+
+    @Override
+    public BakedModelCore<?> krender$getCore() {
+        return core;
     }
 }
