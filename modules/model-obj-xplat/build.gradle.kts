@@ -7,6 +7,7 @@ plugins {
 submodule {
     setRefmaps("krender_model_obj")
     xplatProjectDependency(":model-loading", include = false)
+    xplatProjectDependency(":model-guard", include = false)
     xplatProjectDependency(":engine-api", include = false)
     setupJavadoc()
 }

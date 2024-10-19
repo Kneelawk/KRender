@@ -98,6 +98,11 @@ module(mojmap, "reload-listener-xplat-mojmap")
 module(fabric, "reload-listener-fabric")
 module(neoforge, "reload-listener-neoforge")
 
+module(xplat, "model-guard-xplat")
+module(mojmap, "model-guard-xplat-mojmap")
+module(fabric, "model-guard-fabric")
+module(neoforge, "model-guard-neoforge")
+
 module(xplat, "model-obj-xplat")
 module(mojmap, "model-obj-xplat-mojmap")
 module(fabric, "model-obj-fabric")

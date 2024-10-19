@@ -2,8 +2,8 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${version}",
-  "name": "KRender OBJ Model Loading",
-  "description": "Cross-platform OBJ Model Loader.",
+  "name": "KRender Model Loading Guard",
+  "description": "Model Loader Manager, hopefully preventing model-loading conflicts.",
   "authors": [
     "Kneelawk"
   ],
@@ -20,11 +20,11 @@
   "depends": {
     "fabricloader": ">=0.15.0",
     "fabric-api": "*",
-    "krender_model_loading": "*",
-    "krender_model_guard": "*",
-    "krender_engine_api": "*",
     "minecraft": ">=1.21- <1.22-",
     "java": ">=17"
+  },
+  "breaks": {
+    "suspicious_shapes": "~1"
   },
   "custom": {
     "modmenu": {
