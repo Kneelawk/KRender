@@ -87,7 +87,7 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
         }
     }
 
-    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 0), order = 1500)
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;loadAllBlockStates()V"), order = 1500)
     private void krender$initBeforeItems(BlockColors blockColors, ProfilerFiller profilerFiller,
                                                Map<ResourceLocation, BlockModel> map,
                                                Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> map2, CallbackInfo ci) {
