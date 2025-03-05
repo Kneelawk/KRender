@@ -87,14 +87,23 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
         }
     }
 
+    @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;popPush(Ljava/lang/String;)V", ordinal = 0), order = 1500)
+    private void krender$initBeforeItems(BlockColors blockColors, ProfilerFiller profilerFiller,
+                                               Map<ResourceLocation, BlockModel> map,
+                                               Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> map2, CallbackInfo ci) {
+        profilerFiller.popPush("krender_add_low_level_models");
+        if (krender$manager != null) {
+            krender$manager.addExtraLowLevelModels(this::krender$addExtraLowLevelModel);
+        }
+    }
+
     @Inject(method = "<init>", at = @At("RETURN"))
     private void krender$initReturn(BlockColors blockColors, ProfilerFiller profilerFiller,
                                     Map<ResourceLocation, BlockModel> map,
                                     Map<ResourceLocation, List<BlockStateModelLoader.LoadedJson>> map2,
                                     CallbackInfo ci) {
-        profilerFiller.popPush("krender_add_extra_models");
+        profilerFiller.popPush("krender_add_top_level_models");
         if (krender$manager != null) {
-            krender$manager.addExtraLowLevelModels(this::krender$addExtraLowLevelModel);
             krender$manager.addExtraTopLevelNames(this::krender$addExtraTopLevelName);
             krender$manager.addExtraTopLevelModels(this::krender$addExtraTopLevelModel);
         }
