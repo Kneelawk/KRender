@@ -82,8 +82,6 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
             ModelBakeryPluginContextImpl ctx = future.join().loadPlugins();
             krender$manager = ctx.createManager((ModelBakery) (Object) this);
             ModelBakeryPluginManager.CURRENT_MANAGER.set(krender$manager);
-
-            krender$manager.addExtraLowLevelModels(this::krender$addExtraLowLevelModel);
         } else {
             krender$manager = null;
         }
@@ -96,6 +94,7 @@ public abstract class ModelBakeryMixin implements ModelBakeryHooks {
                                     CallbackInfo ci) {
         profilerFiller.popPush("krender_add_extra_models");
         if (krender$manager != null) {
+            krender$manager.addExtraLowLevelModels(this::krender$addExtraLowLevelModel);
             krender$manager.addExtraTopLevelNames(this::krender$addExtraTopLevelName);
             krender$manager.addExtraTopLevelModels(this::krender$addExtraTopLevelModel);
         }
