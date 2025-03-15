@@ -119,8 +119,8 @@ public class ObjUnbakedModel implements UnbakedModel {
             QuadEmitter root = builder.emitter();
 
             Matrix4f transform = new Matrix4f();
-            transform.mul(state.getRotation().getMatrix());
             metadata.transformMatrix(transform);
+            transform.mul(state.getRotation().getMatrix());
 
             try (PooledQuadEmitter emitter = root.withTransformQuad(
                 new MatrixQuadTransform.Options(transform, metadata.transformGranularity()),

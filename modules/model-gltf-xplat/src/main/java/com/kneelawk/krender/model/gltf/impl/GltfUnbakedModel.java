@@ -78,8 +78,8 @@ public class GltfUnbakedModel implements UnbakedModel {
 
             // build transform matrix
             Matrix4f baseTransform = new Matrix4f().identity();
-            baseTransform.mul(state.getRotation().getMatrix());
             metadata.transformMatrix(baseTransform);
+            baseTransform.mul(state.getRotation().getMatrix());
 
             if (!file.root().images().isEmpty()) {
                 particleTexture = blockSprite.apply(getImage(0));
