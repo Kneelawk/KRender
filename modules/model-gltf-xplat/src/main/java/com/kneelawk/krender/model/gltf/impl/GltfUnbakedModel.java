@@ -118,8 +118,8 @@ public class GltfUnbakedModel implements UnbakedModel {
 
             // build transform matrix
             Matrix4f baseTransform = new Matrix4f().identity();
-            baseTransform.mul(modelState.getRotation().getMatrix());
             metadata.transformMatrix(baseTransform);
+            baseTransform.mul(modelState.getRotation().getMatrix());
 
             QuadEmitter emitter = meshBuilder.emitter();
             try (PooledQuadEmitter pooled = emitter.withTransformQuad(
