@@ -4,6 +4,7 @@ import java.util.function.Function;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadSink;
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
@@ -19,14 +20,14 @@ public class BaseTypeConverter implements TypeConverter {
     /**
      * The renderer that this converter is associated with.
      */
-    protected final BaseKRendererApi renderer;
+    protected final KRenderer renderer;
 
     /**
      * Creates a new base type converter.
      *
      * @param renderer the renderer that this converter and everything it converts to will be associated with.
      */
-    public BaseTypeConverter(BaseKRendererApi renderer) {this.renderer = renderer;}
+    public BaseTypeConverter(KRenderer renderer) {this.renderer = renderer;}
 
     @Override
     public RenderMaterial toAssociated(RenderMaterial material) {

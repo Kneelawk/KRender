@@ -1,29 +1,44 @@
 package com.kneelawk.krender.engine.backend.frapi.impl.material;
 
+import java.util.concurrent.locks.ReentrantLock;
+
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 
 import net.minecraft.resources.ResourceLocation;
 
+import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 
-public class FRAPIMaterialManager extends BaseMaterialManager<FRAPIRenderMaterial> {
+public class FRAPIMaterialManager extends BaseMaterialManager {
+    private final ReentrantLock lock = new ReentrantLock();
+
     public FRAPIMaterialManager() {
         super(FRAPIRenderer.INSTNACE, FRAPIRenderMaterial::new);
     }
 
     @Override
-    protected boolean registerMaterialImpl(ResourceLocation id, FRAPIRenderMaterial material) {
-        boolean res = super.registerMaterialImpl(id, material);
+    public boolean registerMaterial(ResourceLocation id, RenderMaterial material) {
+        boolean res = super.registerMaterial(id, material);
         if (res) {
-            Renderer.get().registerMaterial(id, material.material);
+            lock.lock();
+            try {
+                Renderer.get().registerMaterial(id, ((FRAPIRenderMaterial) material).material);
+            } finally {
+                lock.unlock();
+            }
         }
         return res;
     }
 
     @Override
-    protected boolean registerOrUpdateMaterialImpl(ResourceLocation id, FRAPIRenderMaterial material) {
-        Renderer.get().registerMaterial(id, material.material);
-        return super.registerOrUpdateMaterialImpl(id, material);
+    public boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
+        lock.lock();
+        try {
+            Renderer.get().registerMaterial(id, ((FRAPIRenderMaterial) material).material);
+        } finally {
+            lock.unlock();
+        }
+        return super.registerOrUpdateMaterial(id, material);
     }
 }

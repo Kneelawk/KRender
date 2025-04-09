@@ -21,7 +21,7 @@ public class BaseMeshBuilder implements MeshBuilder {
     /**
      * The renderer that this mesh builder, its emitter, and all built meshes will be associated with.
      */
-    protected final BaseKRendererApi renderer;
+    protected final KRenderer renderer;
     /**
      * This mesh builder's scratch data buffer.
      */
@@ -40,7 +40,7 @@ public class BaseMeshBuilder implements MeshBuilder {
      *
      * @param renderer the render that this mesh builder, its emitter, and all built meshes will be associated with.
      */
-    public BaseMeshBuilder(BaseKRendererApi renderer) {
+    public BaseMeshBuilder(KRenderer renderer) {
         this.maker = createMaker(renderer);
         this.renderer = renderer;
         maker.begin(data, index);
@@ -54,7 +54,7 @@ public class BaseMeshBuilder implements MeshBuilder {
      * @param renderer the renderer for the quad emitter.
      * @return the new associated quad emitter.
      */
-    protected BaseQuadEmitter createMaker(BaseKRendererApi renderer) {
+    protected BaseQuadEmitter createMaker(KRenderer renderer) {
         return new Maker(renderer);
     }
 
@@ -109,7 +109,7 @@ public class BaseMeshBuilder implements MeshBuilder {
     }
 
     private class Maker extends RootQuadEmitter {
-        public Maker(BaseKRendererApi renderer) {
+        public Maker(KRenderer renderer) {
             super(renderer);
         }
 

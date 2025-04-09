@@ -2,7 +2,9 @@ package com.kneelawk.krender.engine.backend.frapi.impl;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
+import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
@@ -13,7 +15,7 @@ import com.kneelawk.krender.engine.backend.frapi.impl.model.FRAPIUnwrapper;
 import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
 import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 
-public class FRAPIRenderer implements BaseKRendererApi {
+public class FRAPIRenderer implements KRenderer {
     public static final FRAPIRenderer INSTNACE = new FRAPIRenderer();
 
     private final FRAPIUnwrapper unwrapper = new FRAPIUnwrapper();
@@ -36,7 +38,7 @@ public class FRAPIRenderer implements BaseKRendererApi {
     }
 
     @Override
-    public @NotNull BaseMaterialManagerApi<FRAPIRenderMaterial> materialManager() {
+    public @NotNull MaterialManager materialManager() {
         return materialManager;
     }
 

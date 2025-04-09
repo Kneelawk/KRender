@@ -24,7 +24,7 @@ public class BaseMesh implements Mesh {
     /**
      * The renderer that this mesh is associated with.
      */
-    protected final BaseKRendererApi renderer;
+    protected final KRenderer renderer;
     /**
      * The data held by this mesh.
      */
@@ -36,7 +36,7 @@ public class BaseMesh implements Mesh {
      * @param renderer the renderer that the new mesh will be associated with.
      * @param data     the data of the mesh.
      */
-    public BaseMesh(BaseKRendererApi renderer, int[] data) {
+    public BaseMesh(KRenderer renderer, int[] data) {
         this.renderer = renderer;
         this.data = data;
     }

@@ -2,6 +2,7 @@ package com.kneelawk.krender.engine.base.convert;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.base.buffer.BaseQuadFormat;
 import com.kneelawk.krender.engine.base.buffer.RootQuadEmitter;
 
@@ -18,7 +19,7 @@ public class VertexConsumerQuadEmitter extends RootQuadEmitter {
      * @param renderer the renderer this quad emitter is associated with.
      * @param consumer the vertex consumer to wrap.
      */
-    public VertexConsumerQuadEmitter(BaseKRendererApi renderer, VertexConsumer consumer) {
+    public VertexConsumerQuadEmitter(KRenderer renderer, VertexConsumer consumer) {
         super(renderer);
         this.consumer = consumer;
         begin(new int[BaseQuadFormat.TOTAL_STRIDE], 0);

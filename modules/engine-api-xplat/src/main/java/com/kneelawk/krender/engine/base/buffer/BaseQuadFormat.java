@@ -1,15 +1,26 @@
 package com.kneelawk.krender.engine.base.buffer;
 
+import java.util.concurrent.ExecutionException;
+
 import com.google.common.base.Preconditions;
+import com.google.common.cache.Cache;
+import com.google.common.cache.CacheBuilder;
 
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadView;
 import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
+import com.kneelawk.krender.engine.api.util.bits.Bits;
+import com.kneelawk.krender.engine.api.util.bits.BooleanBits;
+import com.kneelawk.krender.engine.api.util.bits.IntBits;
+import com.kneelawk.krender.engine.base.material.BaseMaterialFormat;
 
 import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_BIT_COUNT;
 import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_MASK;
@@ -20,7 +31,33 @@ import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_MASK;
  * Static values useful for encoding and decoding quads when using the base implementations.
  */
 public final class BaseQuadFormat {
-    private BaseQuadFormat() {}
+    private static final Cache<MaterialManager, BaseQuadFormat> cache =
+        CacheBuilder.newBuilder().weakKeys().build();
+
+    /**
+     * Gets a base quad format for the given material manager.
+     *
+     * @param manager the manager to get the quad format for.
+     * @return the quad format for the given material manager.
+     */
+    public static BaseQuadFormat get(MaterialManager manager) {
+        try {
+            return cache.get(manager, () -> new BaseQuadFormat(Mth.ceillog2(manager.maxIntId())));
+        } catch (ExecutionException e) {
+            // should never happen
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Gets a base quad format for the given renderer.
+     *
+     * @param renderer the renderer implementation supplying the texture manager.
+     * @return the material format for the given renderer.
+     */
+    public static BaseQuadFormat get(KRenderer renderer) {
+        return get(renderer.materialManager());
+    }
 
     /**
      * The int index of the bits in the header.
@@ -99,68 +136,65 @@ public final class BaseQuadFormat {
     public static final int[] EMPTY = new int[TOTAL_STRIDE];
 
     /**
-     * The bit offset of the cull face in the header bits.
-     */
-    public static final int CULL_SHIFT = 0;
-    /**
-     * The inverse mask of the cull face.
-     */
-    public static final int CULL_INVERSE_MASK = ~(DIRECTION_MASK << CULL_SHIFT);
-    /**
-     * The bit offset of the light face in the header bits.
-     */
-    public static final int LIGHT_SHIFT = CULL_SHIFT + DIRECTION_BIT_COUNT;
-    /**
-     * The inverse mask of the light face.
-     */
-    public static final int LIGHT_INVERSE_MASK = ~(DIRECTION_MASK << LIGHT_SHIFT);
-    /**
-     * The bit offset of the normal presence flags in the header bits.
-     */
-    public static final int NORMALS_SHIFT = LIGHT_SHIFT + DIRECTION_BIT_COUNT;
-    /**
      * The number of bits in the normal presence flags.
      */
     public static final int NORMALS_COUNT = 4;
-    /**
-     * The bit mask of the normal presence flags, not shifted.
-     */
-    public static final int NORMALS_MASK = (1 << NORMALS_COUNT) - 1;
-    /**
-     * The shifted inverse mask of the normal presence flags.
-     */
-    public static final int NORMALS_INVERSE_MASK = ~(NORMALS_MASK << NORMALS_SHIFT);
-    /**
-     * The bit offset of the geometry flags in the header bits.
-     */
-    public static final int GEOMETRY_SHIFT = NORMALS_SHIFT + NORMALS_COUNT;
-    /**
-     * The bit mask of the geometry flags, not shifted.
-     */
-    public static final int GEOMETRY_MASK = (1 << GeometryHelper.FLAG_BIT_COUNT) - 1;
-    /**
-     * The shifted inverse mask of the geometry flags.
-     */
-    public static final int GEOMETRY_INVERSE_MASK = ~(GEOMETRY_MASK << GEOMETRY_SHIFT);
-    /**
-     * The bit offset of the material in the header bits.
-     */
-    public static final int MATERIAL_SHIFT = GEOMETRY_SHIFT + GeometryHelper.FLAG_BIT_COUNT;
-    /**
-     * The inverse mask of the material.
-     */
-    public static final int MATERIAL_INVERSE_MASK = ~(BaseMaterialViewApi.FULL_BIT_MASK << MATERIAL_SHIFT);
 
     static {
         // We check that our vertices are the same size and format as vanilla's because that makes translation a lot easier
         Preconditions.checkState(VERTEX_STRIDE == QuadView.VANILLA_VERTEX_STRIDE,
             "KRender Engine base vertex format (%s ints) is incompatible with vanilla vertex format (%s ints)",
             VERTEX_STRIDE, QuadView.VANILLA_VERTEX_STRIDE);
+    }
+
+    /**
+     * The cull direction.
+     */
+    public final IntBits cull;
+    /**
+     * The light direction.
+     */
+    public final IntBits light;
+    /**
+     * The normal presence flags.
+     */
+    public final IntBits normalsInt;
+    /**
+     * The individual normal presence flags.
+     */
+    public final BooleanBits[] normals;
+    /**
+     * The geometry flags.
+     */
+    public final IntBits geometry;
+    /**
+     * The material for a given quad.
+     */
+    public final IntBits material;
+
+    public BaseQuadFormat(int materialBits) {
+        cull = IntBits.of(DIRECTION_BIT_COUNT);
+        light = IntBits.ofNoSplitI(cull, DIRECTION_BIT_COUNT);
+        normalsInt = IntBits.ofNoSplitI(light, 4);
+        geometry = IntBits.ofNoSplitI(normalsInt, GeometryHelper.FLAG_BIT_COUNT);
+        material = IntBits.ofNoSplitI(geometry, materialBits);
+
+        normals = new BooleanBits[NORMALS_COUNT];
+        Bits prev = light;
+        for (int i = 0; i < NORMALS_COUNT; i++) {
+            prev = normals[i] = BooleanBits.ofI(prev);
+        }
 
         // Check that there are enough bits in the header to hold everything
-        Preconditions.checkState(MATERIAL_SHIFT + BaseMaterialViewApi.TOTAL_BIT_LENGTH <= 32,
-            "KRender Engine base quad format header bit count (%s) has exceeded 32 bits",
-            MATERIAL_SHIFT + BaseMaterialViewApi.TOTAL_BIT_LENGTH);
+        Preconditions.checkState(getHeaderBitCount() <= 32,
+            "KRender Engine base quad format header bit count (%s) has exceeded 32 bits", getHeaderBitCount());
+    }
+
+    /**
+     * {@return the number of bits in the header}
+     */
+    public int getHeaderBitCount() {
+        return material.fullShift() + material.bitCount();
     }
 
     /**
@@ -169,8 +203,8 @@ public final class BaseQuadFormat {
      * @param bits the header bits.
      * @return the direction cull face.
      */
-    public static @Nullable Direction getCullFace(int bits) {
-        return DirectionIds.idToDirection((bits >>> CULL_SHIFT) & DIRECTION_MASK);
+    public @Nullable Direction getCullFace(int bits) {
+        return DirectionIds.idToDirection(cull.getI(bits));
     }
 
     /**
@@ -180,8 +214,8 @@ public final class BaseQuadFormat {
      * @param face the new cull face direction.
      * @return the header bits with the new cull face.
      */
-    public static int setCullFace(int bits, @Nullable Direction face) {
-        return (bits & CULL_INVERSE_MASK) | (DirectionIds.directionToId(face) << CULL_SHIFT);
+    public int setCullFace(int bits, @Nullable Direction face) {
+        return cull.setI(bits, DirectionIds.directionToId(face));
     }
 
     /**
@@ -190,8 +224,8 @@ public final class BaseQuadFormat {
      * @param bits the header bits.
      * @return the light face.
      */
-    public static Direction getLightFace(int bits) {
-        final Direction direction = DirectionIds.idToDirection((bits >> LIGHT_SHIFT) & DIRECTION_MASK);
+    public Direction getLightFace(int bits) {
+        final Direction direction = DirectionIds.idToDirection(light.getI(bits));
         assert direction != null;
         return direction;
     }
@@ -203,8 +237,8 @@ public final class BaseQuadFormat {
      * @param face the new light face direction.
      * @return the header bits with the new light face.
      */
-    public static int setLightFace(int bits, Direction face) {
-        return (bits & LIGHT_INVERSE_MASK) | (DirectionIds.directionToId(face) << LIGHT_SHIFT);
+    public int setLightFace(int bits, Direction face) {
+        return light.setI(bits, DirectionIds.directionToId(face));
     }
 
     /**
@@ -213,8 +247,8 @@ public final class BaseQuadFormat {
      * @param bits the header bits.
      * @return the normal flags.
      */
-    public static int getNormalFlags(int bits) {
-        return (bits >> NORMALS_SHIFT) & NORMALS_MASK;
+    public int getNormalFlags(int bits) {
+        return normalsInt.getI(bits);
     }
 
     /**
@@ -224,8 +258,8 @@ public final class BaseQuadFormat {
      * @param vertexIndex the index of the normal to check.
      * @return whether the normal exists.
      */
-    public static boolean isNormalPresent(int bits, int vertexIndex) {
-        return (getNormalFlags(bits) & (1 << vertexIndex)) != 0;
+    public boolean isNormalPresent(int bits, int vertexIndex) {
+        return normals[vertexIndex].getI(bits);
     }
 
     /**
@@ -237,9 +271,8 @@ public final class BaseQuadFormat {
      * @param present     whether the normal should be marked as present.
      * @return the new header bits.
      */
-    public static int setNormalPresent(int bits, int vertexIndex, boolean present) {
-        final int offset = NORMALS_SHIFT + vertexIndex;
-        return (bits & ~(1 << offset)) | ((present ? 1 : 0) << offset);
+    public int setNormalPresent(int bits, int vertexIndex, boolean present) {
+        return normals[vertexIndex].setI(bits, present);
     }
 
     /**
@@ -248,8 +281,8 @@ public final class BaseQuadFormat {
      * @param bits the header bits.
      * @return the geometry flags.
      */
-    public static int getGeometryFlags(int bits) {
-        return (bits >> GEOMETRY_SHIFT) & GEOMETRY_MASK;
+    public int getGeometryFlags(int bits) {
+        return geometry.getI(bits);
     }
 
     /**
@@ -259,8 +292,8 @@ public final class BaseQuadFormat {
      * @param geometryFlags the new geometry flags.
      * @return the new header bits.
      */
-    public static int setGeometryFlags(int bits, int geometryFlags) {
-        return (bits & GEOMETRY_INVERSE_MASK) | ((geometryFlags & GEOMETRY_MASK) << GEOMETRY_SHIFT);
+    public int setGeometryFlags(int bits, int geometryFlags) {
+        return geometry.setI(bits, geometryFlags);
     }
 
     /**
@@ -270,8 +303,8 @@ public final class BaseQuadFormat {
      * @param manager the material manager.
      * @return the render material.
      */
-    public static RenderMaterial getMaterial(int bits, MaterialManager manager) {
-        return manager.materialByIntId((bits >>> MATERIAL_SHIFT) & BaseMaterialViewApi.FULL_BIT_MASK);
+    public RenderMaterial getMaterial(int bits, MaterialManager manager) {
+        return manager.materialByIntId(material.getI(bits));
     }
 
     /**
@@ -281,7 +314,7 @@ public final class BaseQuadFormat {
      * @param material the new render material.
      * @return the new header bits.
      */
-    public static int setMaterial(int bits, RenderMaterial material) {
-        return (bits & MATERIAL_INVERSE_MASK) | (material.intId() << MATERIAL_SHIFT);
+    public int setMaterial(int bits, RenderMaterial material) {
+        return this.material.setI(bits, material.intId());
     }
 }

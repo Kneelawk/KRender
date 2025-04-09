@@ -6,15 +6,18 @@ import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.shim.ShimRenderer;
 import com.kneelawk.krender.engine.base.material.BaseMaterialView;
+import com.kneelawk.krender.engine.base.material.BaseRenderMaterial;
 
-public class ShimRenderMaterial extends BaseMaterialView implements RenderMaterial {
+public class ShimRenderMaterial extends BaseRenderMaterial {
+
     /**
-     * Creates a new {@link BaseMaterialView} with the given bits.
+     * Creates a new {@link BaseRenderMaterial} with the given bits.
      *
-     * @param bits the bits representing this material.
+     * @param finder the material finder used to create this material.
+     * @param intId  the integer id of the render material.
      */
-    public ShimRenderMaterial(int bits) {
-        super(bits);
+    public ShimRenderMaterial(BaseMaterialView finder, int intId) {
+        super(finder, intId);
     }
 
     @Override

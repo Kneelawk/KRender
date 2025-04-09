@@ -48,6 +48,7 @@ public abstract class BaseRenderMaterial extends BaseMaterialView implements Ren
      * Creates a new {@link BaseRenderMaterial} with the given bits.
      *
      * @param finder the material finder used to create this material.
+     * @param intId the integer id of the render material.
      */
     public BaseRenderMaterial(BaseMaterialView finder, int intId) {
         super(finder.bits, finder.name);

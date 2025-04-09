@@ -1,5 +1,6 @@
 package com.kneelawk.krender.engine.base.convert;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.base.buffer.BaseQuadEmitter;
 import com.kneelawk.krender.engine.base.buffer.BaseQuadFormat;
@@ -20,7 +21,7 @@ public class ConvertingQuadEmitter extends RootQuadEmitter {
      * @param renderer the renderer that this quad emitter will be associated with.
      * @param target   the emitter to wrap.
      */
-    public ConvertingQuadEmitter(BaseKRendererApi renderer, QuadEmitter target) {
+    public ConvertingQuadEmitter(KRenderer renderer, QuadEmitter target) {
         super(renderer);
         this.target = target;
         begin(new int[BaseQuadFormat.TOTAL_STRIDE], 0);

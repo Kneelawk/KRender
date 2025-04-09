@@ -6,6 +6,7 @@ import org.jetbrains.annotations.UnknownNullability;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadSink;
 import com.kneelawk.krender.engine.api.buffer.QuadTransform;
@@ -23,19 +24,19 @@ public class TransformStack {
     /**
      * The renderer that all quad emitters from this stack will be associated with.
      */
-    protected final BaseKRendererApi renderer;
+    protected final KRenderer renderer;
 
     /**
      * The constructor for the type of transforming quad emitter this transform stack deals in.
      */
-    protected final BiFunction<BaseKRendererApi, TransformStack, TransformingQuadEmitter> ctor;
+    protected final BiFunction<KRenderer, TransformStack, TransformingQuadEmitter> ctor;
 
     /**
      * Creates a new transform stack.
      *
      * @param renderer the renderer that all quad emitters from this stack will be associated with.
      */
-    public TransformStack(BaseKRendererApi renderer) {
+    public TransformStack(KRenderer renderer) {
         this(renderer, TransformingQuadEmitter::new);
     }
 
@@ -45,8 +46,8 @@ public class TransformStack {
      * @param renderer the renderer that all quad emitters from this stack will be associated with.
      * @param ctor     constructor for the type of transforming quad emitter this transform stack deals in.
      */
-    protected TransformStack(BaseKRendererApi renderer,
-                             BiFunction<BaseKRendererApi, TransformStack, TransformingQuadEmitter> ctor) {
+    protected TransformStack(KRenderer renderer,
+                             BiFunction<KRenderer, TransformStack, TransformingQuadEmitter> ctor) {
         this.renderer = renderer;
         this.ctor = ctor;
     }

@@ -3,12 +3,13 @@ package com.kneelawk.krender.engine.backend.neoforge.impl.mesh;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 
-import com.kneelawk.krender.engine.api.util.TriState;
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.api.util.TriState;
 import com.kneelawk.krender.engine.base.buffer.RootQuadEmitter;
 
 public abstract class NFRootQuadEmitter extends RootQuadEmitter {
-    public NFRootQuadEmitter(BaseKRendererApi renderer) {
+    public NFRootQuadEmitter(KRenderer renderer) {
         super(renderer, new NFTransformStack(renderer));
     }
 

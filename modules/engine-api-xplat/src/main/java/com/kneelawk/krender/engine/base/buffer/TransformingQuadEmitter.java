@@ -5,6 +5,7 @@ import java.util.Objects;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.PooledQuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.PooledVertexEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
@@ -46,7 +47,7 @@ public class TransformingQuadEmitter extends BaseQuadEmitter implements PooledQu
      * @param renderer       the renderer that this emitter is to be associated with.
      * @param transformStack the transform stack that this emitter came from and will be returned to.
      */
-    public TransformingQuadEmitter(BaseKRendererApi renderer, TransformStack transformStack) {
+    public TransformingQuadEmitter(KRenderer renderer, TransformStack transformStack) {
         super(renderer);
         this.transformStack = transformStack;
         begin(new int[BaseQuadFormat.TOTAL_STRIDE], 0);

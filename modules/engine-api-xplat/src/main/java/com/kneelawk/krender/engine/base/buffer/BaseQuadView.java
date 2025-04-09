@@ -16,10 +16,10 @@ import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.util.ColorUtils;
 
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_BITS;
-import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_TINT_INDEX;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_FACE_NORMAL;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_STRIDE;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_TAG;
+import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.HEADER_TINT_INDEX;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_COLOR;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_LIGHTMAP;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_NORMAL;
@@ -29,7 +29,6 @@ import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_V;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_X;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_Y;
 import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.VERTEX_Z;
-import static com.kneelawk.krender.engine.base.buffer.BaseQuadFormat.isNormalPresent;
 
 // This class is largely based on the Fabric Render API's QuadViewImpl.
 
@@ -41,6 +40,11 @@ public class BaseQuadView implements QuadView {
      * The renderer associated with this quad view.
      */
     protected final KRenderer renderer;
+
+    /**
+     * The quad format for this quad view's renderer.
+     */
+    protected final BaseQuadFormat format;
 
     /**
      * Header and quad data.
@@ -81,6 +85,7 @@ public class BaseQuadView implements QuadView {
      */
     public BaseQuadView(KRenderer renderer) {
         this.renderer = renderer;
+        this.format = BaseQuadFormat.get(renderer);
     }
 
     /**
@@ -117,10 +122,10 @@ public class BaseQuadView implements QuadView {
             data[baseIndex + HEADER_FACE_NORMAL] = NormalHelper.packNormal(faceNormal);
 
             data[baseIndex + HEADER_BITS] =
-                BaseQuadFormat.setLightFace(data[baseIndex + HEADER_BITS], GeometryHelper.computeLightFace(this));
+                format.setLightFace(data[baseIndex + HEADER_BITS], GeometryHelper.computeLightFace(this));
 
             data[baseIndex + HEADER_BITS] =
-                BaseQuadFormat.setGeometryFlags(data[baseIndex + HEADER_BITS],
+                format.setGeometryFlags(data[baseIndex + HEADER_BITS],
                     GeometryHelper.computeGeometryFlags(this));
         }
     }
@@ -237,7 +242,7 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public boolean hasNormal(int vertexIndex) {
-        return isNormalPresent(data[baseIndex + HEADER_BITS], vertexIndex);
+        return format.isNormalPresent(data[baseIndex + HEADER_BITS], vertexIndex);
     }
 
     @Override
@@ -284,13 +289,13 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public @Nullable Direction getCullFace() {
-        return BaseQuadFormat.getCullFace(data[baseIndex + HEADER_BITS]);
+        return format.getCullFace(data[baseIndex + HEADER_BITS]);
     }
 
     @Override
     public Direction getLightFace() {
         computeGeometry();
-        return BaseQuadFormat.getLightFace(data[baseIndex + HEADER_BITS]);
+        return format.getLightFace(data[baseIndex + HEADER_BITS]);
     }
 
     @Override
@@ -314,7 +319,7 @@ public class BaseQuadView implements QuadView {
 
     @Override
     public RenderMaterial getMaterial() {
-        return BaseQuadFormat.getMaterial(data[baseIndex + HEADER_BITS], renderer.materialManager());
+        return format.getMaterial(data[baseIndex + HEADER_BITS], renderer.materialManager());
     }
 
     @Override

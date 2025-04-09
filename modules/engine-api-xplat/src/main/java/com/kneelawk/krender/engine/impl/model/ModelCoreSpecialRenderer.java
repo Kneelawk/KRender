@@ -35,7 +35,7 @@ public class ModelCoreSpecialRenderer implements SpecialModelRenderer<ModelCoreS
         KRenderer renderer = KRenderer.tryGetDefault();
         if (renderer == null) return;
 
-        QuadEmitter emitter = renderer.converter().fromItemMultiBufferSource(bufferSource);
+        QuadEmitter emitter = renderer.converter().fromItemMultiBufferSource(bufferSource, displayContext, poseStack.last());
 
         try (PooledQuadEmitter pooled = emitter.withTransformQuad(PoseQuadTransform.getInstance(),
             new PoseQuadTransform.Options(poseStack.last()), LightingQuadTransform.getInstance(),

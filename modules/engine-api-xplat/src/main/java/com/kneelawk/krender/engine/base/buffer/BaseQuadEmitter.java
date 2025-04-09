@@ -317,7 +317,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     public QuadEmitter removeNormal(int vertexIndex) {
         flushVertices();
         final int index = baseIndex + HEADER_BITS;
-        data[index] = BaseQuadFormat.setNormalPresent(data[index], vertexIndex, false);
+        data[index] = format.setNormalPresent(data[index], vertexIndex, false);
         return this;
     }
 
@@ -328,14 +328,14 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
      */
     protected void setNormal(int vertexIndex) {
         final int index = baseIndex + HEADER_BITS;
-        data[index] = BaseQuadFormat.setNormalPresent(data[index], vertexIndex, true);
+        data[index] = format.setNormalPresent(data[index], vertexIndex, true);
     }
 
     @Override
     public QuadEmitter setCullFace(@Nullable Direction face) {
         flushVertices();
         final int index = baseIndex + HEADER_BITS;
-        data[index] = BaseQuadFormat.setCullFace(data[index], face);
+        data[index] = format.setCullFace(data[index], face);
         setNominalFace(face);
         return this;
     }
@@ -380,7 +380,7 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
     @Override
     public QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace) {
         fromVanilla(quad.getVertices(), 0);
-        data[baseIndex + HEADER_BITS] = BaseQuadFormat.setCullFace(0, cullFace);
+        data[baseIndex + HEADER_BITS] = format.setCullFace(0, cullFace);
         setNominalFace(quad.getDirection());
         setTintIndex(quad.getTintIndex());
 
@@ -443,8 +443,8 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
         for (int i = 0; i < 4; i++) {
             System.arraycopy(sortData, HEADER_STRIDE + indices[i] * VERTEX_STRIDE, data,
                 baseIndex + HEADER_STRIDE + i * VERTEX_STRIDE, VERTEX_STRIDE);
-            header = BaseQuadFormat.setNormalPresent(header, i,
-                BaseQuadFormat.isNormalPresent(sortData[HEADER_BITS], indices[i]));
+            header = format.setNormalPresent(header, i,
+                format.isNormalPresent(sortData[HEADER_BITS], indices[i]));
         }
         data[baseIndex + HEADER_BITS] = header;
 
@@ -462,9 +462,8 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
 
     @Override
     public BaseQuadEmitter setDefaultMaterial(RenderMaterial material) {
-        if (!(material instanceof BaseMaterialViewApi)) throw new IllegalArgumentException(
-            "BaseQuadEmitters are only compatible with BaseMaterialViewApi render material impls. " +
-                "You are likely attempting to use a render material from another renderer. " +
+        if (renderer != material.getRenderer()) throw new IllegalArgumentException(
+            "The given material is from a different renderer. " +
                 "Please convert the render material to one compatible with this renderer via this renderer's converter.");
 
         defaultMaterial = material;
@@ -478,12 +477,11 @@ public abstract class BaseQuadEmitter extends BaseQuadView implements QuadEmitte
             material = defaultMaterial;
         }
 
-        if (!(material instanceof BaseMaterialViewApi baseMaterial)) throw new IllegalArgumentException(
-            "BaseQuadEmitters are only compatible with BaseMaterialViewApi render material impls. " +
-                "You are likely attempting to use a render material from another renderer. " +
+        if (renderer != material.getRenderer()) throw new IllegalArgumentException(
+            "The given material is from a different renderer. " +
                 "Please convert the render material to one compatible with this renderer via this renderer's converter.");
 
-        data[baseIndex + HEADER_BITS] = BaseQuadFormat.setMaterial(data[baseIndex + HEADER_BITS], baseMaterial);
+        data[baseIndex + HEADER_BITS] = format.setMaterial(data[baseIndex + HEADER_BITS], material);
 
         return this;
     }

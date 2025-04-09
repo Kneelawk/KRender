@@ -1,9 +1,10 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.mesh;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.base.buffer.TransformStack;
 
 public class NFTransformStack extends TransformStack {
-    public NFTransformStack(BaseKRendererApi renderer) {
+    public NFTransformStack(KRenderer renderer) {
         super(renderer, NFTransformingQuadEmitter::new);
     }
 }

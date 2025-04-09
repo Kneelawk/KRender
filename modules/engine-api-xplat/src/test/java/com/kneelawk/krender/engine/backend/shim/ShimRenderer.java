@@ -1,13 +1,16 @@
 package com.kneelawk.krender.engine.backend.shim;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
+import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
+import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.backend.shim.material.ShimMaterialManager;
 import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 
-public class ShimRenderer implements BaseKRendererApi {
+public class ShimRenderer implements KRenderer {
     public static final ShimRenderer INSTANCE = new ShimRenderer();
 
     private final ShimMaterialManager materialManager = new ShimMaterialManager();
@@ -28,8 +31,13 @@ public class ShimRenderer implements BaseKRendererApi {
     }
 
     @Override
-    public BaseMaterialManagerApi<?> materialManager() {
+    public MaterialManager materialManager() {
         return materialManager;
+    }
+
+    @Override
+    public MaterialTextureManager textureManager() {
+        return null;
     }
 
     @Override
