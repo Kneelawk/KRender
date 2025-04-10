@@ -1,5 +1,9 @@
 package com.kneelawk.krender.engine.api.texture;
 
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
@@ -22,4 +26,24 @@ public interface MaterialTexture extends RendererDependent {
      * This material texture's id is the same as the id of the minecraft texture this material texture represents if any.
      */
     ResourceLocation id();
+
+    /**
+     * {@return the minecraft texture backing this material texture}
+     */
+    AbstractTexture texture();
+
+    /**
+     * {@return whether this texture is an atlas}
+     */
+    boolean isAtlas();
+
+    /**
+     * {@return this texture as a texture atlas if this texture is backed by a texture atlas}
+     */
+    @Nullable TextureAtlas textureAtlas();
+
+    /**
+     * {@return the sprite finder for the atlas associated with this texture if any}
+     */
+    @Nullable SpriteFinder spriteFinder();
 }
