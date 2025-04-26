@@ -172,7 +172,7 @@ public final class BaseQuadFormat {
      */
     public final IntBits material;
 
-    public BaseQuadFormat(int materialBits) {
+    private BaseQuadFormat(int materialBits) {
         cull = IntBits.of(DIRECTION_BIT_COUNT);
         light = IntBits.ofNoSplitI(cull, DIRECTION_BIT_COUNT);
         normalsInt = IntBits.ofNoSplitI(light, 4);

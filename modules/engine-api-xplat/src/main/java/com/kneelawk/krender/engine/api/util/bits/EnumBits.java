@@ -5,6 +5,11 @@ import java.util.function.ToIntFunction;
 
 import net.minecraft.util.Mth;
 
+/**
+ * Bit mask for getting and setting enum values.
+ *
+ * @param <E> the type of enum this bit mask handles.
+ */
 public class EnumBits<E extends Enum<E>> implements Bits {
     private final IntBits bits;
     private final IntFunction<E> fromIndex;

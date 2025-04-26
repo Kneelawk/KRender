@@ -27,6 +27,7 @@ public abstract class BaseMaterialView implements MaterialView {
      * Creates a new {@link BaseMaterialView} with the given bits.
      *
      * @param bits the bits representing this material.
+     * @param name the name of this material.
      */
     public BaseMaterialView(int bits, String name) {
         this.bits = bits;

@@ -18,6 +18,9 @@ import com.kneelawk.krender.engine.api.texture.MaterialTexture;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.impl.KREConstants;
 
+/**
+ * Base {@link MaterialTextureManager} implementation for use in backends.
+ */
 public class BaseMaterialTextureManager implements MaterialTextureManager {
     /**
      * The max number of textures that can be managed.
@@ -87,7 +90,8 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
     /**
      * Constructs a new {@link BaseMaterialTextureManager}.
      *
-     * @param renderer the renderer that this manager is associated with.
+     * @param renderer       the renderer that this manager is associated with.
+     * @param textureFactory the factory for the backend's {@link MaterialTexture} implementation.
      */
     public BaseMaterialTextureManager(KRenderer renderer, TextureFactory textureFactory) {
         this.renderer = renderer;

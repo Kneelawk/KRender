@@ -8,19 +8,23 @@ import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
+import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.backend.neoforge.impl.material.NFRenderMaterial;
 import com.kneelawk.krender.engine.backend.neoforge.impl.mesh.NFMeshBuilder;
 import com.kneelawk.krender.engine.backend.neoforge.impl.model.NFBakedModelFactory;
 import com.kneelawk.krender.engine.backend.neoforge.impl.model.NFUnwrapper;
+import com.kneelawk.krender.engine.backend.neoforge.impl.texture.NFMaterialTexture;
 import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
+import com.kneelawk.krender.engine.base.texture.BaseMaterialTextureManager;
 
 public class NFRenderer implements KRenderer {
     public static final NFRenderer INSTANCE = new NFRenderer();
 
     public final NFUnwrapper unwrapper = new NFUnwrapper();
-    public final BaseMaterialManager materialManater =
-        new BaseMaterialManager(INSTANCE, NFRenderMaterial::new);
+    public final BaseMaterialTextureManager textureManager =
+        new BaseMaterialTextureManager(this, NFMaterialTexture::new);
+    public final BaseMaterialManager materialManager = new BaseMaterialManager(this, NFRenderMaterial::new);
     public final BaseTypeConverter typeConverter = new BaseTypeConverter(this);
 
     @Override
@@ -29,7 +33,7 @@ public class NFRenderer implements KRenderer {
     }
 
     @Override
-    public BakedModelUnwrapper bakedModelUnwrapper() {
+    public @NotNull BakedModelUnwrapper bakedModelUnwrapper() {
         return unwrapper;
     }
 
@@ -40,7 +44,12 @@ public class NFRenderer implements KRenderer {
 
     @Override
     public @NotNull MaterialManager materialManager() {
-        return materialManater;
+        return materialManager;
+    }
+
+    @Override
+    public @NotNull MaterialTextureManager textureManager() {
+        return textureManager;
     }
 
     @Override

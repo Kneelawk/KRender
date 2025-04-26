@@ -10,6 +10,9 @@ import com.kneelawk.krender.engine.api.RendererDependent;
 
 /**
  * A texture managed by a KRender backend for use in a {@link com.kneelawk.krender.engine.api.material.MaterialView}.
+ * <p>
+ * {@link MaterialTexture}s are not tied to any specific {@link AbstractTexture} but are instead tied to a specific
+ * {@link ResourceLocation}. The associated {@link AbstractTexture} is updated during every resource-reload.
  */
 public interface MaterialTexture extends RendererDependent {
     /**
