@@ -12,6 +12,11 @@ submodule {
     xplatExternalDependency(include = false) { "com.kneelawk.common-events:common-events-$it:$common_events_version" }
 }
 
+dependencies {
+    val common_events_version: String by project
+    modLocalRuntime("com.kneelawk.common-events:common-events-test-xplat-intermediary:$common_events_version")
+}
+
 kpublish {
     createPublication("intermediary")
 }
