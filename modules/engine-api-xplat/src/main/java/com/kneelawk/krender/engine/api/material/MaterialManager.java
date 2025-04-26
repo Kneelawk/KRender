@@ -47,6 +47,11 @@ public interface MaterialManager extends RendererDependent {
     int maxIntId();
 
     /**
+     * {@return an iterable over all managed materials}
+     */
+    Iterable<RenderMaterial> allMaterials();
+
+    /**
      * Gets a {@link RenderMaterial} by its id if has been registered.
      *
      * @param id the id of the render material to look up.

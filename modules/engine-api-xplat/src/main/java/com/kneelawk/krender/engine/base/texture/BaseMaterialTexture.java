@@ -7,19 +7,34 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
 
-import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
 import com.kneelawk.krender.engine.api.texture.SpriteFinder;
 import com.kneelawk.krender.reloadlistener.api.ReloadSensitiveLazy;
 
-public class BaseMaterialTexture implements MaterialTexture {
-    private final KRenderer renderer;
-    private final int intId;
-    private final ResourceLocation textureId;
-    private final ReloadSensitiveLazy<AbstractTexture> texture;
+/**
+ * Base {@link MaterialTexture} implementation.
+ */
+public abstract class BaseMaterialTexture implements MaterialTexture {
+    /**
+     * The texture's integer id.
+     */
+    protected final int intId;
+    /**
+     * The texture's resource location.
+     */
+    protected final ResourceLocation textureId;
+    /**
+     * Lazy access to the backing vanilla texture.
+     */
+    protected final ReloadSensitiveLazy<AbstractTexture> texture;
 
-    protected BaseMaterialTexture(KRenderer renderer, int intId, ResourceLocation textureId) {
-        this.renderer = renderer;
+    /**
+     * Creates a new {@link BaseMaterialTexture}.
+     *
+     * @param textureId the resource location of the backing texture.
+     * @param intId     the integer id of this texture.
+     */
+    protected BaseMaterialTexture(ResourceLocation textureId, int intId) {
         this.intId = intId;
         this.textureId = textureId;
         this.texture =
@@ -57,10 +72,5 @@ public class BaseMaterialTexture implements MaterialTexture {
         TextureAtlas atlas = textureAtlas();
         if (atlas == null) return null;
         return SpriteFinder.get(atlas);
-    }
-
-    @Override
-    public @Nullable KRenderer getRenderer() {
-        return renderer;
     }
 }

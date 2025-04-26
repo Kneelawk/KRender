@@ -1,7 +1,5 @@
 package com.kneelawk.krender.engine.api.texture;
 
-import org.jetbrains.annotations.Nullable;
-
 import net.minecraft.resources.ResourceLocation;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
@@ -26,6 +24,11 @@ public interface MaterialTextureManager extends RendererDependent {
     int maxIntId();
 
     /**
+     * {@return an iterable of all textures}
+     */
+    Iterable<MaterialTexture> allTextures();
+
+    /**
      * {@return the none texture, indicating no texture is to be rendered}
      */
     MaterialTexture none();
@@ -38,8 +41,7 @@ public interface MaterialTextureManager extends RendererDependent {
     /**
      * {@return a material texture for the minecraft block atlas}
      * <p>
-     * This is the default texture for most materials and is the only valid texture on most platforms when rendering
-     * terrain.
+     * This is the default texture for most materials and is the only valid texture for terrain on most platforms.
      */
     MaterialTexture blockAtlas();
 
@@ -49,5 +51,5 @@ public interface MaterialTextureManager extends RendererDependent {
      * @param id the minecraft texture id.
      * @return the material texture corresponding to the minecraft texture with the given id, if one exists.
      */
-    @Nullable MaterialTexture textureById(ResourceLocation id);
+    MaterialTexture textureById(ResourceLocation id);
 }

@@ -1,9 +1,12 @@
 package com.kneelawk.krender.engine.base.material;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +25,7 @@ import com.kneelawk.krender.engine.api.util.TriState;
  */
 public class BaseMaterialManager implements MaterialManager {
     /**
-     * The maximum material id value.
+     * The maximum number of materials that can be managed.
      */
     public static final int MATERIAL_COUNT = 0x8000;
 
@@ -80,6 +83,16 @@ public class BaseMaterialManager implements MaterialManager {
      * Function for creating a render material based on the given material finder, for when the requested material has not been created yet.
      */
     protected final Function<BaseMaterialFinder, RenderMaterial> createMaterial = this::createMaterial;
+
+    /**
+     * Iterable of all materials.
+     */
+    protected final Iterable<RenderMaterial> materialIter = new Iterable<>() {
+        @Override
+        public @NotNull Iterator<RenderMaterial> iterator() {
+            return new MaterialIterator();
+        }
+    };
 
     /**
      * The default material finder implementation.
@@ -160,7 +173,7 @@ public class BaseMaterialManager implements MaterialManager {
         if (id < -1 || id >= MATERIAL_COUNT) throw new IllegalArgumentException("Invalid material int id");
         RenderMaterial material = materials[id];
         if (material == null)
-            throw new IllegalStateException("Attempted to request a material " + id +
+            throw new NoSuchElementException("Attempted to request a material " + id +
                 " that does not exist. This likely indicates mesh corruption.");
         return material;
     }
@@ -168,6 +181,11 @@ public class BaseMaterialManager implements MaterialManager {
     @Override
     public int maxIntId() {
         return MATERIAL_COUNT;
+    }
+
+    @Override
+    public Iterable<RenderMaterial> allMaterials() {
+        return materialIter;
     }
 
     @Override
@@ -221,5 +239,22 @@ public class BaseMaterialManager implements MaterialManager {
          * @return the new render material.
          */
         RenderMaterial create(BaseMaterialView finder, int intId);
+    }
+
+    private class MaterialIterator implements Iterator<RenderMaterial> {
+        private int index = 0;
+
+        @Override
+        public boolean hasNext() {
+            // impl-wise materials never get deleted and our array is dense, so we can count on this
+            return materials[index] != null;
+        }
+
+        @Override
+        public RenderMaterial next() {
+            RenderMaterial mat = materials[index++];
+            if (mat == null) throw new NoSuchElementException("This material manager currently has no more elements.");
+            return mat;
+        }
     }
 }
