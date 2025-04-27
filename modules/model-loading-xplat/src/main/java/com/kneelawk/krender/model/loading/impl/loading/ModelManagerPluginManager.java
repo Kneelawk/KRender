@@ -17,6 +17,7 @@ import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelDebugName;
 import net.minecraft.client.resources.model.ModelDiscovery;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -67,13 +68,13 @@ public class ModelManagerPluginManager {
         }
     }
 
-    public void bakeExtraModels(ModelBakery bakery, ModelBakery.TextureGetter textureGetter,
+    public void bakeExtraModels(ModelBakery bakery, SpriteGetter textureGetter,
                                 ModelBakery.BakingResult bakingResult) {
         Map<ResourceLocation, BakedModel> extraBakedModels = new Object2ObjectLinkedOpenHashMap<>();
         for (ResourceLocation extraModelPath : extraModels) {
             ModelDebugName debugName = () -> extraModelPath.toString() + "#extra";
             BakedModel baked =
-                bakery.new ModelBakerImpl(textureGetter, debugName).bake(extraModelPath, BlockModelRotation.X0_Y0);
+                bakery.new ModelBakerImpl(textureGetter).bake(extraModelPath, BlockModelRotation.X0_Y0);
             extraBakedModels.put(extraModelPath, baked);
         }
         ((Duck_ModelBakeryBakingResult) (Object) bakingResult).krender$setExtraModels(extraBakedModels);

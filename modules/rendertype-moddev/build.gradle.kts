@@ -10,7 +10,7 @@ val mod_id: String by project
 
 neoForge {
     val neoform_version: String by project
-    neoFormVersion.set(neoform_version)
+    neoFormVersion = neoform_version
 
     validateAccessTransformers.set(true)
 
