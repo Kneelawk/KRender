@@ -1,4 +1,4 @@
-package com.kneelawk.krender.engine.backend.shim;
+package com.kneelawk.krender.engine.backend.test.impl;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
@@ -7,27 +7,27 @@ import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
-import com.kneelawk.krender.engine.backend.shim.material.ShimRenderMaterial;
-import com.kneelawk.krender.engine.backend.shim.texture.ShimMaterialTexture;
+import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
 import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 import com.kneelawk.krender.engine.base.texture.BaseMaterialTextureManager;
 
-public class ShimRenderer implements KRenderer {
-    public static final ShimRenderer INSTANCE = new ShimRenderer();
+public class TestRenderer implements KRenderer {
+    public static final TestRenderer INSTANCE = new TestRenderer();
 
     private final BaseMaterialTextureManager textureManager =
-        new BaseMaterialTextureManager(this, ShimMaterialTexture::new);
-    private final BaseMaterialManager materialManager = new BaseMaterialManager(this, ShimRenderMaterial::new);
+        new BaseMaterialTextureManager(this, TestMaterialTexture::new);
+    private final BaseMaterialManager materialManager = new BaseMaterialManager(this, TestRenderMaterial::new);
+    private final BaseTypeConverter typeConverter = new BaseTypeConverter(this);
 
     @Override
     public BakedModelFactory bakedModelFactory() {
-        return null;
+        return new TestBakedModelFactory();
     }
 
     @Override
     public BakedModelUnwrapper bakedModelUnwrapper() {
-        return null;
+        return model -> null;
     }
 
     @Override
@@ -47,6 +47,6 @@ public class ShimRenderer implements KRenderer {
 
     @Override
     public TypeConverter converter() {
-        return null;
+        return typeConverter;
     }
 }

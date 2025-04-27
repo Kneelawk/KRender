@@ -8,9 +8,9 @@ import org.joml.Vector3f;
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
 
+import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
-import com.kneelawk.krender.engine.backend.shim.ShimRenderer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -24,7 +24,7 @@ public class QuadEmitterSortingTests {
 
     @Test
     void sorting1() {
-        MeshBuilder builder = ShimRenderer.INSTANCE.meshBuilder();
+        MeshBuilder builder = KRenderer.getDefault().meshBuilder();
         QuadEmitter emitter = builder.emitter();
         emitter.asVertexEmitter().addVertex(1f, 0f, 0f).addVertex(1f, 1f, 0f).addVertex(0f, 1f, 0f)
             .addVertex(0f, 0f, 1f);
