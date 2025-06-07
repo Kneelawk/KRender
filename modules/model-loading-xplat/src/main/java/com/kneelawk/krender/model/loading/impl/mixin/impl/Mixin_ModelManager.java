@@ -64,7 +64,7 @@ public class Mixin_ModelManager implements Duck_ModelManager {
     }
 
     @ModifyExpressionValue(method = "reload", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;loadBlockStates(Lnet/minecraft/client/resources/model/UnbakedModel;Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
+        target = "Lnet/minecraft/client/resources/model/BlockStateModelLoader;loadBlockStates(Lnet/minecraft/server/packs/resources/ResourceManager;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
     private CompletableFuture<BlockStateModelLoader.LoadedModels> krender$addBlockStateModels(
         CompletableFuture<BlockStateModelLoader.LoadedModels> original,
         @Local(argsOnly = true, ordinal = 0) Executor backgroundExecutor,
