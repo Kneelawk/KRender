@@ -1,40 +1,40 @@
 accessWidener v2 named
 
-#transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
-#transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
-
-transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
-#transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeRenderType state ()Lnet/minecraft/client/renderer/RenderType$CompositeState;
-
-transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeState
-transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState textureState Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState outputState Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
-transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState outlineProperty Lnet/minecraft/client/renderer/RenderType$OutlineProperty;
-transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState states Lcom/google/common/collect/ImmutableList;
-
-transitive-accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
-
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$BooleanStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$ColorLogicStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$CullStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LayeringStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LightmapStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LineStateShard
-
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry
-transitive-accessible method net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry <init> (Lnet/minecraft/resources/ResourceLocation;ZZ)V
-
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OffsetTexturingStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OverlayStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
-
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
-transitive-accessible field net/minecraft/client/renderer/RenderStateShard$TextureStateShard texture Ljava/util/Optional;
-
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TexturingStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
-#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard
+##transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+##transitive-accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeRenderType
+##transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeRenderType state ()Lnet/minecraft/client/renderer/RenderType$CompositeState;
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeState
+#transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState textureState Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;
+#transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState outputState Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+#transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState outlineProperty Lnet/minecraft/client/renderer/RenderType$OutlineProperty;
+#transitive-accessible field net/minecraft/client/renderer/RenderType$CompositeState states Lcom/google/common/collect/ImmutableList;
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderType$OutlineProperty
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$BooleanStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$ColorLogicStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$CullStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$DepthTestStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LayeringStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LightmapStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$LineStateShard
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry
+#transitive-accessible method net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry <init> (Lnet/minecraft/resources/ResourceLocation;ZZ)V
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OffsetTexturingStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OverlayStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$ShaderStateShard
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TextureStateShard
+#transitive-accessible field net/minecraft/client/renderer/RenderStateShard$TextureStateShard texture Ljava/util/Optional;
+#
+#transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TexturingStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$TransparencyStateShard
+##transitive-accessible class net/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard
