@@ -30,7 +30,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.data.DataHolder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.frapi.impl.KRBFRLog;
@@ -38,7 +38,7 @@ import com.kneelawk.krender.engine.backend.frapi.impl.buffer.FRAPIQuadEmitter;
 import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 public class FRAPICachedBakedModelImpl implements BakedModel, BakedModelCoreProvider {
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
 
     private final LoadingCache<ModelKeyHolder, Mesh> meshCache =
         CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(CacheLoader.from(key -> {
@@ -51,13 +51,13 @@ public class FRAPICachedBakedModelImpl implements BakedModel, BakedModelCoreProv
     @SuppressWarnings("unchecked")
     private void render(ModelKeyHolder key, MutableMesh builder) {
         try {
-            ((BakedModelCore<Object>) core).renderBlock(new FRAPIQuadEmitter(builder.emitter()), key.modelKey());
+            ((BlockStateModelCore<Object>) core).renderBlock(new FRAPIQuadEmitter(builder.emitter()), key.modelKey());
         } catch (Exception e) {
             KRBFRLog.LOG.error("Error rendering cached quads for model");
         }
     }
 
-    public FRAPICachedBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
+    public FRAPICachedBakedModelImpl(BlockStateModelCore<?> core) {this.core = core;}
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction, RandomSource random) {
@@ -114,7 +114,7 @@ public class FRAPICachedBakedModelImpl implements BakedModel, BakedModelCoreProv
     }
 
     @Override
-    public BakedModelCore<?> krender$getCore() {
+    public BlockStateModelCore<?> krender$getCore() {
         return core;
     }
 }

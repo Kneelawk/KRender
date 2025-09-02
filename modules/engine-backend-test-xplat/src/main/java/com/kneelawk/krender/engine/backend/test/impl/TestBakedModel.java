@@ -12,13 +12,13 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 public class TestBakedModel implements BakedModel, BakedModelCoreProvider {
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
 
-    public TestBakedModel(BakedModelCore<?> core) {
+    public TestBakedModel(BlockStateModelCore<?> core) {
         this.core = core;
     }
 
@@ -54,7 +54,7 @@ public class TestBakedModel implements BakedModel, BakedModelCoreProvider {
     }
 
     @Override
-    public BakedModelCore<?> krender$getCore() {
+    public BlockStateModelCore<?> krender$getCore() {
         return core;
     }
 }

@@ -50,7 +50,7 @@ public class DiscoFloorUnbakedModel implements UnbakedModel {
         };
 
         return KRenderer.getDefault().bakedModelFactory()
-            .wrap(new DiscoFloorBakedModel(material.apply("particle"), new TextureAtlasSprite[]{
+            .wrap(new DiscoFloorBlockStateModel(material.apply("particle"), new TextureAtlasSprite[]{
                 material.apply("convex"),
                 material.apply("horizontal"),
                 material.apply("vertical"),

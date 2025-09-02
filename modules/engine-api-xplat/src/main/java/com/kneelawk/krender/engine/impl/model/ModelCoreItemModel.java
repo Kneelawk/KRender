@@ -1,5 +1,12 @@
 package com.kneelawk.krender.engine.impl.model;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
+import net.minecraft.client.renderer.block.model.SimpleModelWrapper;
+import net.minecraft.client.renderer.block.model.SingleVariant;
+
+import net.minecraft.client.resources.model.BlockModelRotation;
+
 import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
@@ -8,7 +15,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
@@ -17,9 +23,9 @@ import net.minecraft.world.item.ItemStack;
 import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 
 public class ModelCoreItemModel implements ItemModel {
-    private final BakedModel model;
+    private final BlockStateModel model;
 
-    public ModelCoreItemModel(BakedModel model) {
+    public ModelCoreItemModel(BlockStateModel model) {
         this.model = model;
     }
 
@@ -31,7 +37,7 @@ public class ModelCoreItemModel implements ItemModel {
 
         if (model instanceof BakedModelCoreProvider provider) {
             layer.setupSpecialModel(ModelCoreSpecialRenderer.INSTANCE,
-                new ModelCoreSpecialRenderer.Input(provider.krender$getCore(), stack), model);
+                new ModelCoreSpecialRenderer.Input(provider.krender$getCore(), stack));
         }
     }
 
@@ -46,13 +52,14 @@ public class ModelCoreItemModel implements ItemModel {
 
         @Override
         public ItemModel bake(BakingContext context) {
-            BakedModel bakedModel = context.bake(model);
+            BlockStateModel bakedModel = new SingleVariant(SimpleModelWrapper.bake(context.blockModelBaker(), model,
+                    BlockModelRotation.X0_Y0));
             return new ModelCoreItemModel(bakedModel);
         }
 
         @Override
         public void resolveDependencies(Resolver resolver) {
-            resolver.resolve(model);
+            resolver.markDependency(model);
         }
     }
 }

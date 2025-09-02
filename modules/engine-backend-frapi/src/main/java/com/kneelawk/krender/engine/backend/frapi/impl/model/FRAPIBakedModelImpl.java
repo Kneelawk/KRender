@@ -22,7 +22,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.data.DataHolder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.frapi.impl.buffer.FRAPIQuadEmitter;
@@ -32,9 +32,9 @@ import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
  * Basic non-caching baked model impl.
  */
 public class FRAPIBakedModelImpl implements BakedModel, BakedModelCoreProvider {
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
 
-    public FRAPIBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
+    public FRAPIBakedModelImpl(BlockStateModelCore<?> core) {this.core = core;}
 
     @Override
     public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction direction,
@@ -79,7 +79,7 @@ public class FRAPIBakedModelImpl implements BakedModel, BakedModelCoreProvider {
         DataHolder data =
             Objects.requireNonNullElse((DataHolder) blockView.getBlockEntityRenderData(pos), DataHolder.empty());
         Object key = core.getBlockKey(new ModelBlockContext(blockView, pos, state, randomSupplier, data));
-        ((BakedModelCore<Object>) core).renderBlock(new FRAPIQuadEmitter(emitter), key);
+        ((BlockStateModelCore<Object>) core).renderBlock(new FRAPIQuadEmitter(emitter), key);
     }
 
     @Override
@@ -89,7 +89,7 @@ public class FRAPIBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     }
 
     @Override
-    public BakedModelCore<?> krender$getCore() {
+    public BlockStateModelCore<?> krender$getCore() {
         return core;
     }
 }

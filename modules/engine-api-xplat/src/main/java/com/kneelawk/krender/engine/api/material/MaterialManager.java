@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.material;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+
 import org.jetbrains.annotations.Nullable;
 
 import net.minecraft.client.renderer.RenderType;
@@ -91,10 +93,10 @@ public interface MaterialManager extends RendererDependent {
      * <p>
      * This makes a best-effort attempt to find a render material equivalent to the given render type.
      *
-     * @param type the render type to find the render material equivalent to.
+     * @param pipeline the render pipeline to find the render material equivalent to.
      * @return the roughly equivalent render material.
      */
-    default RenderMaterial fromVanilla(RenderType type) {
-        return materialFinder().fromVanilla(type).find();
+    default RenderMaterial fromVanilla(RenderPipeline pipeline) {
+        return materialFinder().fromVanilla(pipeline).find();
     }
 }

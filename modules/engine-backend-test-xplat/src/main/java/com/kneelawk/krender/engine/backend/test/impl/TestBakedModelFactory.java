@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.KRenderer;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 
 public class TestBakedModelFactory implements BakedModelFactory {
@@ -25,7 +25,7 @@ public class TestBakedModelFactory implements BakedModelFactory {
     }
 
     @Override
-    public @NotNull BakedModel wrap(BakedModelCore<?> core) {
+    public @NotNull BakedModel wrap(BlockStateModelCore<?> core) {
         return new TestBakedModel(core);
     }
 

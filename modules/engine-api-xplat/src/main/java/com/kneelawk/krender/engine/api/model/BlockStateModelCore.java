@@ -2,44 +2,22 @@ package com.kneelawk.krender.engine.api.model;
 
 import org.jetbrains.annotations.UnknownNullability;
 
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 
 /**
- * Implementors of this interface function as cross-platform {@link BakedModel}s.
+ * Implementors of this interface function as cross-platform {@link net.minecraft.client.renderer.block.model.BlockStateModel}s.
  * <p>
- * This interface abstracts away the loader-platform-specific extra methods that can be implemented on {@link BakedModel}s.
+ * This interface abstracts away the loader-platform-specific extra methods that can be implemented on {@link net.minecraft.client.renderer.block.model.BlockStateModel}s.
  *
  * @param <BK> the type that is used as a cache key when caching or used to pass data to the emitter when not.
  */
-public interface BakedModelCore<BK> {
-    /**
-     * {@return whether this model has ambient occlusion}
-     */
-    boolean useAmbientOcclusion();
-
-    /**
-     * {@return whether this model should appear rotated in inventory GUIs}
-     */
-    boolean isGui3d();
-
-    /**
-     * {@return whether this model is lit from the side ({@code true}) or head-on ({@code false})}
-     */
-    boolean usesBlockLight();
-
+public interface BlockStateModelCore<BK> {
     /**
      * {@return the particle sprite for this model}
      */
     TextureAtlasSprite getParticleIcon();
-
-    /**
-     * {@return the rotation of this model as an item}
-     */
-    ItemTransforms getTransforms();
 
     /**
      * Gets the model key used to pass information to {@link #renderBlock(QuadEmitter, Object)}.

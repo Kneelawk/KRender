@@ -1,5 +1,9 @@
 package com.kneelawk.krender.engine.api.material;
 
+import net.minecraft.client.renderer.RenderPipelines;
+
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +29,7 @@ public enum BlendMode implements StringRepresentable {
      *
      * @see RenderType#solid()
      */
-    SOLID(RenderType.solid()),
+    SOLID(ChunkSectionLayer.SOLID),
 
     /**
      * Materials with this blend mode cause pixels to only be present if they are greater than half alpha. This version
@@ -33,7 +37,7 @@ public enum BlendMode implements StringRepresentable {
      *
      * @see RenderType#cutoutMipped()
      */
-    CUTOUT_MIPPED(RenderType.cutoutMipped()),
+    CUTOUT_MIPPED(ChunkSectionLayer.CUTOUT_MIPPED),
 
     /**
      * Materials with this blend mode cause pixels to only be present if they are greater than half alpha. This version
@@ -42,14 +46,14 @@ public enum BlendMode implements StringRepresentable {
      *
      * @see RenderType#cutout()
      */
-    CUTOUT(RenderType.cutout()),
+    CUTOUT(ChunkSectionLayer.CUTOUT),
 
     /**
      * Materials with this blend mode blend pixels with those behind them based on the pixels' alpha.
      *
-     * @see RenderType#translucent()
+     * @see RenderPipelines#TRANSLUCENT
      */
-    TRANSLUCENT(RenderType.translucent());
+    TRANSLUCENT(ChunkSectionLayer.TRANSLUCENT);
 
     /**
      * Blend mode codec.
@@ -57,12 +61,12 @@ public enum BlendMode implements StringRepresentable {
     public static final Codec<BlendMode> CODEC = StringRepresentable.fromEnum(BlendMode::values);
 
     /**
-     * The block render type associated with this blend mode.
+     * The chunk section layer associated with this blend mode.
      */
-    public final RenderType blockRenderType;
+    public final ChunkSectionLayer chunkSectionLayer;
 
-    BlendMode(@Nullable RenderType blockRenderType) {
-        this.blockRenderType = blockRenderType;
+    BlendMode(@Nullable ChunkSectionLayer chunkSectionLayer) {
+        this.chunkSectionLayer = chunkSectionLayer;
     }
 
     @Override

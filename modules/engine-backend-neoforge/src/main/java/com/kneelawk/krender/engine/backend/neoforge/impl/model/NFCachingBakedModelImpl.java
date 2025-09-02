@@ -28,7 +28,7 @@ import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.data.DataHolder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.backend.neoforge.impl.KRBNFLog;
@@ -38,9 +38,9 @@ import com.kneelawk.krender.engine.neoforge.api.model.ModelDataProperties;
 public class NFCachingBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
 
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
 
-    public NFCachingBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
+    public NFCachingBakedModelImpl(BlockStateModelCore<?> core) {this.core = core;}
 
     private final LoadingCache<ModelKeyHolder, SplittingQuadBaker.Result> quadCache =
         CacheBuilder.newBuilder().expireAfterAccess(1, TimeUnit.MINUTES).build(CacheLoader.from(key -> {
@@ -52,7 +52,7 @@ public class NFCachingBakedModelImpl implements BakedModel, BakedModelCoreProvid
     @SuppressWarnings("unchecked")
     private void render(ModelKeyHolder key, SplittingQuadBaker baker) {
         try {
-            ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), key.modelKey());
+            ((BlockStateModelCore<Object>) core).renderBlock(baker.emitter(), key.modelKey());
         } catch (Exception e) {
             KRBNFLog.LOG.error("Error rendering cached quads for model {}", core, e);
         }
@@ -159,7 +159,7 @@ public class NFCachingBakedModelImpl implements BakedModel, BakedModelCoreProvid
     }
 
     @Override
-    public BakedModelCore<?> krender$getCore() {
+    public BlockStateModelCore<?> krender$getCore() {
         return core;
     }
 }

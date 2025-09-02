@@ -1,12 +1,13 @@
 package com.kneelawk.krender.engine.api.model;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
 import org.jetbrains.annotations.Nullable;
 
 import org.joml.Vector3f;
 
 import net.minecraft.client.renderer.block.model.ItemTransform;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
@@ -18,20 +19,20 @@ public final class ModelUtils {
     private ModelUtils() {}
 
     /**
-     * Tries to obtain a {@link BakedModelCore} from a {@link BakedModel} if that baked model either contains a baked
+     * Tries to obtain a {@link BlockStateModelCore} from a {@link net.minecraft.client.renderer.block.model.BlockStateModel} if that baked model either contains a baked
      * model core or can be converted into one.
      *
      * @param model the baked model to get the core of.
      * @return the core of the given baked model or {@code null} if the given baked model did not contain and could not
      * be converted into a model core.
      */
-    public static @Nullable BakedModelCore<?> getCore(BakedModel model) {
+    public static @Nullable BlockStateModelCore<?> getCore(BlockStateModel model) {
         if (model instanceof BakedModelCoreProvider provider) {
             return provider.krender$getCore();
         }
 
         for (KRenderer renderer : KRenderer.getByPriority()) {
-            BakedModelCore<?> core = renderer.bakedModelUnwrapper().unwrap(model);
+            BlockStateModelCore<?> core = renderer.bakedModelUnwrapper().unwrap(model);
             if (core != null) {
                 return core;
             }

@@ -16,7 +16,7 @@ import com.kneelawk.krender.engine.api.mesh.Mesh;
  */
 public record SimpleModelCore(Mesh mesh, TextureAtlasSprite particle, boolean useAo, boolean gui3d,
                               ItemTransforms itemTransforms)
-    implements StaticBakedModelCore {
+    implements StaticBlockStateModelCore {
 
     /**
      * Creates a simple model core with default item transforms.
@@ -36,27 +36,7 @@ public record SimpleModelCore(Mesh mesh, TextureAtlasSprite particle, boolean us
     }
 
     @Override
-    public boolean useAmbientOcclusion() {
-        return useAo;
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return gui3d;
-    }
-
-    @Override
-    public boolean usesBlockLight() {
-        return gui3d;
-    }
-
-    @Override
     public TextureAtlasSprite getParticleIcon() {
         return particle;
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return itemTransforms;
     }
 }

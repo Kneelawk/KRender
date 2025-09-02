@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.api.material;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+
 import net.minecraft.client.renderer.RenderType;
 
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
@@ -114,8 +116,8 @@ public interface MaterialFinder extends MaterialView {
     /**
      * Makes a best-effort attempt to copy material information from a {@link RenderType}.
      *
-     * @param type the render type to copy material information from.
+     * @param pipeline the render type to copy material information from.
      * @return this material finder.
      */
-    MaterialFinder fromVanilla(RenderType type);
+    MaterialFinder fromVanilla(RenderPipeline pipeline);
 }

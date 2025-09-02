@@ -6,7 +6,7 @@ import java.util.Set;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 
-import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
@@ -15,7 +15,7 @@ import com.kneelawk.krender.model.loading.api.ModelManagerPlugin;
 
 public class ModelManagerPluginContextImpl implements ModelManagerPlugin.Context {
     private final Map<ResourceLocation, UnbakedModel> referenceableModels = new Object2ObjectLinkedOpenHashMap<>();
-    private final Map<BlockState, UnbakedBlockStateModel> blockStateModels = new Object2ObjectLinkedOpenHashMap<>();
+    private final Map<BlockState, BlockStateModel.UnbakedRoot> blockStateModels = new Object2ObjectLinkedOpenHashMap<>();
     private final Set<ResourceLocation> extraModels = new ObjectLinkedOpenHashSet<>();
 
     public ModelManagerPluginManager createManager() {
@@ -35,12 +35,12 @@ public class ModelManagerPluginContextImpl implements ModelManagerPlugin.Context
     }
 
     @Override
-    public void addBlockStateModel(BlockState state, UnbakedBlockStateModel model) {
+    public void addBlockStateModel(BlockState state, BlockStateModel.UnbakedRoot model) {
         blockStateModels.put(state, model);
     }
 
     @Override
-    public void addBlockStateModels(Map<BlockState, ? extends UnbakedBlockStateModel> models) {
+    public void addBlockStateModels(Map<BlockState, ? extends BlockStateModel.UnbakedRoot> models) {
         blockStateModels.putAll(models);
     }
 

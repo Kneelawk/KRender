@@ -6,7 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.KRenderer;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
 
@@ -25,7 +25,7 @@ public class FRAPIBakedModelFactory implements BakedModelFactory {
     }
 
     @Override
-    public @NotNull BakedModel wrap(@NotNull BakedModelCore<?> core) {
+    public @NotNull BakedModel wrap(@NotNull BlockStateModelCore<?> core) {
         if (caching) {
             return new FRAPICachedBakedModelImpl(core);
         } else {

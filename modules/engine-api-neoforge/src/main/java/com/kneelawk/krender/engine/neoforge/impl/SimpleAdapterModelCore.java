@@ -16,11 +16,11 @@ import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.mesh.Mesh;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
-import com.kneelawk.krender.engine.api.model.StaticBakedModelCore;
+import com.kneelawk.krender.engine.api.model.StaticBlockStateModelCore;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
 import com.kneelawk.krender.engine.neoforge.impl.mixin.impl.Accessor_SimpleBakedModel;
 
-public class SimpleAdapterModelCore implements StaticBakedModelCore {
+public class SimpleAdapterModelCore implements StaticBlockStateModelCore {
     private final SimpleBakedModel model;
     private final AtomicReference<Mesh> mesh = new AtomicReference<>(null);
 

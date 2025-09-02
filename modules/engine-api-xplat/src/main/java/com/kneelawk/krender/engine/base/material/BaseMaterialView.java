@@ -78,7 +78,7 @@ public abstract class BaseMaterialView implements MaterialView {
 
     @Override
     public @Nullable RenderType toVanillaBlock() {
-        return getBlendMode().blockRenderType;
+        return getBlendMode().blockRenderPipeline;
     }
 
     @Override

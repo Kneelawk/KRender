@@ -1,5 +1,8 @@
 package com.kneelawk.krender.engine.base.material;
 
+import com.mojang.blaze3d.pipeline.RenderPipeline;
+
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderType;
 
 import com.kneelawk.krender.engine.api.material.BlendMode;
@@ -85,17 +88,17 @@ public abstract class BaseMaterialFinder extends BaseMaterialView implements Mat
     }
 
     @Override
-    public MaterialFinder fromVanilla(RenderType type) {
+    public MaterialFinder fromVanilla(RenderPipeline pipeline) {
         clear();
 
         // FIXME: only supports terrain render types
-        if (type == RenderType.solid()) {
+        if (pipeline == RenderPipelines.SOLID) {
             setBlendMode(BlendMode.SOLID);
-        } else if (type == RenderType.cutout()) {
+        } else if (pipeline == RenderPipelines.CUTOUT) {
             setBlendMode(BlendMode.CUTOUT);
-        } else if (type == RenderType.cutoutMipped()) {
+        } else if (pipeline == RenderPipelines.CUTOUT_MIPPED) {
             setBlendMode(BlendMode.CUTOUT_MIPPED);
-        } else if (type == RenderType.translucent()) {
+        } else if (pipeline == RenderPipelines.TRANSLUCENT) {
             setBlendMode(BlendMode.TRANSLUCENT);
         }
 

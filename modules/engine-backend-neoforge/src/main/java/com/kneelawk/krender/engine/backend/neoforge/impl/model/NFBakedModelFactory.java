@@ -5,7 +5,7 @@ import org.jetbrains.annotations.Nullable;
 import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.KRenderer;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
 
@@ -24,7 +24,7 @@ public class NFBakedModelFactory implements BakedModelFactory {
     }
 
     @Override
-    public BakedModel wrap(BakedModelCore core) {
+    public BakedModel wrap(BlockStateModelCore core) {
         if (caching) {
             return new NFCachingBakedModelImpl(core);
         } else {

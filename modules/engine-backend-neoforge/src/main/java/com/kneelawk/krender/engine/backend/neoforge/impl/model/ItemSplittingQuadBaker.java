@@ -16,7 +16,7 @@ import net.minecraft.client.resources.model.BakedModel;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.texture.SpriteFinder;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
 import com.kneelawk.krender.engine.backend.neoforge.impl.mesh.NFRootQuadEmitter;
@@ -50,7 +50,7 @@ public class ItemSplittingQuadBaker {
         return maker;
     }
 
-    public List<BakedModel> bake(BakedModelCore<?> core) {
+    public List<BakedModel> bake(BlockStateModelCore<?> core) {
         List<BakedModel> models = new ObjectArrayList<>();
         for (var entry : datas.entrySet()) {
             models.add(new ItemBakedModel(core, entry.getKey(), entry.getValue()));

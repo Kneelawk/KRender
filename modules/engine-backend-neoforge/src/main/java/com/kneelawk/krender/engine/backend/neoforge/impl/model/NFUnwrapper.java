@@ -15,12 +15,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
 
 public class NFUnwrapper implements BakedModelUnwrapper {
     @Override
-    public @Nullable BakedModelCore<?> unwrap(BakedModel model) {
+    public @Nullable BlockStateModelCore<?> unwrap(BakedModel model) {
         if (isImplemented(model, "getQuads", BlockState.class, Direction.class, RandomSource.class, ModelData.class,
             RenderType.class) ||
             isImplemented(model, "getModelData", BlockAndTintGetter.class, BlockPos.class, BlockState.class,

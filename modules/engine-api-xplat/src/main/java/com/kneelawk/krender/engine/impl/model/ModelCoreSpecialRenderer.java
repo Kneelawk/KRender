@@ -13,13 +13,13 @@ import net.minecraft.world.item.ItemStack;
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.PooledQuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.api.util.transform.LightingQuadTransform;
 import com.kneelawk.krender.engine.api.util.transform.PoseQuadTransform;
 
 /**
- * A {@link SpecialModelRenderer} designed for rendering {@link BakedModelCore}s.
+ * A {@link SpecialModelRenderer} designed for rendering {@link BlockStateModelCore}s.
  */
 public class ModelCoreSpecialRenderer implements SpecialModelRenderer<ModelCoreSpecialRenderer.Input> {
     public static final ModelCoreSpecialRenderer INSTANCE = new ModelCoreSpecialRenderer();
@@ -52,5 +52,5 @@ public class ModelCoreSpecialRenderer implements SpecialModelRenderer<ModelCoreS
         return null;
     }
 
-    public record Input(BakedModelCore<?> core, ItemStack stack) {}
+    public record Input(BlockStateModelCore<?> core, ItemStack stack) {}
 }

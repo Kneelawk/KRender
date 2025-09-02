@@ -1,18 +1,18 @@
 package com.kneelawk.krender.engine.api.model;
 
-import net.minecraft.client.resources.model.BakedModel;
-
 import com.kneelawk.krender.engine.api.RendererDependent;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
 /**
- * Responsible for wrapping a {@link BakedModelCore} and creating a {@link BakedModel}.
+ * Responsible for wrapping a {@link BlockStateModelCore} and creating a {@link net.minecraft.client.renderer.block.model.BlockStateModel}.
  */
 public interface BakedModelFactory extends RendererDependent {
     /**
      * Sets whether this baked model factory creates baked models that cache their quads.
      * <p>
-     * Note: if caching is disabled, then {@link BakedModelCore#renderBlock(QuadEmitter, Object)} may be called several
+     * Note: if caching is disabled, then {@link BlockStateModelCore#renderBlock(QuadEmitter, Object)} may be called several
      * times per rebuild to render a single block.
      * <p>
      * This is {@code true} by default.
@@ -28,11 +28,11 @@ public interface BakedModelFactory extends RendererDependent {
     boolean isCaching();
 
     /**
-     * Creates a {@link BakedModel} by wrapping a {@link BakedModelCore} in a platform-dependent {@link BakedModel}
+     * Creates a {@link net.minecraft.client.renderer.block.model.BlockStateModel} by wrapping a {@link BlockStateModelCore} in a platform-dependent {@link BlockStateModel}
      * implementation, allowing for better integration with NeoForge and FRAPI's own interfaces.
      *
      * @param core the core to wrap.
      * @return the created baked model.
      */
-    BakedModel wrap(BakedModelCore<?> core);
+    BlockStateModel wrap(BlockStateModelCore<?> core);
 }

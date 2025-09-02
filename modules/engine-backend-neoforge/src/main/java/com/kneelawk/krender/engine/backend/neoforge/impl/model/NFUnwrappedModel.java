@@ -1,5 +1,7 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.model;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
 import net.neoforged.neoforge.client.model.data.ModelData;
 
 import org.jetbrains.annotations.UnknownNullability;
@@ -16,39 +18,19 @@ import net.minecraft.world.level.block.state.BlockState;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
 
-public class NFUnwrappedModel implements BakedModelCore<NFUnwrappedModel.Storage> {
-    private final BakedModel model;
+public class NFUnwrappedModel implements BlockStateModelCore<NFUnwrappedModel.Storage> {
+    private final BlockStateModel model;
 
-    public NFUnwrappedModel(BakedModel model) {this.model = model;}
-
-    @Override
-    public boolean useAmbientOcclusion() {
-        return model.useAmbientOcclusion();
-    }
-
-    @Override
-    public boolean isGui3d() {
-        return model.isGui3d();
-    }
-
-    @Override
-    public boolean usesBlockLight() {
-        return model.usesBlockLight();
-    }
+    public NFUnwrappedModel(BlockStateModel model) {this.model = model;}
 
     @Override
     public TextureAtlasSprite getParticleIcon() {
-        return model.getParticleIcon(ModelData.EMPTY);
-    }
-
-    @Override
-    public ItemTransforms getTransforms() {
-        return model.getTransforms();
+        return model.particleIcon();
     }
 
     @Override

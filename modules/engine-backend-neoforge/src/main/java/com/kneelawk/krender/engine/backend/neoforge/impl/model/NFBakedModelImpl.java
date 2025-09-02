@@ -23,21 +23,21 @@ import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.data.DataHolder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.base.model.BakedModelCoreProvider;
 import com.kneelawk.krender.engine.neoforge.api.model.ModelDataProperties;
 
 /**
- * Non-Caching implementation that calls {@link BakedModelCore#renderBlock(QuadEmitter, Object)} multiple times.
+ * Non-Caching implementation that calls {@link BlockStateModelCore#renderBlock(QuadEmitter, Object)} multiple times.
  */
 public class NFBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     private static final ThreadLocal<RandomSource> RANDOM_SOURCES = ThreadLocal.withInitial(RandomSource::create);
 
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
 
-    public NFBakedModelImpl(BakedModelCore<?> core) {this.core = core;}
+    public NFBakedModelImpl(BlockStateModelCore<?> core) {this.core = core;}
 
     @Override
     public List<BakedQuad> getQuads(@Nullable BlockState blockState, @Nullable Direction direction,
@@ -80,7 +80,7 @@ public class NFBakedModelImpl implements BakedModel, BakedModelCoreProvider {
             if (holder == null) return List.of();
 
             FilteringQuadBaker baker = FilteringQuadBaker.get(side, renderType, state);
-            ((BakedModelCore<Object>) core).renderBlock(baker.emitter(), holder.modelKey());
+            ((BlockStateModelCore<Object>) core).renderBlock(baker.emitter(), holder.modelKey());
             return baker.bake();
         } else {
             // TODO: item mode
@@ -119,7 +119,7 @@ public class NFBakedModelImpl implements BakedModel, BakedModelCoreProvider {
         if (holder == null) return ChunkRenderTypeSet.none();
 
         RenderTypeCollector collector = RenderTypeCollector.get(state);
-        ((BakedModelCore<Object>) core).renderBlock(collector.emitter(), holder.modelKey());
+        ((BlockStateModelCore<Object>) core).renderBlock(collector.emitter(), holder.modelKey());
         return collector.getRenderTypes();
     }
 
@@ -135,7 +135,7 @@ public class NFBakedModelImpl implements BakedModel, BakedModelCoreProvider {
     }
 
     @Override
-    public BakedModelCore<?> krender$getCore() {
+    public BlockStateModelCore<?> krender$getCore() {
         return core;
     }
 }

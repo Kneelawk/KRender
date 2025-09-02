@@ -2,7 +2,7 @@ package com.kneelawk.krender.model.loading.api;
 
 import java.util.Set;
 
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.resources.ResourceLocation;
 
@@ -23,7 +23,7 @@ public final class ModelManagerUtils {
      * @see ModelManagerPlugin.Context#addExtraModel(ResourceLocation)
      * @see ModelManagerPlugin.Context#addExtraModels(Set)
      */
-    public static BakedModel getExtraModel(ModelManager manager, ResourceLocation name) {
+    public static BlockStateModel getExtraModel(ModelManager manager, ResourceLocation name) {
         return ((Duck_ModelManager) manager).krender$getExtraModel(name);
     }
 }

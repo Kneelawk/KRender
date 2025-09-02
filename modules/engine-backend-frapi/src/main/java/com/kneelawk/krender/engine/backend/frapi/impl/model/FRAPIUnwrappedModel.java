@@ -10,11 +10,11 @@ import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.mesh.Mesh;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 
-public class FRAPIUnwrappedModel implements BakedModelCore<FRAPIUnwrappedModel.Quads> {
+public class FRAPIUnwrappedModel implements BlockStateModelCore<FRAPIUnwrappedModel.Quads> {
     private final BakedModel bakedModel;
 
     public FRAPIUnwrappedModel(BakedModel bakedModel) {this.bakedModel = bakedModel;}

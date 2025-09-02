@@ -10,6 +10,8 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -20,7 +22,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelDiscovery;
@@ -39,10 +40,10 @@ import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelManager;
 @Mixin(ModelManager.class)
 public class Mixin_ModelManager implements Duck_ModelManager {
     @Shadow
-    private BakedModel missingModel;
+    private ModelBakery.MissingModels missingModels;
 
     @Unique
-    private @Nullable Map<ResourceLocation, BakedModel> krender$extraModels;
+    private @Nullable Map<ResourceLocation, BlockStateModel> krender$extraModels;
 
     @Inject(method = "reload", at = @At("HEAD"))
     private void krender$prepare(PreparableReloadListener.PreparationBarrier barrier, ResourceManager manager,
@@ -93,8 +94,7 @@ public class Mixin_ModelManager implements Duck_ModelManager {
     }
 
     @ModifyArg(method = "reload", at = @At(value = "INVOKE",
-        target = "Ljava/util/concurrent/CompletableFuture;thenApplyAsync(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;",
-        ordinal = 3))
+        target = "Ljava/util/concurrent/CompletableFuture;thenComposeAsync(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"))
     private Function<Void, Object> krender$passManagerToBakery(Function<Void, Object> fn, @Share("pluginManager")
     LocalRef<CompletableFuture<ModelManagerPluginManager>> pluginManager) {
         CompletableFuture<ModelManagerPluginManager> future = pluginManager.get();
@@ -111,14 +111,14 @@ public class Mixin_ModelManager implements Duck_ModelManager {
     }
 
     @Inject(method = "apply", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/client/resources/model/ModelBakery$BakingResult;missingItemModel()Lnet/minecraft/client/renderer/item/ItemModel;"))
+        target = "Lnet/minecraft/client/resources/model/ModelBakery$BakingResult;missingModels()Lnet/minecraft/client/resources/model/ModelBakery$MissingModels;"))
     private void krender$apply(CallbackInfo ci, @Local() ModelBakery.BakingResult bakingResult) {
         krender$extraModels = ((Duck_ModelBakeryBakingResult) (Object) bakingResult).krender$getExtraModels();
     }
 
     @Override
-    public BakedModel krender$getExtraModel(ResourceLocation path) {
+    public BlockStateModel krender$getExtraModel(ResourceLocation path) {
         if (krender$extraModels != null && krender$extraModels.containsKey(path)) return krender$extraModels.get(path);
-        return missingModel;
+        return missingModels.block();
     }
 }

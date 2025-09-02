@@ -1,9 +1,9 @@
 package com.kneelawk.krender.engine.base.model;
 
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 
 /**
- * Implemented by objects that either contain or can be converted into a {@link BakedModelCore}.
+ * Implemented by objects that either contain or can be converted into a {@link BlockStateModelCore}.
  */
 public interface BakedModelCoreProvider {
     /**
@@ -11,5 +11,5 @@ public interface BakedModelCoreProvider {
      * <p>
      * Note: This method is prefixed with a mod id to prevent collisions when implemented by mixins.
      */
-    BakedModelCore<?> krender$getCore();
+    BlockStateModelCore<?> krender$getCore();
 }

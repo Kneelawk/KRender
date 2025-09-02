@@ -1,9 +1,9 @@
 package com.kneelawk.krender.engine.api.model;
 
+import net.minecraft.client.renderer.block.model.BlockStateModel;
+
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-
-import net.minecraft.client.resources.model.BakedModel;
 
 /**
  * Implemented by backends to provide backend-dependent access to baked model internals.
@@ -20,5 +20,5 @@ public interface BakedModelUnwrapper {
      * @param model the baked model to be unwrapped.
      * @return a baked model core that can be used to render the baked model.
      */
-    @Nullable BakedModelCore<?> unwrap(BakedModel model);
+    @Nullable BlockStateModelCore<?> unwrap(BlockStateModel model);
 }

@@ -11,12 +11,12 @@ import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.mesh.Mesh;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 import com.kneelawk.krender.engine.api.model.ModelBlockContext;
 import com.kneelawk.krender.engine.api.model.ModelItemContext;
 import com.kneelawk.krender.engine.api.model.ModelUtils;
 
-public final class DiscoFloorBakedModel implements BakedModelCore<CTUtils.Data> {
+public final class DiscoFloorBlockStateModel implements BlockStateModelCore<CTUtils.Data> {
     private static final RenderMaterial BASE_MATERIAL =
         KRenderer.getDefault().materialManager().materialFinder().setBlendMode(BlendMode.CUTOUT).find();
     private static final RenderMaterial GLOW_MATERIAL =
@@ -27,8 +27,8 @@ public final class DiscoFloorBakedModel implements BakedModelCore<CTUtils.Data> 
     private final TextureAtlasSprite[] glowingSprites;
     private final Mesh itemMesh;
 
-    public DiscoFloorBakedModel(TextureAtlasSprite particle, TextureAtlasSprite[] baseSprites,
-                                TextureAtlasSprite[] glowingSprites) {
+    public DiscoFloorBlockStateModel(TextureAtlasSprite particle, TextureAtlasSprite[] baseSprites,
+                                     TextureAtlasSprite[] glowingSprites) {
         this.particle = particle;
         this.baseSprites = baseSprites;
         this.glowingSprites = glowingSprites;

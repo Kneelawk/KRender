@@ -14,14 +14,14 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 
-import com.kneelawk.krender.engine.api.model.BakedModelCore;
+import com.kneelawk.krender.engine.api.model.BlockStateModelCore;
 
 public class ItemBakedModel implements BakedModel {
-    private final BakedModelCore<?> core;
+    private final BlockStateModelCore<?> core;
     private final RenderType type;
     private final List<BakedQuad> quads;
 
-    public ItemBakedModel(BakedModelCore<?> core, RenderType type, List<BakedQuad> quads) {
+    public ItemBakedModel(BlockStateModelCore<?> core, RenderType type, List<BakedQuad> quads) {
         this.core = core;
         this.type = type;
         this.quads = quads;

@@ -46,7 +46,7 @@ public class CTGlassUnbakedModel implements UnbakedModel {
         };
 
         return KRenderer.getDefault().bakedModelFactory()
-            .wrap(new CTGlassBakedModel(true, true, material.apply("particle"), new TextureAtlasSprite[]{
+            .wrap(new CTGlassBlockStateModel(true, true, material.apply("particle"), new TextureAtlasSprite[]{
                 material.apply("convex"),
                 material.apply("horizontal"),
                 material.apply("vertical"),

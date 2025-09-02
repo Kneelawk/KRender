@@ -6,9 +6,9 @@ import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.mesh.Mesh;
 
 /**
- * Implemented by {@link BakedModelCore}s that output the same mesh data independent of context.
+ * Implemented by {@link BlockStateModelCore}s that output the same mesh data independent of context.
  */
-public interface StaticBakedModelCore extends BakedModelCore<Void> {
+public interface StaticBlockStateModelCore extends BlockStateModelCore<Void> {
     /**
      * {@return this model's static mesh}
      */
