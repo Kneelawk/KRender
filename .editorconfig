@@ -119,7 +119,7 @@ ij_java_for_statement_wrap = off
 ij_java_generate_final_locals = false
 ij_java_generate_final_parameters = false
 ij_java_if_brace_force = never
-ij_java_imports_layout = java.**, |, javax.**, |, com.**, |, net.**, |, org.**, |, *, |, net.fabricmc.**, |, org.quiltmc.**, |, it.unimi.**, |, org.joml.**, |, com.mojang.**, |, net.minecraft.**, |, alexiil.mc.mod.**, |, alexiil.mc.lib.net.**, |, alexiil.mc.lib.attributes.**, |, alexiil.mc.lib.multipart.**, |, com.kneelawk.**, |, $*
+ij_java_imports_layout = java.**, |, javax.**, |, com.**, |, net.**, |, org.**, |, it.unimi.**, |, org.joml.**, |, com.mojang.**, |, net.minecraft.**, |, net.fabricmc.**, |, org.quiltmc.**, |, *, |, com.kneelawk.**, |, $*
 ij_java_indent_case_from_switch = true
 ij_java_insert_inner_class_imports = false
 ij_java_insert_override_annotation = true
@@ -445,8 +445,3 @@ ij_yaml_sequence_on_new_line = false
 ij_yaml_space_before_colon = false
 ij_yaml_spaces_within_braces = true
 ij_yaml_spaces_within_brackets = true
-
-[*.tiny]
-indent_style = tab
-tab_width = 4
-trim_trailing_whitespace = false

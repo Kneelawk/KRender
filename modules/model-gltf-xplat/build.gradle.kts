@@ -5,7 +5,7 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_model_gltf")
+    applyMixinExpansions()
     xplatProjectDependency(":model-loading", include = false)
     xplatProjectDependency(":model-guard", include = false)
     xplatProjectDependency(":engine-api", include = false)
@@ -13,5 +13,5 @@ submodule {
 }
 
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }

@@ -5,16 +5,17 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_model_loading")
+    applyMixinExpansions()
     setupJavadoc()
     val common_events_version: String by project
     xplatExternalDependency(include = false) { "com.kneelawk.common-events:common-events-$it:$common_events_version" }
 }
 
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }
 
-loom {
-    accessWidenerPath.set(project(":model-loading-fabric").file("src/main/resources/krender_model_loading.accesswidener"))
+minivan {
+    version("1.21.8")
+    accessWideners(project(":model-loading-fabric").file("src/main/resources/krender_model_loading.accesswidener"))
 }

@@ -4,7 +4,6 @@ plugins {
 }
 
 submodule {
-    setRefmaps("ct_complicated")
     xplatProjectDependency(":model-loading")
     xplatProjectDependency(":engine-api")
     val kregistry_version: String by project

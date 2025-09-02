@@ -4,7 +4,7 @@ plugins {
 }
 
 submodule {
-    setRefmaps("static_models")
+    applyMixinExpansions()
     xplatProjectDependency(":model-gltf")
     xplatProjectDependency(":model-obj")
     xplatProjectDependency(":engine-api")
