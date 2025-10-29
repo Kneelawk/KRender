@@ -5,16 +5,11 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_engine_backend_test")
+    applyMixinExpansions()
     xplatProjectDependency(":engine-api", include = false)
     setupJavadoc()
 }
 
-dependencies {
-    val common_events_version: String by project
-    modRuntimeOnly("com.kneelawk.common-events:common-events-test-xplat-intermediary:$common_events_version")
-}
-
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }

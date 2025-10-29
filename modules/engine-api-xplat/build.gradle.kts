@@ -5,7 +5,7 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_engine_api")
+    applyMixinExpansions()
     setupJavadoc()
     xplatProjectDependency(":reload-listener")
     val common_events_version: String by project
@@ -13,5 +13,5 @@ submodule {
 }
 
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }

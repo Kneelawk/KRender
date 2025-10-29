@@ -5,12 +5,12 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_model_guard")
+    applyMixinExpansions()
     val kregistry_version: String by project
     xplatExternalDependency { "com.kneelawk.kregistry:kregistry-lite-$it:$kregistry_version" }
     setupJavadoc()
 }
 
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }

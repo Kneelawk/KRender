@@ -12,16 +12,22 @@ pluginManagement {
         maven("https://maven.neoforged.net/releases/") {
             name = "NeoForged"
         }
+        maven("https://repo.sleeping.town/") {
+            name = "SleepingTown"
+        }
         maven("https://maven.kneelawk.com/releases/") {
             name = "Kneelawk"
         }
         gradlePluginPortal()
+        mavenLocal()
     }
     plugins {
         val loom_version: String by settings
         id("fabric-loom") version loom_version
         val moddev_version: String by settings
         id("net.neoforged.moddev") version moddev_version
+        val minivan_version: String by settings
+        id("agency.highlysuspect.minivan") version minivan_version
         val remapcheck_version: String by settings
         id("com.kneelawk.remapcheck") version remapcheck_version
         val versioning_version: String by settings
@@ -37,52 +43,61 @@ rootProject.name = "krender"
 
 fun module(enabled: Boolean, name: String) {
     if (!enabled) return
-    include(name)
-    project(":$name").projectDir = File(rootDir, "modules/${name.replace(':', '/')}")
+    val sanitizedName = name.replace('/', '-')
+    include(sanitizedName)
+    project(":$sanitizedName").projectDir = File(rootDir, "modules/$name")
 }
 
-fun module(name: String, vararg submodules: Pair<Boolean, String>) {
-    include(name)
-    project(":$name").projectDir = File(rootDir, "modules/$name")
+fun module(enabled: Boolean, name: String, vararg submodules: Pair<Boolean, String>) {
+    if (!enabled) return
+    val sanitizedName = name.replace('/', '-')
+    include(sanitizedName)
+    project(":$sanitizedName").projectDir = File(rootDir, "modules/$name")
 
     for ((enabled, submodule) in submodules) {
         if (!enabled) continue
-        include("$name:$submodule")
-        project(":$name:$submodule").projectDir = File(rootDir, "modules/$name/${submodule.replace(':', '/')}")
+        val sanitizedSubmodule = submodule.replace('/', '-')
+        include("$sanitizedName:$sanitizedSubmodule")
+        project(":$sanitizedName:$sanitizedSubmodule").projectDir = File(rootDir, "modules/$name/$submodule")
     }
 }
 
 fun example(enabled: Boolean, name: String) {
     if (!enabled) return
-    include(name)
-    project(":$name").projectDir = File(rootDir, "examples/${name.replace(':', '/')}")
+    val sanitizedName = name.replace('/', '-')
+    include(sanitizedName)
+    project(":$sanitizedName").projectDir = File(rootDir, "examples/$name")
 }
 
-fun example(name: String, vararg submodules: Pair<Boolean, String>) {
-    include(name)
-    project(":$name").projectDir = File(rootDir, "examples/$name")
+fun example(enabled: Boolean, name: String, vararg submodules: Pair<Boolean, String>) {
+    if (!enabled) return
+    val sanitizedName = name.replace('/', '-')
+    include(sanitizedName)
+    project(":$sanitizedName").projectDir = File(rootDir, "examples/$name")
 
     for ((enabled, submodule) in submodules) {
         if (!enabled) continue
-        include("$name:$submodule")
-        project(":$name:$submodule").projectDir = File(rootDir, "examples/$name/${submodule.replace(':', '/')}")
+        val sanitizedSubmodule = submodule.replace('/', '-')
+        include("$sanitizedName:$sanitizedSubmodule")
+        project(":$sanitizedName:$sanitizedSubmodule").projectDir = File(rootDir, "examples/$name/$submodule")
     }
 }
 
 fun javadoc(enabled: Boolean, name: String) {
     if (!enabled) return
-    include("javadoc-$name")
-    project(":javadoc-$name").projectDir = File(rootDir, "javadoc/$name")
+    val sanitizedName = name.replace('/', '-')
+    include("javadoc-$sanitizedName")
+    project(":javadoc-$sanitizedName").projectDir = File(rootDir, "javadoc/$name")
 }
 
 val xplat = true
-val mojmap = true
+val intermediary = true
 val fabric = true
 val neoforge = true
 val moddev = true
 
 module(xplat, "engine-api-xplat")
-module(mojmap, "engine-api-xplat-mojmap")
+module(intermediary, "engine-api-xplat-intermediary")
 module(fabric, "engine-api-fabric")
 module(neoforge, "engine-api-neoforge")
 
@@ -90,35 +105,32 @@ module(fabric, "engine-backend-frapi")
 module(neoforge, "engine-backend-neoforge")
 
 module(xplat, "engine-backend-test-xplat")
-module(mojmap, "engine-backend-test-xplat-mojmap")
+module(intermediary, "engine-backend-test-xplat-intermediary")
 
 module(xplat, "model-loading-xplat")
-module(mojmap, "model-loading-xplat-mojmap")
+module(intermediary, "model-loading-xplat-intermediary")
 module(fabric, "model-loading-fabric")
 module(neoforge, "model-loading-neoforge")
 
 module(xplat, "reload-listener-xplat")
-module(mojmap, "reload-listener-xplat-mojmap")
+module(intermediary, "reload-listener-xplat-intermediary")
 module(fabric, "reload-listener-fabric")
 module(neoforge, "reload-listener-neoforge")
 
 module(xplat, "model-guard-xplat")
-module(mojmap, "model-guard-xplat-mojmap")
+module(intermediary, "model-guard-xplat-intermediary")
 module(fabric, "model-guard-fabric")
 module(neoforge, "model-guard-neoforge")
 
 module(xplat, "model-obj-xplat")
-module(mojmap, "model-obj-xplat-mojmap")
+module(intermediary, "model-obj-xplat-intermediary")
 module(fabric, "model-obj-fabric")
 module(neoforge, "model-obj-neoforge")
 
 module(xplat, "model-gltf-xplat")
-module(mojmap, "model-gltf-xplat-mojmap")
+module(intermediary, "model-gltf-xplat-intermediary")
 module(fabric, "model-gltf-fabric")
 module(neoforge, "model-gltf-neoforge")
-
-module(fabric, "rendertype-loom")
-module(moddev, "rendertype-moddev")
 
 example(xplat, "ct-complicated-xplat")
 example(fabric, "ct-complicated-fabric")

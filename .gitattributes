@@ -7,3 +7,16 @@
 # These are Windows script files and should use crlf
 *.bat           text eol=crlf
 
+# Binary files should be left untouched
+*.dll           binary
+*.exe           binary
+*.gif           binary
+*.jar           binary
+*.jks           binary
+*.jpg           binary
+*.lzma          binary
+*.ogg           binary
+*.png           binary
+*.pyd           binary
+*.so            binary
+*.zip           binary

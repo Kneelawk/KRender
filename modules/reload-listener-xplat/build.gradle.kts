@@ -5,12 +5,12 @@ plugins {
 }
 
 submodule {
-    setRefmaps("krender_reload_listener")
+    applyMixinExpansions()
     setupJavadoc()
     val common_events_version: String by project
     xplatExternalDependency { "com.kneelawk.common-events:common-events-$it:$common_events_version" }
 }
 
 kpublish {
-    createPublication("intermediary")
+    createPublication("mojmap")
 }
