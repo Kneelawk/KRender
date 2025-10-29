@@ -2,19 +2,19 @@
   "schemaVersion": 1,
   "id": "${mod_id}",
   "version": "${version}",
-  "name": "Connected Textures Complicated",
-  "description": "Complicated cross-platform connected-texture implementation.",
+  "name": "${name}",
+  "description": "${description}",
   "authors": [
-    "Kneelawk"
+    ${authors_fabric}
   ],
   "contact": {
-    "homepage": "https://github.com/Kneelawk/KRender",
-    "issues": "https://github.com/Kneelawk/KRender/issues",
-    "sources": "https://github.com/Kneelawk/KRender"
+    "homepage": "${homepage}",
+    "issues": "${issues}",
+    "sources": "${sources}"
   },
-  "license": "MIT",
+  "license": "${license}",
   "icon": "assets/${mod_id}/icon.png",
-  "environment": "*",
+  "environment": "${environment}",
   "entrypoints": {
     "main": [
       {
@@ -29,11 +29,11 @@
   },
   "mixins": [ ],
   "depends": {
-    "fabricloader": ">=0.15.0",
     "fabric-api": "*",
+    "fabricloader": "${loader_version_fabric}",
+    "minecraft": "${mc_version_fabric}",
+    "java": "${java_version_fabric}",
     "krender_model_loading": "*",
-    "krender_engine_api": "*",
-    "minecraft": ">=1.21- <1.22-",
-    "java": ">=17"
+    "krender_engine_api": "*"
   }
 }

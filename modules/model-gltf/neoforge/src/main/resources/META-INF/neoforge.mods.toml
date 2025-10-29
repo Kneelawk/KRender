@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
-license = "MIT"
+license = "${license}"
 
 [[mixins]]
 config = "${mod_id}.mixins.json"
@@ -8,15 +8,22 @@ config = "${mod_id}.mixins.json"
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
-displayName = "KRender glTF Model Loading"
-authors = "Kneelawk"
-description = "Cross-platform glTF Model Loader."
+displayName = "${name}"
+authors = "${authors_neoforge}"
+description = "${description}"
 logoFile = "assets/${mod_id}/icon.png"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
 type = "REQUIRED"
-versionRange = "[21.0,)"
+versionRange = "${loader_version_neoforge}"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "common_events"
+type = "REQUIRED"
+versionRange = "${common_events_version_neoforge}"
 ordering = "NONE"
 side = "BOTH"
 

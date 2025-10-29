@@ -1,6 +1,6 @@
 modLoader = "javafml"
 loaderVersion = "[1,)"
-license = "MIT"
+license = "${license}"
 
 [[mixins]]
 config = "krender_reload_listener.xplat.mixins.json"
@@ -8,21 +8,21 @@ config = "krender_reload_listener.xplat.mixins.json"
 [[mods]]
 modId = "${mod_id}"
 version = "${version}"
-displayName = "KRender Reload Listener"
-authors = "Kneelawk"
-description = "KRender Reload Listener Events."
+displayName = "${name}"
+authors = "${authors_neoforge}"
+description = "${description}"
 logoFile = "assets/${mod_id}/icon.png"
 
 [[dependencies.${mod_id}]]
 modId = "neoforge"
 type = "REQUIRED"
-versionRange = "[21.0,)"
+versionRange = "${loader_version_neoforge}"
 ordering = "NONE"
 side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "common_events"
 type = "REQUIRED"
-versionRange = "[1,)"
+versionRange = "${common_events_version_neoforge}"
 ordering = "NONE"
 side = "BOTH"
