@@ -1,0 +1,47 @@
+{
+  "schemaVersion": 1,
+  "id": "${mod_id}",
+  "version": "${version}",
+  "name": "${name}",
+  "description": "${description}",
+  "authors": [
+    ${authors_fabric}
+  ],
+  "contact": {
+    "homepage": "${homepage}",
+    "issues": "${issues}",
+    "sources": "${sources}"
+  },
+  "license": "${license}",
+  "icon": "assets/${mod_id}/icon.png",
+  "environment": "${environment}",
+  "entrypoints": {
+    "client": [
+      "com.kneelawk.krender.engine.fabric.impl.ClientEntrypoint"
+    ]
+  },
+  "mixins": [
+    "krender_engine_api.xplat.mixins.json",
+    "krender_engine_api.fabric.mixins.json"
+  ],
+  "depends": {
+    "fabric-api": "*",
+    "fabricloader": "${loader_version_fabric}",
+    "minecraft": "${mc_version_fabric}",
+    "java": "${java_version_fabric}",
+    "common_events": "${common_events_version_fabric}",
+    "krender_reload_listener": "*"
+  },
+  "custom": {
+    "modmenu": {
+      "badges": [ "library" ],
+      "parent": {
+        "id": "${parent_id}",
+        "name": "${parent_name}",
+        "description": "${parent_description}",
+        "icon": "assets/${mod_id}/icon.png",
+        "badges": [ "library" ]
+      }
+    }
+  }
+}
