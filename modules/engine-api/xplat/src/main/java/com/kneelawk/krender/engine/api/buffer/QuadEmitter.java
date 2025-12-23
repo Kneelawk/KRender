@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.api.buffer;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix3fc;
@@ -12,12 +12,16 @@ import org.joml.Vector3f;
 import org.joml.Vector3fc;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
 
-import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.api.texture.MaterialTexture;
+import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.api.util.DirectionUtils;
+import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Per-quad Fabric Render API style model emitter.
@@ -485,22 +489,71 @@ public interface QuadEmitter extends QuadView, QuadSink {
     QuadEmitter setNominalFace(@Nullable Direction face);
 
     /**
-     * Sets this quad emitter's default material for new quads.
+     * Sets this quad's blend mode.
      *
-     * @param material the emitter's new default material.
+     * @param renderLayer the new blend mode.
      * @return this quad emitter.
      */
-    QuadEmitter setDefaultMaterial(RenderMaterial material);
+    QuadEmitter setRenderLayer(@Nullable ChunkSectionLayer renderLayer);
 
     /**
-     * Sets this quad's material.
-     * <p>
-     * If no material is set, then this quad will use the default material.
+     * Sets whether this quad is emissive. This causes it to ignore lighting values.
      *
-     * @param material the new material for this quad.
+     * @param emissive the emissive value.
      * @return this quad emitter.
      */
-    QuadEmitter setMaterial(@Nullable RenderMaterial material);
+    QuadEmitter setEmissive(boolean emissive);
+
+    /**
+     * Sets whether diffuse shading is disabled.
+     *
+     * @param disabled whether to disable diffuse shading.
+     * @return this quad emitter.
+     */
+    QuadEmitter setDiffuseDisabled(boolean disabled);
+
+    /**
+     * Sets whether ambient occlusion is force enabled, disabled, or left up to the model.
+     * <p>
+     * Note: not all backends may respect this value, or some may only respect a {@code FALSE} value, treating a
+     * {@code TRUE} value the same as a {@code DEFAULT} value.
+     *
+     * @param mode whether ambient occlusion is force enabled, disabled, or left up to the model.
+     * @return this quad emitter.
+     */
+    QuadEmitter setAmbientOcclusionMode(TriState mode);
+
+    /**
+     * Sets the kind of foil used by this quad.
+     * <p>
+     * This is usually not supported on terrain rendering on most backends.
+     *
+     * @param foilType the kind of foil to be used by this quad.
+     * @return this quad emitter.
+     */
+    QuadEmitter setFoilType(ItemStackRenderState.@Nullable FoilType foilType);
+
+    /**
+     * Sets the texture or texture atlas to be used on quads rendered with this quad, looking up by integer id.
+     * <p>
+     * When rendering terrain, most backends only support the {@link MaterialTextureManager#blockAtlas} or {@link MaterialTextureManager#itemAtlas} textures.
+     *
+     * @param textureIntId the integer id of the texture to be associated with this quad.
+     * @return this quad emitter.
+     */
+    QuadEmitter setTextureIntId(int textureIntId);
+
+    /**
+     * Sets the texture or texture atlas to be used on quads rendered with this quad.
+     * <p>
+     * When rendering terrain, most backends only support the {@link MaterialTextureManager#blockAtlas} or {@link MaterialTextureManager#itemAtlas} textures.
+     *
+     * @param texture the texture to be associated with this quad.
+     * @return this quad emitter.
+     */
+    default QuadEmitter setTexture(MaterialTexture texture) {
+        return setTextureIntId(texture.intId());
+    }
 
     /**
      * Sets this quad's tint index.
@@ -531,12 +584,10 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * Copies vanilla quad properties to the current quad.
      *
      * @param quad     the vanilla quad to copy from.
-     * @param material the material to use when copying the quad. Note: diffuse-shading only applies if both the
-     *                 material and the quad have it enabled.
      * @param cullFace the cull-face of the vanilla quad.
      * @return this quad emitter.
      */
-    QuadEmitter fromVanilla(BakedQuad quad, RenderMaterial material, @Nullable Direction cullFace);
+    QuadEmitter fromVanilla(BakedQuad quad, @Nullable Direction cullFace);
 
     /**
      * Sorts this quad's vertices around the given normal vector, starting from the binormal vector.

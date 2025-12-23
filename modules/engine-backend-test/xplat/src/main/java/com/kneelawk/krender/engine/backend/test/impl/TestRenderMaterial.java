@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.backend.test.impl;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.base.material.BaseMaterialView;

@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 
 import net.neoforged.neoforge.client.ChunkRenderTypeSet;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;

@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.texture.atlas.SpriteResourceLoader;
 import net.minecraft.client.renderer.texture.atlas.SpriteSource;
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.resources.metadata.animation.FrameSize;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceMetadata;
@@ -27,9 +27,9 @@ public class GltfSpriteSource implements SpriteSource {
     @Override
     public void run(ResourceManager resourceManager, Output output) {
         ModelGuards guards = ModelGuards.load(resourceManager);
-        Map<ResourceLocation, Resource> gltfResources =
+        Map<Identifier, Resource> gltfResources =
             guards.getModels(resourceManager, KGltfConstants.LOADER_ID, ".gltf");
-        Map<ResourceLocation, Resource> glbResources =
+        Map<Identifier, Resource> glbResources =
             guards.getModels(resourceManager, KGltfConstants.LOADER_ID, ".glb");
 
         for (var entry : gltfResources.entrySet()) {
@@ -51,13 +51,13 @@ public class GltfSpriteSource implements SpriteSource {
         }
     }
 
-    private static void addImages(Output output, ResourceLocation modelName, GltfFile file)
+    private static void addImages(Output output, Identifier modelName, GltfFile file)
         throws IOException {
         int imageCount = file.root().images().size();
         for (int i = 0; i < imageCount; i++) {
             BufferAccess access = file.getImageBuffer(i);
             if (access != null) {
-                ResourceLocation imageName = KGltfConstants.getImageName(modelName, i);
+                Identifier imageName = KGltfConstants.getImageName(modelName, i);
                 output.add(imageName, new BufferAccessSpriteSupplier(imageName, access));
             }
         }
@@ -68,7 +68,7 @@ public class GltfSpriteSource implements SpriteSource {
         return TYPE;
     }
 
-    private record BufferAccessSpriteSupplier(ResourceLocation name, BufferAccess buffer) implements SpriteSupplier {
+    private record BufferAccessSpriteSupplier(Identifier name, BufferAccess buffer) implements SpriteSupplier {
         @Override
         public SpriteContents apply(SpriteResourceLoader spriteResourceLoader) {
             NativeImage image;

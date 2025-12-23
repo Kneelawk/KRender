@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.impl.model;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 

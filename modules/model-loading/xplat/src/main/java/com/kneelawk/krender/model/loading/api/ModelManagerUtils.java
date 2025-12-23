@@ -4,7 +4,7 @@ import java.util.Set;
 
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelManager;
 
@@ -20,10 +20,10 @@ public final class ModelManagerUtils {
      * @param manager the model manager to get the extra model from.
      * @param name    the name of the extra model.
      * @return the extra model loaded and baked.
-     * @see ModelManagerPlugin.Context#addExtraModel(ResourceLocation)
+     * @see ModelManagerPlugin.Context#addExtraModel(Identifier)
      * @see ModelManagerPlugin.Context#addExtraModels(Set)
      */
-    public static BakedModel getExtraModel(ModelManager manager, ResourceLocation name) {
+    public static BakedModel getExtraModel(ModelManager manager, Identifier name) {
         return ((Duck_ModelManager) manager).krender$getExtraModel(name);
     }
 }

@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.material;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;

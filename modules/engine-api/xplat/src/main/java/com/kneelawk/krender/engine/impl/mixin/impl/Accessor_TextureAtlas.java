@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @Mixin(TextureAtlas.class)
 public interface Accessor_TextureAtlas {
     @Accessor("texturesByName")
-    Map<ResourceLocation, TextureAtlasSprite> krender_engine_api$texturesByName();
+    Map<Identifier, TextureAtlasSprite> krender_engine_api$texturesByName();
 
     @Accessor("width")
     int krender_engine_api$width();

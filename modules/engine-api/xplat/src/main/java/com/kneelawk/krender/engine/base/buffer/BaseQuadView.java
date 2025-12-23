@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.base.buffer;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;

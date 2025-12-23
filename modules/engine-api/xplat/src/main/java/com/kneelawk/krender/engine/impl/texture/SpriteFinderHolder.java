@@ -6,7 +6,7 @@ import com.google.common.math.IntMath;
 
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.texture.SpriteFinder;
 import com.kneelawk.krender.engine.impl.mixin.api.Duck_TextureAtlas;
@@ -16,7 +16,7 @@ public class SpriteFinderHolder {
     public static SpriteFinder createSpriteFinder(TextureAtlas atlas) {
         Accessor_TextureAtlas accessor = (Accessor_TextureAtlas) atlas;
 
-        Map<ResourceLocation, TextureAtlasSprite> texturesByName = accessor.krender_engine_api$texturesByName();
+        Map<Identifier, TextureAtlasSprite> texturesByName = accessor.krender_engine_api$texturesByName();
         TextureAtlasSprite[] sprites = new TextureAtlasSprite[texturesByName.size()];
         boolean powerOf2 = true;
         int minSize = 65536;

@@ -6,11 +6,11 @@ import java.util.Map;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 
 public record MtlFile(Map<String, MtlMaterial> materials) {
-    public static MtlFile load(Resource resource, ResourceLocation name) throws IOException {
+    public static MtlFile load(Resource resource, Identifier name) throws IOException {
         MtlFile file = new MtlFile(new Object2ObjectLinkedOpenHashMap<>());
 
         try (BufferedReader reader = resource.openAsReader()) {
@@ -34,7 +34,7 @@ public record MtlFile(Map<String, MtlMaterial> materials) {
                         file.materials.computeIfPresent(currentName, (n, mat) -> mat.withDiffuseColor(diffuseColor));
                     } else if (strs[0].equals("map_Kd")) {
                         checkArgs(strs, currentName, "map_Kd", 1);
-                        ResourceLocation diffuseTexture = ResourceLocation.parse(strs[1]);
+                        Identifier diffuseTexture = Identifier.parse(strs[1]);
                         file.materials.computeIfPresent(currentName,
                             (n, mat) -> mat.withDiffuseTexture(diffuseTexture));
                     } else if (strs[0].equals("Ke")) {

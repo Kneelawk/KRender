@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.impl.model;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
 
@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.item.ItemModel;
 import net.minecraft.client.renderer.item.ItemModelResolver;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
@@ -35,9 +35,9 @@ public class ModelCoreItemModel implements ItemModel {
         }
     }
 
-    public record Unbaked(ResourceLocation model) implements ItemModel.Unbaked {
+    public record Unbaked(Identifier model) implements ItemModel.Unbaked {
         public static final MapCodec<Unbaked> MAP_CODEC =
-            ResourceLocation.CODEC.fieldOf("model").xmap(Unbaked::new, Unbaked::model);
+            Identifier.CODEC.fieldOf("model").xmap(Unbaked::new, Unbaked::model);
 
         @Override
         public MapCodec<? extends ItemModel.Unbaked> type() {

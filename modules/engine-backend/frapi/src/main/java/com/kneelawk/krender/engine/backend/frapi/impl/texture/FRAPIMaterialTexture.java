@@ -1,8 +1,8 @@
 package com.kneelawk.krender.engine.backend.frapi.impl.texture;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
@@ -15,7 +15,7 @@ public class FRAPIMaterialTexture extends BaseMaterialTexture {
      * @param textureId the resource location of the backing texture.
      * @param intId     the integer id of this texture.
      */
-    public FRAPIMaterialTexture(ResourceLocation textureId, int intId) {
+    public FRAPIMaterialTexture(Identifier textureId, int intId) {
         super(textureId, intId);
     }
 

@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.api.buffer;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -8,11 +8,14 @@ import org.joml.Vector3f;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
-import com.kneelawk.krender.engine.api.material.RenderMaterial;
+import com.kneelawk.krender.engine.api.texture.MaterialTexture;
+import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * A view of a buffered quad.
@@ -216,9 +219,43 @@ public interface QuadView extends RendererDependent {
     Vector3f getFaceNormal();
 
     /**
-     * {@return this quad's material}
+     * {@return this quad's blend mode}
      */
-    RenderMaterial getMaterial();
+    @Nullable ChunkSectionLayer getRenderLayer();
+
+    /**
+     * {@return whether this quad is emissive}
+     * <p>
+     * Emissive quads always render at full-brightness, ignoring provided lightmap values.
+     */
+    boolean isEmissive();
+
+    /**
+     * {@return whether diffuse shading is disabled for this quad}
+     */
+    boolean isDiffuseDisabled();
+
+    /**
+     * {@return whether ambient occlusion is enabled}
+     */
+    TriState getAmbientOcclusionMode();
+
+    /**
+     * {@return the type of foil used by this quad}
+     */
+    ItemStackRenderState.@Nullable FoilType getFoilType();
+
+    /**
+     * {@return the integer id of the texture or texture atlas associated with this quad}
+     */
+    int getTextureIntId();
+
+    /**
+     * {@return the texture or texture atlas associated with this quad}
+     */
+    default MaterialTexture getTexture() {
+        return getRendererOrDefault().textureManager().textureByIntId(getTextureIntId());
+    }
 
     /**
      * {@return the quad tint index serialized with the quad}

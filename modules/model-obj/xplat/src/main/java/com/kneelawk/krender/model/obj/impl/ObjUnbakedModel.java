@@ -17,14 +17,13 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.PooledQuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.SimpleModelCore;
@@ -43,9 +42,9 @@ import com.kneelawk.krender.model.obj.impl.format.metadata.ObjMetadata;
 public class ObjUnbakedModel implements UnbakedModel {
     private final ObjFile file;
     private final ObjMetadata metadata;
-    private final ResourceLocation name;
+    private final Identifier name;
 
-    public ObjUnbakedModel(ObjFile file, ObjMetadata metadata, ResourceLocation name) {
+    public ObjUnbakedModel(ObjFile file, ObjMetadata metadata, Identifier name) {
         this.file = file;
         this.metadata = metadata;
         this.name = name;
@@ -166,7 +165,7 @@ public class ObjUnbakedModel implements UnbakedModel {
                 .wrap(new SimpleModelCore(builder.build(), particle, metadata.useAmbientOcclusion(), metadata.gui3d()));
         } catch (Exception e) {
             KObjLog.LOG.error("Error loading model '{}'", name, e);
-            return baker.bake(ResourceLocation.withDefaultNamespace("error/missing"), modelState);
+            return baker.bake(Identifier.withDefaultNamespace("error/missing"), modelState);
         }
     }
 

@@ -8,7 +8,7 @@ import java.util.function.Function;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -35,7 +35,7 @@ public interface ModelGuard {
     /**
      * {@return the loader this guard loads for}
      */
-    ResourceLocation getLoader();
+    Identifier getLoader();
 
     /**
      * Actually loads resources for a model loader.
@@ -44,7 +44,7 @@ public interface ModelGuard {
      * @param suffix  the suffix of model files to load.
      * @return all loaded resources.
      */
-    Map<ResourceLocation, Resource> loadAll(ResourceManager manager, String suffix);
+    Map<Identifier, Resource> loadAll(ResourceManager manager, String suffix);
 
     /**
      * Loads a single resource for a model loader.
@@ -53,5 +53,5 @@ public interface ModelGuard {
      * @param id      the id of the resource to load.
      * @return the single loaded resource, if present.
      */
-    Optional<Resource> load(ResourceManager manager, ResourceLocation id);
+    Optional<Resource> load(ResourceManager manager, Identifier id);
 }

@@ -1,7 +1,7 @@
 package com.kneelawk.krender.engine.backend.frapi.impl.model;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
 

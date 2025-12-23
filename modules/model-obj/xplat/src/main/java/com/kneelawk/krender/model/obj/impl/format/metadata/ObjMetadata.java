@@ -11,7 +11,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.world.phys.Vec3;
 
@@ -19,7 +19,7 @@ public record ObjMetadata(Vec3 translation, Vec3 rotation, Vec3 scale, List<Meta
                           Matrix4f matrix, MaterialOverride materialOverride,
                           Map<String, MaterialOverride> materialOverrides,
                           boolean useAmbientOcclusion, boolean gui3d,
-                          Optional<ResourceLocation> particle,
+                          Optional<Identifier> particle,
                           float transformGranularity) {
 
     private static final Codec<Matrix4f> MATRIX_CODEC =
@@ -51,7 +51,7 @@ public record ObjMetadata(Vec3 translation, Vec3 rotation, Vec3 scale, List<Meta
             .forGetter(ObjMetadata::materialOverrides),
         Codec.BOOL.optionalFieldOf("useAmbientOcclusion", true).forGetter(ObjMetadata::useAmbientOcclusion),
         Codec.BOOL.optionalFieldOf("gui3d", true).forGetter(ObjMetadata::gui3d),
-        ResourceLocation.CODEC.optionalFieldOf("particle").forGetter(ObjMetadata::particle),
+        Identifier.CODEC.optionalFieldOf("particle").forGetter(ObjMetadata::particle),
         Codec.FLOAT.optionalFieldOf("transformGranularity", 0f).forGetter(ObjMetadata::transformGranularity)
     ).apply(instance, ObjMetadata::new));
     public static final ObjMetadata DEFAULT =

@@ -17,7 +17,7 @@ import com.google.gson.JsonParser;
 
 import org.apache.commons.io.IOUtils;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.objects.Object2ReferenceLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
@@ -25,8 +25,8 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 
-import net.minecraft.ResourceLocationException;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.IdentifierException;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -41,7 +41,7 @@ import com.kneelawk.krender.model.guard.impl.KRMGConstants;
 
 import static com.kneelawk.krender.model.gltf.impl.GltfUtils.swapInt;
 
-public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLocation, byte[]> dependencies) {
+public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<Identifier, byte[]> dependencies) {
     public static GltfFile loadGltf(Resource resource, ResourceManager manager, ModelGuards guards) throws IOException {
         JsonElement json;
         try (InputStream is = resource.open()) {
@@ -61,7 +61,7 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
         checkImages(root);
 
         // load dependencies
-        Map<ResourceLocation, byte[]> dependencies = loadDependencies(manager, guards, root);
+        Map<Identifier, byte[]> dependencies = loadDependencies(manager, guards, root);
 
         return new GltfFile(root, null, dependencies);
     }
@@ -107,24 +107,24 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 dis.readFully(bin);
 
                 // load dependencies
-                Map<ResourceLocation, byte[]> dependencies = loadDependencies(manager, guards, root);
+                Map<Identifier, byte[]> dependencies = loadDependencies(manager, guards, root);
 
                 return new GltfFile(root, bin, dependencies);
             } else {
                 // load dependencies
-                Map<ResourceLocation, byte[]> dependencies = loadDependencies(manager, guards, root);
+                Map<Identifier, byte[]> dependencies = loadDependencies(manager, guards, root);
 
                 return new GltfFile(root, null, dependencies);
             }
         }
     }
 
-    private static @NotNull Map<ResourceLocation, byte[]> loadDependencies(ResourceManager manager, ModelGuards guards,
+    private static @NotNull Map<Identifier, byte[]> loadDependencies(ResourceManager manager, ModelGuards guards,
                                                                            GltfRoot root) throws IOException {
         // gltf dependencies will usually be unique, so we can just store them
-        Set<ResourceLocation> dependencyNames = findAndCheckDependencies(root);
-        Map<ResourceLocation, byte[]> dependencies = new Object2ReferenceLinkedOpenHashMap<>();
-        for (ResourceLocation dep : dependencyNames) {
+        Set<Identifier> dependencyNames = findAndCheckDependencies(root);
+        Map<Identifier, byte[]> dependencies = new Object2ReferenceLinkedOpenHashMap<>();
+        for (Identifier dep : dependencyNames) {
             Optional<Resource> depResOpt = guards.getResource(manager, KRMGConstants.LOADER_NAME, dep);
             if (depResOpt.isEmpty()) throw new IOException("glTF tried to load missing resource: " + dep);
 
@@ -139,9 +139,9 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
         return dependencies;
     }
 
-    private static Set<ResourceLocation> findAndCheckDependencies(GltfRoot root)
+    private static Set<Identifier> findAndCheckDependencies(GltfRoot root)
         throws IOException {
-        Set<ResourceLocation> dependencies = new ObjectLinkedOpenHashSet<>();
+        Set<Identifier> dependencies = new ObjectLinkedOpenHashSet<>();
 
         List<GltfBuffer> buffers = root.buffers();
         for (int i = 0; i < buffers.size(); i++) {
@@ -153,8 +153,8 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
             String rlStr;
             if (uri.startsWith("rl:")) {
                 rlStr = uri.substring("rl:".length());
-            } else if (uri.startsWith("resourcelocation:")) {
-                rlStr = uri.substring("resourcelocation:".length());
+            } else if (uri.startsWith("Identifier:")) {
+                rlStr = uri.substring("Identifier:".length());
             } else if (uri.startsWith("id:")) {
                 rlStr = uri.substring("id:".length());
             } else if (uri.startsWith("identifier:")) {
@@ -163,13 +163,13 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 continue;
             } else {
                 throw new IOException("Invalid Minecraft glTF buffer " + i + " uri: '" + uri +
-                    "'. Allowed uri types: 'rl:', 'resourcelocation:', 'id:', 'identifier:', and 'data:'.");
+                    "'. Allowed uri types: 'rl:', 'Identifier:', 'id:', 'identifier:', and 'data:'.");
             }
 
-            ResourceLocation rl;
+            Identifier rl;
             try {
-                rl = ResourceLocation.parse(rlStr);
-            } catch (ResourceLocationException e) {
+                rl = Identifier.parse(rlStr);
+            } catch (IdentifierException e) {
                 throw new IOException("Invalid uri resource location: '" + rlStr + "' in buffer " + i, e);
             }
             dependencies.add(rl);
@@ -192,8 +192,8 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
             String rlStr;
             if (uri.startsWith("rl:")) {
                 rlStr = uri.substring("rl:".length());
-            } else if (uri.startsWith("resourcelocation:")) {
-                rlStr = uri.substring("resourcelocation:".length());
+            } else if (uri.startsWith("Identifier:")) {
+                rlStr = uri.substring("Identifier:".length());
             } else if (uri.startsWith("id:")) {
                 rlStr = uri.substring("id:".length());
             } else if (uri.startsWith("identifier:")) {
@@ -212,12 +212,12 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 continue;
             } else {
                 throw new IOException("Invalid Minecraft glTF image " + i + " uri: '" + uri +
-                    "'. Allowed uri types: 'rl:', 'resourcelocation:', 'id:', 'identifier:', and 'data:'.");
+                    "'. Allowed uri types: 'rl:', 'Identifier:', 'id:', 'identifier:', and 'data:'.");
             }
 
             try {
-                ResourceLocation.parse(rlStr);
-            } catch (ResourceLocationException e) {
+                Identifier.parse(rlStr);
+            } catch (IdentifierException e) {
                 throw new IOException("Invalid uri resource location: '" + rlStr + "' in image " + i, e);
             }
         }
@@ -239,8 +239,8 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
             String rlStr;
             if (uri.startsWith("rl:")) {
                 rlStr = uri.substring("rl:".length());
-            } else if (uri.startsWith("resourcelocation:")) {
-                rlStr = uri.substring("resourcelocation:".length());
+            } else if (uri.startsWith("Identifier:")) {
+                rlStr = uri.substring("Identifier:".length());
             } else if (uri.startsWith("id:")) {
                 rlStr = uri.substring("id:".length());
             } else if (uri.startsWith("identifier:")) {
@@ -256,13 +256,13 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 }
             } else {
                 throw new IOException("Invalid Minecraft glTF buffer " + view.buffer() + " uri: '" + uri +
-                    "'. Allowed uri types: 'rl:', 'resourcelocation:', 'id:', 'identifier:', and 'data:'.");
+                    "'. Allowed uri types: 'rl:', 'Identifier:', 'id:', 'identifier:', and 'data:'.");
             }
 
-            ResourceLocation bufferLocation;
+            Identifier bufferLocation;
             try {
-                bufferLocation = ResourceLocation.parse(rlStr);
-            } catch (ResourceLocationException e) {
+                bufferLocation = Identifier.parse(rlStr);
+            } catch (IdentifierException e) {
                 throw new IOException("Invalid uri resource location: '" + rlStr + "' in buffer " + index, e);
             }
             byte[] data = dependencies.get(bufferLocation);
@@ -274,7 +274,7 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
         }
     }
 
-    public @Nullable ResourceLocation getImageLocation(int index) throws IOException {
+    public @Nullable Identifier getImageLocation(int index) throws IOException {
         List<GltfImage> images = root.images();
         if (index < 0 || index >= images.size())
             throw new IOException("Attempted to access image " + index + " which does not exist");
@@ -287,8 +287,8 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
             String rlStr;
             if (uri.startsWith("rl:")) {
                 rlStr = uri.substring("rl:".length());
-            } else if (uri.startsWith("resourcelocation:")) {
-                rlStr = uri.substring("resourcelocation:".length());
+            } else if (uri.startsWith("Identifier:")) {
+                rlStr = uri.substring("Identifier:".length());
             } else if (uri.startsWith("id:")) {
                 rlStr = uri.substring("id:".length());
             } else if (uri.startsWith("identifier:")) {
@@ -297,12 +297,12 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 return null;
             } else {
                 throw new IOException("Invalid Minecraft glTF image " + index + " uri: '" + uri +
-                    "'. Allowed uri types: 'rl:', 'resourcelocation:', 'id:', 'identifier:', and 'data:'.");
+                    "'. Allowed uri types: 'rl:', 'Identifier:', 'id:', 'identifier:', and 'data:'.");
             }
 
             try {
-                return ResourceLocation.parse(rlStr);
-            } catch (ResourceLocationException e) {
+                return Identifier.parse(rlStr);
+            } catch (IdentifierException e) {
                 throw new IOException("Invalid uri resource location: '" + rlStr + "' in image " + index);
             }
         } else {
@@ -320,7 +320,7 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
         } else if (image.uri().isPresent()) {
             String uri = image.uri().get();
 
-            if (uri.startsWith("rl:") || uri.startsWith("resourcelocation:") || uri.startsWith("id:") ||
+            if (uri.startsWith("rl:") || uri.startsWith("Identifier:") || uri.startsWith("id:") ||
                 uri.startsWith("identifier:")) {
                 return null;
             } else if (uri.startsWith("data:")) {
@@ -333,7 +333,7 @@ public record GltfFile(GltfRoot root, byte @Nullable [] buffer, Map<ResourceLoca
                 }
             } else {
                 throw new IOException("Invalid Minecraft glTF image " + index + " uri: '" + uri +
-                    "'. Allowed uri types: 'rl:', 'resourcelocation:', 'id:', 'identifier:', and 'data:'.");
+                    "'. Allowed uri types: 'rl:', 'Identifier:', 'id:', 'identifier:', and 'data:'.");
             }
         } else {
             throw new IOException("Image " + index + " does not have a uri or buffer referenced");

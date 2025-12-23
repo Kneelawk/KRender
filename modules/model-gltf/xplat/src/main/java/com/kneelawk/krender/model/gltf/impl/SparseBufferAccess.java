@@ -3,7 +3,7 @@ package com.kneelawk.krender.model.gltf.impl;
 import java.io.InputStream;
 import java.util.Arrays;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.ints.Int2IntRBTreeMap;

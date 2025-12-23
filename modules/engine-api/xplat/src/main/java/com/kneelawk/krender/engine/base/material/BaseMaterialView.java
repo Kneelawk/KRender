@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.base.material;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.renderer.RenderType;
 

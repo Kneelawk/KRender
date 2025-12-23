@@ -7,11 +7,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
@@ -30,7 +30,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
     /**
      * The texture location of the 'none' texture.
      */
-    public static final ResourceLocation NONE_TEXTURE_ID = KREConstants.prl("/none");
+    public static final Identifier NONE_TEXTURE_ID = KREConstants.prl("/none");
 
     /**
      * The renderer this texture manager is associated with.
@@ -50,7 +50,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
     /**
      * A map of textures by resource-location.
      */
-    protected final ConcurrentHashMap<ResourceLocation, MaterialTexture> textureById = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<Identifier, MaterialTexture> textureById = new ConcurrentHashMap<>();
 
     /**
      * The material texture that represents 'no texture'.
@@ -70,7 +70,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
     /**
      * Final reference to this manager's create-texture method.
      */
-    protected final Function<ResourceLocation, MaterialTexture> createTexture = this::createTexture;
+    protected final Function<Identifier, MaterialTexture> createTexture = this::createTexture;
 
     /**
      * The backend's texture factory.
@@ -102,7 +102,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
         blockAtlasTexture = textureById(TextureAtlas.LOCATION_BLOCKS);
     }
 
-    private MaterialTexture createTexture(ResourceLocation textureId) {
+    private MaterialTexture createTexture(Identifier textureId) {
         int id = nextId.getAndIncrement();
         MaterialTexture tex = textureFactory.create(textureId, id);
         textures[id] = tex;
@@ -145,7 +145,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
     }
 
     @Override
-    public MaterialTexture textureById(ResourceLocation id) {
+    public MaterialTexture textureById(Identifier id) {
         return textureById.computeIfAbsent(id, createTexture);
     }
 
@@ -165,7 +165,7 @@ public class BaseMaterialTextureManager implements MaterialTextureManager {
          * @param intId     the integer id of the new texture.
          * @return a new texture.
          */
-        MaterialTexture create(ResourceLocation textureId, int intId);
+        MaterialTexture create(Identifier textureId, int intId);
     }
 
     private class TextureIterator implements Iterator<MaterialTexture> {

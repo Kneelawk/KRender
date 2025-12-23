@@ -2,7 +2,7 @@ package com.kneelawk.krender.model.gltf.impl;
 
 import java.io.InputStream;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;

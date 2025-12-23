@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.api;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Implemented by any type that is supplied by a render engine backend.

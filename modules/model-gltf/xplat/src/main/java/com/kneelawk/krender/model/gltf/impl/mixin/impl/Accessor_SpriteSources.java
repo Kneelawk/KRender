@@ -7,12 +7,12 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 import net.minecraft.client.renderer.texture.atlas.SpriteSourceType;
 import net.minecraft.client.renderer.texture.atlas.SpriteSources;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @Mixin(SpriteSources.class)
 public interface Accessor_SpriteSources {
     @Accessor("TYPES")
-    static BiMap<ResourceLocation, SpriteSourceType> krender$types() {
+    static BiMap<Identifier, SpriteSourceType> krender$types() {
         throw new AssertionError("mixin did not inject!");
     }
 }

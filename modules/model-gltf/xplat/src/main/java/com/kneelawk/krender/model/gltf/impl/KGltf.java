@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 
 import com.kneelawk.krender.model.gltf.impl.format.metadata.GltfMetadata;
@@ -20,12 +20,12 @@ public class KGltf {
     public static void init() {
         PreparableModelManagerPlugin.register(
             (resourceManager, prepareExecutor) -> CompletableFuture.supplyAsync(() -> {
-                Map<ResourceLocation, GltfUnbakedModel> unbakedModels = new Object2ObjectLinkedOpenHashMap<>();
+                Map<Identifier, GltfUnbakedModel> unbakedModels = new Object2ObjectLinkedOpenHashMap<>();
 
                 ModelGuards guards = ModelGuards.load(resourceManager);
-                Map<ResourceLocation, Resource> gltfResources =
+                Map<Identifier, Resource> gltfResources =
                     guards.getModels(resourceManager, KGltfConstants.LOADER_ID, ".gltf");
-                Map<ResourceLocation, Resource> glbResources =
+                Map<Identifier, Resource> glbResources =
                     guards.getModels(resourceManager, KGltfConstants.LOADER_ID, ".glb");
 
                 for (var entry : gltfResources.entrySet()) {

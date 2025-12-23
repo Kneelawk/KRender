@@ -9,14 +9,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import net.minecraft.client.resources.model.ModelDiscovery;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginManager;
 
 @Mixin(ModelDiscovery.class)
 public abstract class Mixin_ModelDiscovery {
     @Shadow
-    abstract UnbakedModel getBlockModel(ResourceLocation modelLocation);
+    abstract UnbakedModel getBlockModel(Identifier modelLocation);
 
     @Unique
     private ModelManagerPluginManager krender$manager;

@@ -3,10 +3,9 @@ package com.kneelawk.krender.engine.api;
 import java.util.List;
 
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.kneelawk.krender.engine.api.convert.TypeConverter;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
@@ -75,11 +74,6 @@ public interface KRenderer {
      * {@return a mesh builder for meshes associated with this backend}
      */
     MeshBuilder meshBuilder();
-
-    /**
-     * {@return this backend's material manager}
-     */
-    MaterialManager materialManager();
 
     /**
      * {@return this backend's texture manager}

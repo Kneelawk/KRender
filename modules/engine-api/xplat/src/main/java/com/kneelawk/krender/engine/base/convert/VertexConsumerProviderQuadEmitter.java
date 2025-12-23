@@ -2,7 +2,7 @@ package com.kneelawk.krender.engine.base.convert;
 
 import java.util.function.Function;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
 

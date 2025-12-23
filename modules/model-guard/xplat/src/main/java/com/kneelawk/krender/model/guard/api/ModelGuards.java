@@ -15,7 +15,7 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -41,9 +41,9 @@ public class ModelGuards {
     public static final String GUARDS_PATH = "krender/model_guards";
     private static final FileToIdConverter GUARDS_CONVERTER = FileToIdConverter.json(GUARDS_PATH);
 
-    private final Map<ResourceLocation, List<ModelGuard>> guards;
+    private final Map<Identifier, List<ModelGuard>> guards;
 
-    private ModelGuards(Map<ResourceLocation, List<ModelGuard>> guards) {this.guards = guards;}
+    private ModelGuards(Map<Identifier, List<ModelGuard>> guards) {this.guards = guards;}
 
     /**
      * Actually loads the model resources that all guards have permitted to be loaded by the given loader.
@@ -53,12 +53,12 @@ public class ModelGuards {
      * @param suffix     the suffix for the model files to load.
      * @return the model resources for the given loader.
      */
-    public Map<ResourceLocation, Resource> getModels(ResourceManager manager, ResourceLocation loaderName,
+    public Map<Identifier, Resource> getModels(ResourceManager manager, Identifier loaderName,
                                                      String suffix) {
         List<ModelGuard> guardList = guards.get(loaderName);
         if (guardList == null) return Map.of();
 
-        Map<ResourceLocation, Resource> loaded = new Object2ObjectLinkedOpenHashMap<>();
+        Map<Identifier, Resource> loaded = new Object2ObjectLinkedOpenHashMap<>();
         for (ModelGuard guard : guardList) {
             loaded.putAll(guard.loadAll(manager, suffix));
         }
@@ -75,8 +75,8 @@ public class ModelGuards {
      * @param resourceId the id (including suffix) of the resource to load.
      * @return the model resource for the given id and loader if present.
      */
-    public Optional<Resource> getResource(ResourceManager manager, ResourceLocation loaderName,
-                                          ResourceLocation resourceId) {
+    public Optional<Resource> getResource(ResourceManager manager, Identifier loaderName,
+                                          Identifier resourceId) {
         List<ModelGuard> guardList = guards.get(loaderName);
         if (guardList == null) return Optional.empty();
 
@@ -97,10 +97,10 @@ public class ModelGuards {
      * @return the new model guards collection.
      */
     public static ModelGuards load(ResourceManager manager) {
-        Map<ResourceLocation, List<ModelGuard>> guards = new Object2ObjectLinkedOpenHashMap<>();
+        Map<Identifier, List<ModelGuard>> guards = new Object2ObjectLinkedOpenHashMap<>();
 
         for (var entry : GUARDS_CONVERTER.listMatchingResources(manager).entrySet()) {
-            ResourceLocation location = entry.getKey();
+            Identifier location = entry.getKey();
             Resource res = entry.getValue();
             try (BufferedReader br = res.openAsReader()) {
                 JsonElement element = JsonParser.parseReader(br);

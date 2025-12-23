@@ -1,10 +1,10 @@
 package com.kneelawk.krender.engine.api.texture;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
 
@@ -12,7 +12,7 @@ import com.kneelawk.krender.engine.api.RendererDependent;
  * A texture managed by a KRender backend for use in a {@link com.kneelawk.krender.engine.api.material.MaterialView}.
  * <p>
  * {@link MaterialTexture}s are not tied to any specific {@link AbstractTexture} but are instead tied to a specific
- * {@link ResourceLocation}. The associated {@link AbstractTexture} is updated during every resource-reload.
+ * {@link Identifier}. The associated {@link AbstractTexture} is updated during every resource-reload.
  */
 public interface MaterialTexture extends RendererDependent {
     /**
@@ -28,7 +28,7 @@ public interface MaterialTexture extends RendererDependent {
      * <p>
      * This material texture's id is the same as the id of the minecraft texture this material texture represents if any.
      */
-    ResourceLocation id();
+    Identifier id();
 
     /**
      * {@return the minecraft texture backing this material texture}

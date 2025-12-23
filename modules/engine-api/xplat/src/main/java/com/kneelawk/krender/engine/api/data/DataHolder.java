@@ -5,7 +5,7 @@ import java.util.Set;
 
 import com.google.common.collect.ImmutableMap;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 /**
  * Immutable map of {@link DataKey}s to values.

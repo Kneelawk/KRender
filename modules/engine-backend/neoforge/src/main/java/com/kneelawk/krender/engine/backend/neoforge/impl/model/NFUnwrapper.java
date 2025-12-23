@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 import net.neoforged.neoforge.client.model.data.ModelData;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.resources.model.BakedModel;

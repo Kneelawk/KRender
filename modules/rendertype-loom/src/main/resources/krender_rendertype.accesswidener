@@ -25,7 +25,7 @@ accessWidener v2 named
 #
 #transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard
 #transitive-accessible class net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry
-#transitive-accessible method net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry <init> (Lnet/minecraft/resources/ResourceLocation;ZZ)V
+#transitive-accessible method net/minecraft/client/renderer/RenderStateShard$MultiTextureStateShard$Entry <init> (Lnet/minecraft/resources/Identifier;ZZ)V
 #
 #transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OffsetTexturingStateShard
 #transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard

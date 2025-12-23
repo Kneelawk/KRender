@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.backend.frapi.impl.material;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 

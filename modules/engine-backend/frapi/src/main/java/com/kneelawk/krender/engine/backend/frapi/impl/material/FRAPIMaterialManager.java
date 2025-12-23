@@ -4,7 +4,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
@@ -18,7 +18,7 @@ public class FRAPIMaterialManager extends BaseMaterialManager {
     }
 
     @Override
-    public boolean registerMaterial(ResourceLocation id, RenderMaterial material) {
+    public boolean registerMaterial(Identifier id, RenderMaterial material) {
         boolean res = super.registerMaterial(id, material);
         if (res) {
             lock.lock();
@@ -32,7 +32,7 @@ public class FRAPIMaterialManager extends BaseMaterialManager {
     }
 
     @Override
-    public boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
+    public boolean registerOrUpdateMaterial(Identifier id, RenderMaterial material) {
         lock.lock();
         try {
             Renderer.get().registerMaterial(id, ((FRAPIRenderMaterial) material).material);

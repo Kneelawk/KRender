@@ -15,7 +15,6 @@ import net.minecraft.Util;
 import com.kneelawk.krender.engine.api.util.TriState;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.util.ColorUtils;
 import com.kneelawk.krender.model.gltf.impl.format.Codecs;

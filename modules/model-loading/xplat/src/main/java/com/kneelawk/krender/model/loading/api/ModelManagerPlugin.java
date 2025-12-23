@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginRegistrar;
@@ -55,7 +55,7 @@ public interface ModelManagerPlugin {
          * @param state the name of the model.
          * @param name  where the model is actually found.
          */
-        void linkBlockStateToModel(BlockState state, ResourceLocation name);
+        void linkBlockStateToModel(BlockState state, Identifier name);
 
         /**
          * Registers a set of default block state models that delegate to their associated models when baked.
@@ -64,7 +64,7 @@ public interface ModelManagerPlugin {
          *
          * @param models the model names and paths to load and add.
          */
-        void linkBlockStatesToModels(Map<BlockState, ResourceLocation> models);
+        void linkBlockStatesToModels(Map<BlockState, Identifier> models);
 
         /**
          * Adds an already loaded model to the {@link ModelBakery}'s set of block state models to bake.
@@ -93,7 +93,7 @@ public interface ModelManagerPlugin {
          * @param name  the name to associate the model with.
          * @param model the model to add.
          */
-        void addReferenceableModel(ResourceLocation name, UnbakedModel model);
+        void addReferenceableModel(Identifier name, UnbakedModel model);
 
         /**
          * Adds already loaded models to the {@link ModelBakery}'s set of lower-level models.
@@ -102,30 +102,30 @@ public interface ModelManagerPlugin {
          *
          * @param models the models to make available to block state models.
          */
-        void addReferenceableModels(Map<ResourceLocation, ? extends UnbakedModel> models);
+        void addReferenceableModels(Map<Identifier, ? extends UnbakedModel> models);
 
         /**
          * Registers an extra model to be loaded even if it is not referenced by a block state model.
          * <p>
-         * Models added here can be referenced via {@link ModelManagerUtils#getExtraModel(ModelManager, ResourceLocation)}.
+         * Models added here can be referenced via {@link ModelManagerUtils#getExtraModel(ModelManager, Identifier)}.
          * <p>
-         * This can be used to load models added via {@link #addReferenceableModel(ResourceLocation, UnbakedModel)} and
+         * This can be used to load models added via {@link #addReferenceableModel(Identifier, UnbakedModel)} and
          * {@link #addReferenceableModels(Map)}.
          *
          * @param name the name of the extra model to load.
          */
-        void addExtraModel(ResourceLocation name);
+        void addExtraModel(Identifier name);
 
         /**
          * Registers a set of extra models to be loaded even if they are not referenced by block state models.
          * <p>
-         * Models added here can be referenced via {@link ModelManagerUtils#getExtraModel(ModelManager, ResourceLocation)}.
+         * Models added here can be referenced via {@link ModelManagerUtils#getExtraModel(ModelManager, Identifier)}.
          * <p>
-         * This can be used to load models added via {@link #addReferenceableModel(ResourceLocation, UnbakedModel)} and
+         * This can be used to load models added via {@link #addReferenceableModel(Identifier, UnbakedModel)} and
          * {@link #addReferenceableModels(Map)}.
          *
          * @param names the names of extra models to load.
          */
-        void addExtraModels(Set<ResourceLocation> names);
+        void addExtraModels(Set<Identifier> names);
     }
 }

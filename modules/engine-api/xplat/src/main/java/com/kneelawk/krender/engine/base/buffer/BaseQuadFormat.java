@@ -6,24 +6,20 @@ import com.google.common.base.Preconditions;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadView;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.api.util.DirectionIds;
 import com.kneelawk.krender.engine.api.util.bits.Bits;
 import com.kneelawk.krender.engine.api.util.bits.BooleanBits;
 import com.kneelawk.krender.engine.api.util.bits.IntBits;
-import com.kneelawk.krender.engine.base.material.BaseMaterialFormat;
 
 import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_BIT_COUNT;
-import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_MASK;
 
 // This class is largely based on the Fabric Render Indigo EncodingFormat.
 

@@ -7,15 +7,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.GlintMode;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.MaterialView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.util.TriState;
@@ -57,7 +56,7 @@ public class BaseMaterialManager implements MaterialManager {
     /**
      * A map of materials by resource-location id.
      */
-    protected final ConcurrentHashMap<ResourceLocation, RenderMaterial> materialsById = new ConcurrentHashMap<>();
+    protected final ConcurrentHashMap<Identifier, RenderMaterial> materialsById = new ConcurrentHashMap<>();
 
     /**
      * The default bits that a material finder starts with.
@@ -204,12 +203,12 @@ public class BaseMaterialManager implements MaterialManager {
     }
 
     @Override
-    public @Nullable RenderMaterial materialById(ResourceLocation id) {
+    public @Nullable RenderMaterial materialById(Identifier id) {
         return materialsById.get(id);
     }
 
     @Override
-    public boolean registerMaterial(ResourceLocation id, RenderMaterial material) {
+    public boolean registerMaterial(Identifier id, RenderMaterial material) {
         if (materialsById.containsKey(id)) return false;
 
         materialsById.put(id, material);
@@ -218,7 +217,7 @@ public class BaseMaterialManager implements MaterialManager {
     }
 
     @Override
-    public boolean registerOrUpdateMaterial(ResourceLocation id, RenderMaterial material) {
+    public boolean registerOrUpdateMaterial(Identifier id, RenderMaterial material) {
         return materialsById.put(id, material) == null;
     }
 

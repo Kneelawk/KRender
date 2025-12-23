@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.api.texture;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
 
@@ -46,10 +46,15 @@ public interface MaterialTextureManager extends RendererDependent {
     MaterialTexture blockAtlas();
 
     /**
+     * {@return a material texture for the minecraft item atlas}
+     */
+    MaterialTexture itemAtlas();
+
+    /**
      * Looks up a possibly cached material texture for the minecraft texture with the given id.
      *
      * @param id the minecraft texture id.
      * @return the material texture corresponding to the minecraft texture with the given id, if one exists.
      */
-    MaterialTexture textureById(ResourceLocation id);
+    MaterialTexture textureById(Identifier id);
 }

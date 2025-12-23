@@ -2,7 +2,7 @@ package com.kneelawk.krender.engine.base.buffer;
 
 import java.util.Objects;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 import org.jetbrains.annotations.UnknownNullability;
 
 import com.kneelawk.krender.engine.api.KRenderer;

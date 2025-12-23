@@ -9,7 +9,7 @@ import java.util.Optional;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -19,7 +19,7 @@ import com.kneelawk.krender.model.obj.impl.KObjLog;
 
 public record ObjFile(List<ObjVertexPosition> positions, List<ObjVertexTexture> textures, List<ObjVertexNormal> normals,
                       List<ObjFace> faces, Map<String, MtlMaterial> materials) {
-    public static ObjFile load(Resource resource, ResourceLocation name, ResourceManager manager, ModelGuards guards)
+    public static ObjFile load(Resource resource, Identifier name, ResourceManager manager, ModelGuards guards)
         throws IOException {
         Map<String, MtlMaterial> materials = new Object2ObjectLinkedOpenHashMap<>();
         List<ObjVertexPosition> positions = new ObjectArrayList<>();
@@ -40,7 +40,7 @@ public record ObjFile(List<ObjVertexPosition> positions, List<ObjVertexTexture> 
 
                 try {
                     if (strs[0].equals("mtllib")) {
-                        ResourceLocation mtlLocation = ResourceLocation.parse(strs[1]);
+                        Identifier mtlLocation = Identifier.parse(strs[1]);
                         Optional<Resource> mtlResource =
                             guards.getResource(manager, KObjConstants.LOADER_ID, mtlLocation);
                         if (mtlResource.isPresent()) {

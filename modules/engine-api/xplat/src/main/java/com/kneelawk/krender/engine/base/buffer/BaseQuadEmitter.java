@@ -3,7 +3,7 @@ package com.kneelawk.krender.engine.base.buffer;
 import java.util.Objects;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;

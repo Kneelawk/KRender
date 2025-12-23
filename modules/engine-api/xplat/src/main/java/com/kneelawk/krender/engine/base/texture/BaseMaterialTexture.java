@@ -1,11 +1,11 @@
 package com.kneelawk.krender.engine.base.texture;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
 import com.kneelawk.krender.engine.api.texture.SpriteFinder;
@@ -22,7 +22,7 @@ public abstract class BaseMaterialTexture implements MaterialTexture {
     /**
      * The texture's resource location.
      */
-    protected final ResourceLocation textureId;
+    protected final Identifier textureId;
     /**
      * Lazy access to the backing vanilla texture.
      */
@@ -34,7 +34,7 @@ public abstract class BaseMaterialTexture implements MaterialTexture {
      * @param textureId the resource location of the backing texture.
      * @param intId     the integer id of this texture.
      */
-    protected BaseMaterialTexture(ResourceLocation textureId, int intId) {
+    protected BaseMaterialTexture(Identifier textureId, int intId) {
         this.intId = intId;
         this.textureId = textureId;
         this.texture =
@@ -47,7 +47,7 @@ public abstract class BaseMaterialTexture implements MaterialTexture {
     }
 
     @Override
-    public ResourceLocation id() {
+    public Identifier id() {
         return textureId;
     }
 

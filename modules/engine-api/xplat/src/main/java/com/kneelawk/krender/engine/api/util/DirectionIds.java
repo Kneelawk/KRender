@@ -2,7 +2,7 @@ package com.kneelawk.krender.engine.api.util;
 
 import java.util.Arrays;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;

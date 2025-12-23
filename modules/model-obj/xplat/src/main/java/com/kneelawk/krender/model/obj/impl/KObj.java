@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 
 import com.kneelawk.krender.model.guard.api.ModelGuards;
@@ -18,10 +18,10 @@ public class KObj {
     public static void register() {
         PreparableModelManagerPlugin.register(
             (resourceManager, prepareExecutor) -> CompletableFuture.supplyAsync(() -> {
-                Map<ResourceLocation, ObjUnbakedModel> unbakedModels = new Object2ObjectLinkedOpenHashMap<>();
+                Map<Identifier, ObjUnbakedModel> unbakedModels = new Object2ObjectLinkedOpenHashMap<>();
 
                 ModelGuards guards = ModelGuards.load(resourceManager);
-                Map<ResourceLocation, Resource> objResources =
+                Map<Identifier, Resource> objResources =
                     guards.getModels(resourceManager, KObjConstants.LOADER_ID, ".obj");
 
                 for (var entry : objResources.entrySet()) {

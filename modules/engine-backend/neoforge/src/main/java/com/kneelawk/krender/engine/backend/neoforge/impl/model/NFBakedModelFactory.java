@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.backend.neoforge.impl.model;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.client.resources.model.BakedModel;
 

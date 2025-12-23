@@ -8,27 +8,27 @@ import it.unimi.dsi.fastutil.objects.ObjectLinkedOpenHashSet;
 
 import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.state.BlockState;
 
 import com.kneelawk.krender.model.loading.api.ModelManagerPlugin;
 
 public class ModelManagerPluginContextImpl implements ModelManagerPlugin.Context {
-    private final Map<ResourceLocation, UnbakedModel> referenceableModels = new Object2ObjectLinkedOpenHashMap<>();
+    private final Map<Identifier, UnbakedModel> referenceableModels = new Object2ObjectLinkedOpenHashMap<>();
     private final Map<BlockState, UnbakedBlockStateModel> blockStateModels = new Object2ObjectLinkedOpenHashMap<>();
-    private final Set<ResourceLocation> extraModels = new ObjectLinkedOpenHashSet<>();
+    private final Set<Identifier> extraModels = new ObjectLinkedOpenHashSet<>();
 
     public ModelManagerPluginManager createManager() {
         return new ModelManagerPluginManager(referenceableModels, blockStateModels, extraModels);
     }
 
     @Override
-    public void linkBlockStateToModel(BlockState state, ResourceLocation name) {
+    public void linkBlockStateToModel(BlockState state, Identifier name) {
         blockStateModels.put(state, new DelegatingBlockStateModel(name));
     }
 
     @Override
-    public void linkBlockStatesToModels(Map<BlockState, ResourceLocation> models) {
+    public void linkBlockStatesToModels(Map<BlockState, Identifier> models) {
         for (var entry : models.entrySet()) {
             blockStateModels.put(entry.getKey(), new DelegatingBlockStateModel(entry.getValue()));
         }
@@ -45,22 +45,22 @@ public class ModelManagerPluginContextImpl implements ModelManagerPlugin.Context
     }
 
     @Override
-    public void addReferenceableModel(ResourceLocation name, UnbakedModel model) {
+    public void addReferenceableModel(Identifier name, UnbakedModel model) {
         referenceableModels.put(name, model);
     }
 
     @Override
-    public void addReferenceableModels(Map<ResourceLocation, ? extends UnbakedModel> models) {
+    public void addReferenceableModels(Map<Identifier, ? extends UnbakedModel> models) {
         referenceableModels.putAll(models);
     }
 
     @Override
-    public void addExtraModel(ResourceLocation name) {
+    public void addExtraModel(Identifier name) {
         extraModels.add(name);
     }
 
     @Override
-    public void addExtraModels(Set<ResourceLocation> names) {
+    public void addExtraModels(Set<Identifier> names) {
         extraModels.addAll(names);
     }
 }

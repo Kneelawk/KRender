@@ -12,7 +12,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import net.minecraft.world.phys.Vec3;
 
@@ -22,7 +22,7 @@ public record GltfMetadata(Vec3 translation, Vec3 rotation, Vec3 scale, List<Met
                            Map<String, MaterialOverride> meshMaterialOverrides,
                            Map<String, MaterialOverride> nodeMaterialOverride,
                            boolean useAmbientOcclusion, boolean gui3d,
-                           Optional<Either<Integer, ResourceLocation>> particle,
+                           Optional<Either<Integer, Identifier>> particle,
                            float transformGranularity) {
 
     private static final Codec<Matrix4f> MATRIX_CODEC =
@@ -58,7 +58,7 @@ public record GltfMetadata(Vec3 translation, Vec3 rotation, Vec3 scale, List<Met
             .forGetter(GltfMetadata::materialOverrides),
         Codec.BOOL.optionalFieldOf("useAmbientOcclusion", true).forGetter(GltfMetadata::useAmbientOcclusion),
         Codec.BOOL.optionalFieldOf("gui3d", true).forGetter(GltfMetadata::gui3d),
-        Codec.either(Codec.INT, ResourceLocation.CODEC).optionalFieldOf("particle").forGetter(GltfMetadata::particle),
+        Codec.either(Codec.INT, Identifier.CODEC).optionalFieldOf("particle").forGetter(GltfMetadata::particle),
         Codec.FLOAT.optionalFieldOf("transformGranularity", 0f).forGetter(GltfMetadata::transformGranularity)
     ).apply(instance, GltfMetadata::new));
     public static final GltfMetadata DEFAULT =

@@ -1,10 +1,10 @@
 package com.kneelawk.krender.model.obj.impl.format;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record MtlMaterial(String name, float[] diffuseColor, float dissolve, @Nullable ResourceLocation diffuseTexture,
+public record MtlMaterial(String name, float[] diffuseColor, float dissolve, @Nullable Identifier diffuseTexture,
                           boolean emissive) {
     public MtlMaterial(String name) {
         this(name, new float[0], 1f, null, false);
@@ -18,7 +18,7 @@ public record MtlMaterial(String name, float[] diffuseColor, float dissolve, @Nu
         return new MtlMaterial(name, diffuseColor, dissolve, diffuseTexture, emissive);
     }
 
-    public MtlMaterial withDiffuseTexture(ResourceLocation diffuseTexture) {
+    public MtlMaterial withDiffuseTexture(Identifier diffuseTexture) {
         return new MtlMaterial(name, diffuseColor, dissolve, diffuseTexture, emissive);
     }
 

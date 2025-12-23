@@ -4,7 +4,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import it.unimi.dsi.fastutil.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -14,7 +14,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import net.minecraft.resources.FileToIdConverter;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -23,20 +23,20 @@ import com.kneelawk.krender.model.guard.api.ModelGuard;
 public final class DirectoryModelGuard implements ModelGuard {
     public static final MapCodec<DirectoryModelGuard> MAP_CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
-            ResourceLocation.CODEC.fieldOf("loader").forGetter(DirectoryModelGuard::loader),
+            Identifier.CODEC.fieldOf("loader").forGetter(DirectoryModelGuard::loader),
             Codec.STRING.fieldOf("directory").forGetter(DirectoryModelGuard::directory),
             Codec.STRING.optionalFieldOf("prefix", "").forGetter(DirectoryModelGuard::prefix)
         ).apply(instance, DirectoryModelGuard::new));
 
-    private final ResourceLocation loader;
+    private final Identifier loader;
     private final @Nullable String namespace;
     private final String directory;
     private final String prefix;
 
-    public DirectoryModelGuard(ResourceLocation loader, String directory, String prefix) {
+    public DirectoryModelGuard(Identifier loader, String directory, String prefix) {
         this.loader = loader;
         if (directory.contains(":")) {
-            ResourceLocation location = ResourceLocation.parse(directory);
+            Identifier location = Identifier.parse(directory);
             this.namespace = location.getNamespace();
             this.directory = location.getPath();
         } else {
@@ -52,14 +52,14 @@ public final class DirectoryModelGuard implements ModelGuard {
     }
 
     @Override
-    public ResourceLocation getLoader() {
+    public Identifier getLoader() {
         return loader;
     }
 
     @Override
-    public Map<ResourceLocation, Resource> loadAll(ResourceManager manager, String suffix) {
+    public Map<Identifier, Resource> loadAll(ResourceManager manager, String suffix) {
         FileToIdConverter converter = new FileToIdConverter(directory, suffix);
-        Stream<Map.Entry<ResourceLocation, Resource>> stream =
+        Stream<Map.Entry<Identifier, Resource>> stream =
             converter.listMatchingResources(manager).entrySet().stream();
         if (namespace != null) {
             stream = stream.filter(e -> e.getKey().getNamespace().equals(namespace));
@@ -71,7 +71,7 @@ public final class DirectoryModelGuard implements ModelGuard {
     }
 
     @Override
-    public Optional<Resource> load(ResourceManager manager, ResourceLocation id) {
+    public Optional<Resource> load(ResourceManager manager, Identifier id) {
         if (!id.getPath().startsWith(prefix)) return Optional.empty();
         String path = id.getPath().substring(prefix.length());
 
@@ -80,7 +80,7 @@ public final class DirectoryModelGuard implements ModelGuard {
         return manager.getResource(id.withPath(directory + "/" + path));
     }
 
-    private ResourceLocation loader() {return loader;}
+    private Identifier loader() {return loader;}
 
     private String directory() {
         if (namespace == null) {

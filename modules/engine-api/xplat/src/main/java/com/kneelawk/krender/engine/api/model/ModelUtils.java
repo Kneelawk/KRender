@@ -1,6 +1,6 @@
 package com.kneelawk.krender.engine.api.model;
 
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
 import org.joml.Vector3f;
 

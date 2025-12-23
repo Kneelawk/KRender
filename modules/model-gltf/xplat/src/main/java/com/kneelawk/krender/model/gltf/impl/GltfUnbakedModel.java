@@ -22,12 +22,11 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.client.resources.model.ModelState;
 import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.client.resources.model.UnbakedModel;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.PooledQuadEmitter;
 import com.kneelawk.krender.engine.api.buffer.QuadEmitter;
-import com.kneelawk.krender.engine.api.material.MaterialManager;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.api.mesh.MeshBuilder;
 import com.kneelawk.krender.engine.api.model.SimpleModelCore;
@@ -50,9 +49,9 @@ import com.kneelawk.krender.model.gltf.impl.format.metadata.MaterialOverride;
 public class GltfUnbakedModel implements UnbakedModel {
     private final GltfFile file;
     private final GltfMetadata metadata;
-    private final ResourceLocation name;
+    private final Identifier name;
 
-    public GltfUnbakedModel(GltfFile file, GltfMetadata metadata, ResourceLocation name) {
+    public GltfUnbakedModel(GltfFile file, GltfMetadata metadata, Identifier name) {
         this.file = file;
         this.metadata = metadata;
         this.name = name;
@@ -140,7 +139,7 @@ public class GltfUnbakedModel implements UnbakedModel {
                     metadata.gui3d()));
         } catch (Exception e) {
             KGltfLog.LOG.error("Error loading model '{}'", name, e);
-            return baker.bake(ResourceLocation.withDefaultNamespace("error/missing"), modelState);
+            return baker.bake(Identifier.withDefaultNamespace("error/missing"), modelState);
         }
     }
 
@@ -396,8 +395,8 @@ public class GltfUnbakedModel implements UnbakedModel {
         return new Material(TextureAtlas.LOCATION_BLOCKS, getImage(imageIndex));
     }
 
-    private ResourceLocation getImage(int index) throws IOException {
-        ResourceLocation external = file.getImageLocation(index);
+    private Identifier getImage(int index) throws IOException {
+        Identifier external = file.getImageLocation(index);
         if (external != null) return external;
         return KGltfConstants.getImageName(name, index);
     }
