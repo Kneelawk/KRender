@@ -5,7 +5,7 @@ import java.util.Set;
 
 import org.jetbrains.annotations.ApiStatus;
 
-import net.minecraft.client.renderer.block.model.UnbakedBlockStateModel;
+import net.minecraft.client.renderer.block.model.BlockStateModel;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelManager;
 import net.minecraft.client.resources.model.UnbakedModel;
@@ -74,7 +74,7 @@ public interface ModelManagerPlugin {
          * @param state the name of the model.
          * @param model the model to bake.
          */
-        void addBlockStateModel(BlockState state, UnbakedBlockStateModel model);
+        void addBlockStateModel(BlockState state, BlockStateModel.UnbakedRoot model);
 
         /**
          * Adds a collection of already loaded models to the {@link ModelBakery}'s set of block state models to bake.
@@ -83,7 +83,7 @@ public interface ModelManagerPlugin {
          *
          * @param models the models to bake.
          */
-        void addBlockStateModels(Map<BlockState, ? extends UnbakedBlockStateModel> models);
+        void addBlockStateModels(Map<BlockState, ? extends BlockStateModel.UnbakedRoot> models);
 
         /**
          * Adds an already loaded model to the {@link ModelBakery}'s set of lower-level models.

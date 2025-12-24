@@ -12,7 +12,6 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -20,15 +19,14 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.client.resources.model.ModelBakery;
 import net.minecraft.client.resources.model.ModelDiscovery;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.PreparableReloadListener;
-import net.minecraft.server.packs.resources.ResourceManager;
 
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginManager;
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginRegistrar;
@@ -38,18 +36,15 @@ import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelManager;
 
 @Mixin(ModelManager.class)
 public class Mixin_ModelManager implements Duck_ModelManager {
-    @Shadow
-    private BakedModel missingModel;
-
     @Unique
-    private @Nullable Map<Identifier, BakedModel> krender$extraModels;
+    private @Nullable Map<Identifier, QuadCollection> krender$extraModels;
 
     @Inject(method = "reload", at = @At("HEAD"))
-    private void krender$prepare(PreparableReloadListener.PreparationBarrier barrier, ResourceManager manager,
-                                 Executor backgroundExecutor, Executor gameExecutor,
+    private void krender$prepare(PreparableReloadListener.SharedState state, Executor backgroundExecutor,
+                                 PreparableReloadListener.PreparationBarrier barrier, Executor applyExecutor,
                                  CallbackInfoReturnable<CompletableFuture<Void>> cir, @Share("pluginManager")
                                  LocalRef<CompletableFuture<ModelManagerPluginManager>> pluginManager) {
-        pluginManager.set(ModelManagerPluginRegistrar.prepare(manager, backgroundExecutor)
+        pluginManager.set(ModelManagerPluginRegistrar.prepare(state.resourceManager(), backgroundExecutor)
             .thenApply(PreparedModelManagerPluginList::loadPlugins));
     }
 
@@ -93,8 +88,8 @@ public class Mixin_ModelManager implements Duck_ModelManager {
     }
 
     @ModifyArg(method = "reload", at = @At(value = "INVOKE",
-        target = "Ljava/util/concurrent/CompletableFuture;thenApplyAsync(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;",
-        ordinal = 3))
+        target = "Ljava/util/concurrent/CompletableFuture;thenComposeAsync(Ljava/util/function/Function;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;",
+        ordinal = 0))
     private Function<Void, Object> krender$passManagerToBakery(Function<Void, Object> fn, @Share("pluginManager")
     LocalRef<CompletableFuture<ModelManagerPluginManager>> pluginManager) {
         CompletableFuture<ModelManagerPluginManager> future = pluginManager.get();
@@ -110,14 +105,13 @@ public class Mixin_ModelManager implements Duck_ModelManager {
         };
     }
 
-    @Inject(method = "apply", at = @At(value = "INVOKE",
-        target = "Lnet/minecraft/client/resources/model/ModelBakery$BakingResult;missingItemModel()Lnet/minecraft/client/renderer/item/ItemModel;"))
+    @Inject(method = "apply", at = @At(value = "RETURN"))
     private void krender$apply(CallbackInfo ci, @Local() ModelBakery.BakingResult bakingResult) {
         krender$extraModels = ((Duck_ModelBakeryBakingResult) (Object) bakingResult).krender$getExtraModels();
     }
 
     @Override
-    public BakedModel krender$getExtraModel(Identifier path) {
+    public QuadCollection krender$getExtraModel(Identifier path) {
         if (krender$extraModels != null && krender$extraModels.containsKey(path)) return krender$extraModels.get(path);
         return missingModel;
     }

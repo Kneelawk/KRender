@@ -2,8 +2,8 @@ package com.kneelawk.krender.model.loading.api;
 
 import java.util.Set;
 
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelManager;
+import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelManager;
@@ -23,7 +23,7 @@ public final class ModelManagerUtils {
      * @see ModelManagerPlugin.Context#addExtraModel(Identifier)
      * @see ModelManagerPlugin.Context#addExtraModels(Set)
      */
-    public static BakedModel getExtraModel(ModelManager manager, Identifier name) {
+    public static QuadCollection getExtraModel(ModelManager manager, Identifier name) {
         return ((Duck_ModelManager) manager).krender$getExtraModel(name);
     }
 }

@@ -5,12 +5,7 @@
  * {@link com.kneelawk.krender.model.loading.api.ModelManagerPlugin}s and
  * {@link com.kneelawk.krender.model.loading.api.PreparableModelManagerPlugin}s.
  */
-@ParametersAreNonnullByDefault
-@FieldsAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@NullMarked
 package com.kneelawk.krender.model.loading.api;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-import net.minecraft.FieldsAreNonnullByDefault;
-import net.minecraft.MethodsReturnNonnullByDefault;
+import org.jspecify.annotations.NullMarked;

@@ -2,11 +2,11 @@ package com.kneelawk.krender.model.loading.impl.mixin.api;
 
 import java.util.Map;
 
-import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.resources.Identifier;
 
 public interface Duck_ModelBakeryBakingResult {
-    void krender$setExtraModels(Map<Identifier, BakedModel> extraModels);
+    void krender$setExtraModels(Map<Identifier, QuadCollection> extraModels);
 
-    Map<Identifier, BakedModel> krender$getExtraModels();
+    Map<Identifier, QuadCollection> krender$getExtraModels();
 }

@@ -16,6 +16,5 @@ kpublish {
 }
 
 minivan {
-    version("1.21.10")
     accessWideners(project(":model-loading-fabric").file("src/main/resources/krender_model_loading.accesswidener"))
 }
