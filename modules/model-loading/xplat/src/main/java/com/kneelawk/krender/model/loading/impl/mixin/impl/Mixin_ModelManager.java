@@ -12,6 +12,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 
 import org.jspecify.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -31,11 +32,15 @@ import net.minecraft.server.packs.resources.PreparableReloadListener;
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginManager;
 import com.kneelawk.krender.model.loading.impl.loading.ModelManagerPluginRegistrar;
 import com.kneelawk.krender.model.loading.impl.loading.PreparedModelManagerPluginList;
+import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_MissingModels;
 import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelBakeryBakingResult;
 import com.kneelawk.krender.model.loading.impl.mixin.api.Duck_ModelManager;
 
 @Mixin(ModelManager.class)
 public class Mixin_ModelManager implements Duck_ModelManager {
+    @Shadow
+    private ModelBakery.MissingModels missingModels;
+
     @Unique
     private @Nullable Map<Identifier, QuadCollection> krender$extraModels;
 
@@ -113,6 +118,6 @@ public class Mixin_ModelManager implements Duck_ModelManager {
     @Override
     public QuadCollection krender$getExtraModel(Identifier path) {
         if (krender$extraModels != null && krender$extraModels.containsKey(path)) return krender$extraModels.get(path);
-        return missingModel;
+        return ((Duck_MissingModels) (Object) missingModels).krender$getMissingModelQuads();
     }
 }

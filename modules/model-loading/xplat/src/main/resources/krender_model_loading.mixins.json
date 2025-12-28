@@ -8,6 +8,7 @@
     "defaultRequire": 1
   },
   "client": [
+    "Mixin_MissingModels",
     "Mixin_ModelBakery",
     "Mixin_ModelBakeryBakingResult",
     "Mixin_ModelDiscovery",
