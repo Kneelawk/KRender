@@ -7,7 +7,6 @@ import com.kneelawk.krender.engine.api.model.BakedModelFactory;
 import com.kneelawk.krender.engine.api.model.BakedModelUnwrapper;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
-import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 import com.kneelawk.krender.engine.base.mesh.BaseMeshBuilder;
 import com.kneelawk.krender.engine.base.texture.BaseMaterialTextureManager;
 

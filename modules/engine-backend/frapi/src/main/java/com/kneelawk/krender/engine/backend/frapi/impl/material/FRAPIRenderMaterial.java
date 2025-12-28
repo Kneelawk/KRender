@@ -7,8 +7,6 @@ import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.backend.frapi.api.ConversionUtils;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
-import com.kneelawk.krender.engine.base.material.BaseMaterialView;
-import com.kneelawk.krender.engine.base.material.BaseRenderMaterial;
 
 public class FRAPIRenderMaterial extends BaseRenderMaterial {
     public final net.fabricmc.fabric.api.renderer.v1.material.RenderMaterial material;

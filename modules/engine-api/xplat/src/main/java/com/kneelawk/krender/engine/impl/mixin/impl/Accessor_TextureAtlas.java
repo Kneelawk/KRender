@@ -19,7 +19,4 @@ public interface Accessor_TextureAtlas {
 
     @Accessor("height")
     int krender_engine_api$height();
-
-    @Accessor("mipLevel")
-    int krender_engine_api$mipLevel();
 }

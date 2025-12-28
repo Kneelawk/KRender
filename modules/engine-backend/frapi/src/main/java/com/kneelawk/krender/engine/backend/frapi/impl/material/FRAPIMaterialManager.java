@@ -8,7 +8,6 @@ import net.minecraft.resources.Identifier;
 
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.frapi.impl.FRAPIRenderer;
-import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 
 public class FRAPIMaterialManager extends BaseMaterialManager {
     private final ReentrantLock lock = new ReentrantLock();

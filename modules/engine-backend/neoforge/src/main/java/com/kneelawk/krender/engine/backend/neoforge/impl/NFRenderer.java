@@ -14,7 +14,6 @@ import com.kneelawk.krender.engine.backend.neoforge.impl.model.NFBakedModelFacto
 import com.kneelawk.krender.engine.backend.neoforge.impl.model.NFUnwrapper;
 import com.kneelawk.krender.engine.backend.neoforge.impl.texture.NFMaterialTexture;
 import com.kneelawk.krender.engine.base.convert.BaseTypeConverter;
-import com.kneelawk.krender.engine.base.material.BaseMaterialManager;
 import com.kneelawk.krender.engine.base.texture.BaseMaterialTextureManager;
 
 public class NFRenderer implements KRenderer {

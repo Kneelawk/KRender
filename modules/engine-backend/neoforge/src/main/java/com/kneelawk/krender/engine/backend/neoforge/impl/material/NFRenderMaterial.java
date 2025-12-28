@@ -5,8 +5,6 @@ import org.jspecify.annotations.Nullable;
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
 import com.kneelawk.krender.engine.backend.neoforge.impl.NFRenderer;
-import com.kneelawk.krender.engine.base.material.BaseMaterialView;
-import com.kneelawk.krender.engine.base.material.BaseRenderMaterial;
 
 public class NFRenderMaterial extends BaseRenderMaterial {
 
