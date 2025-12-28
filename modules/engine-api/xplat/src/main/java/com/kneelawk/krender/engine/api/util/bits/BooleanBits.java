@@ -124,6 +124,17 @@ public class BooleanBits implements Bits {
     }
 
     /**
+     * Gets a boolean from an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just this bit) start at.
+     * @return the read boolean.
+     */
+    public boolean getI(int[] bits, int offset) {
+        return getI(bits[unitIndex + offset]);
+    }
+
+    /**
      * Gets a boolean from 64 bits of data.
      *
      * @param bits the bits to get the boolean from.
@@ -131,6 +142,17 @@ public class BooleanBits implements Bits {
      */
     public boolean getJ(long bits) {
         return (bits & mask) != 0L;
+    }
+
+    /**
+     * Gets a boolean from an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just this bit) start at.
+     * @return the read boolean.
+     */
+    public boolean getJ(long[] bits, int offset) {
+        return getJ(bits[unitIndex + offset]);
     }
 
     /**
@@ -145,6 +167,17 @@ public class BooleanBits implements Bits {
     }
 
     /**
+     * Sets a boolean within an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setI(int[] bits, int offset, boolean value) {
+        bits[unitIndex + offset] = setI(bits[unitIndex + offset], value);
+    }
+
+    /**
      * Sets a boolean within 64 bits of data.
      *
      * @param bits  the bits to set the boolean within.
@@ -153,5 +186,16 @@ public class BooleanBits implements Bits {
      */
     public long setJ(long bits, boolean value) {
         return value ? (bits | mask) : (bits & inverseMask);
+    }
+
+    /**
+     * Sets a boolean within an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setJ(long[] bits, int offset, boolean value) {
+        bits[unitIndex + offset] = setJ(bits[unitIndex + offset], value);
     }
 }

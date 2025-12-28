@@ -3,7 +3,6 @@ package com.kneelawk.krender.engine.base.material;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.GlintMode;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Base {@link RenderMaterial} implementation.

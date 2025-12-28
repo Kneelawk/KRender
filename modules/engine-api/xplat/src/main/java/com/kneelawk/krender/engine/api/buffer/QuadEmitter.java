@@ -17,11 +17,11 @@ import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.TriState;
 
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.api.util.DirectionUtils;
-import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Per-quad Fabric Render API style model emitter.
@@ -552,7 +552,7 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @return this quad emitter.
      */
     default QuadEmitter setTexture(MaterialTexture texture) {
-        return setTextureIntId(texture.intId());
+        return setTextureIntId(getRendererOrDefault().converter().toAssociated(texture).intId());
     }
 
     /**
@@ -570,15 +570,6 @@ public interface QuadEmitter extends QuadView, QuadSink {
      * @return this quad emitter.
      */
     QuadEmitter setTag(int tag);
-
-    /**
-     * Copies vanilla quad properties to the current quad.
-     *
-     * @param quadData   the array of vanilla quad data.
-     * @param startIndex the starting index within the quad data array.
-     * @return this quad emitter.
-     */
-    QuadEmitter fromVanilla(int[] quadData, int startIndex);
 
     /**
      * Copies vanilla quad properties to the current quad.

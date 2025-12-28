@@ -12,10 +12,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 
 import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
+import net.minecraft.util.TriState;
 
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
-import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Per-vertex vanilla style model emitter.

@@ -7,7 +7,7 @@ public class IntBits implements Bits {
     /**
      * Create an integer bit mask with no shift.
      *
-     * @param bitCount   the number of bits in the data.
+     * @param bitCount the number of bits in the data.
      * @return a new {@link IntBits} for the given bits.
      */
     public static IntBits of(int bitCount) {
@@ -106,7 +106,7 @@ public class IntBits implements Bits {
      * @param unitLength the number of bits in a unit (32 for int units, 64 for long units).
      * @return a new {@link IntBits} for the given bits.
      */
-    private static IntBits of(Bits shift, int bitCount, int unitLength) {
+    public static IntBits of(Bits shift, int bitCount, int unitLength) {
         return of(shift.fullShift() + shift.bitCount(), bitCount, unitLength);
     }
 
@@ -117,7 +117,7 @@ public class IntBits implements Bits {
      * @param bitCount the number of bits in the data.
      * @return a new {@link IntBits} for the given bits.
      */
-    private static IntBits ofI(Bits shift, int bitCount) {
+    public static IntBits ofI(Bits shift, int bitCount) {
         return of(shift, bitCount, 32);
     }
 
@@ -128,7 +128,7 @@ public class IntBits implements Bits {
      * @param bitCount the number of bits in the data.
      * @return a new {@link IntBits} for the given bits.
      */
-    private static IntBits ofJ(Bits shift, int bitCount) {
+    public static IntBits ofJ(Bits shift, int bitCount) {
         return of(shift, bitCount, 64);
     }
 
@@ -245,8 +245,20 @@ public class IntBits implements Bits {
      * @return the read int.
      */
     public int getI(int bits1, int bits2) {
-        if (!split) return getI(bits2);
+        if (!split) return getI(bits1);
         return ((bits1 & maskI) >>> shift) | ((bits2 & mask2I) << shift2);
+    }
+
+    /**
+     * Gets an integer from an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @return the read int.
+     */
+    public int getI(int[] bits, int offset) {
+        if (!split) return getI(bits[unitIndex + offset]);
+        return getI(bits[unitIndex + offset], bits[unitIndex + offset + 1]);
     }
 
     /**
@@ -272,6 +284,18 @@ public class IntBits implements Bits {
     }
 
     /**
+     * Gets an integer from an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @return the read int.
+     */
+    public int getJ(long[] bits, int offset) {
+        if (!split) return getJ(bits[unitIndex + offset]);
+        return getJ(bits[unitIndex + offset], bits[unitIndex + offset + 1]);
+    }
+
+    /**
      * Sets an integer within 32 bits of data.
      *
      * @param bits  the bits to set the integer within.
@@ -294,6 +318,18 @@ public class IntBits implements Bits {
     }
 
     /**
+     * Sets an integer within an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setI(int[] bits, int offset, int value) {
+        bits[unitIndex + offset] = setI(bits[unitIndex + offset], value);
+        if (split) bits[unitIndex + offset + 1] = setIHigh(bits[unitIndex + offset + 1], value);
+    }
+
+    /**
      * Sets an integer within 64 bits of data.
      *
      * @param bits  the bits to set the integer within.
@@ -313,5 +349,17 @@ public class IntBits implements Bits {
      */
     public long setJHigh(long bits2, int value) {
         return (bits2 & inverseMask2) | ((long) value >>> shift2);
+    }
+
+    /**
+     * Sets an integer within an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setJ(long[] bits, int offset, int value) {
+        bits[unitIndex + offset] = setJ(bits[unitIndex + offset], value);
+        if (split) bits[unitIndex + offset + 1] = setJHigh(bits[unitIndex + offset + 1], value);
     }
 }

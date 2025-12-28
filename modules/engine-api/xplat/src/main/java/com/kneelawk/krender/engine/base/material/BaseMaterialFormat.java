@@ -12,7 +12,6 @@ import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.GlintMode;
 import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
-import com.kneelawk.krender.engine.api.util.TriState;
 import com.kneelawk.krender.engine.api.util.bits.BooleanBits;
 import com.kneelawk.krender.engine.api.util.bits.EnumBits;
 import com.kneelawk.krender.engine.api.util.bits.IntBits;

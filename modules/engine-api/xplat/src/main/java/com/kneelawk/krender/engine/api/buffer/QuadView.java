@@ -12,10 +12,11 @@ import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
+import net.minecraft.util.TriState;
 
 import com.kneelawk.krender.engine.api.RendererDependent;
 import com.kneelawk.krender.engine.api.texture.MaterialTexture;
-import com.kneelawk.krender.engine.api.util.TriState;
+import com.kneelawk.krender.engine.api.texture.SpriteFinder;
 
 /**
  * A view of a buffered quad.
@@ -268,14 +269,6 @@ public interface QuadView extends RendererDependent {
     int getTag();
 
     /**
-     * Copies the vanilla properties of this quad into the given array in vanilla format.
-     *
-     * @param target      the array to copy vanilla properties into.
-     * @param targetIndex the index within the array to start copying to.
-     */
-    void toVanilla(int[] target, int targetIndex);
-
-    /**
      * Creates a vanilla representation of this quad, using the given sprite.
      *
      * @param sprite the sprite to use in the baked quad.
@@ -283,4 +276,16 @@ public interface QuadView extends RendererDependent {
      * @see com.kneelawk.krender.engine.api.texture.SpriteFinder
      */
     BakedQuad toBakedQuad(TextureAtlasSprite sprite);
+
+    /**
+     * Creates a vanilla representation of this quad, using this quad's sprite.
+     *
+     * @return the vanilla representation of this quad.
+     * @throws IllegalStateException if this quad does not use an atlas texture.
+     */
+    default BakedQuad toBakedQuad() {
+        SpriteFinder finder = getTexture().spriteFinder();
+        if (finder == null) throw new IllegalStateException("Attempting to bake a quad using a non-atlas texture");
+        return toBakedQuad(finder.find(this));
+    }
 }

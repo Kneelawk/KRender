@@ -17,7 +17,6 @@ import com.kneelawk.krender.engine.api.material.GlintMode;
 import com.kneelawk.krender.engine.api.material.MaterialFinder;
 import com.kneelawk.krender.engine.api.material.MaterialView;
 import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Base {@link MaterialManager} implementation capable of handling all default materials without any extensions enabled.

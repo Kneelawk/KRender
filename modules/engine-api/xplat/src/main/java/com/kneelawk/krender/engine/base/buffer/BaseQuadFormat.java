@@ -8,18 +8,19 @@ import com.google.common.cache.CacheBuilder;
 
 import org.jspecify.annotations.Nullable;
 
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
+import net.minecraft.client.renderer.item.ItemStackRenderState;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
+import net.minecraft.util.TriState;
 
 import com.kneelawk.krender.engine.api.KRenderer;
 import com.kneelawk.krender.engine.api.buffer.QuadView;
-import com.kneelawk.krender.engine.api.material.RenderMaterial;
-import com.kneelawk.krender.engine.api.util.DirectionIds;
+import com.kneelawk.krender.engine.api.texture.MaterialTextureManager;
 import com.kneelawk.krender.engine.api.util.bits.Bits;
 import com.kneelawk.krender.engine.api.util.bits.BooleanBits;
+import com.kneelawk.krender.engine.api.util.bits.EnumBits;
 import com.kneelawk.krender.engine.api.util.bits.IntBits;
-
-import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_BIT_COUNT;
 
 // This class is largely based on the Fabric Render Indigo EncodingFormat.
 
@@ -27,7 +28,7 @@ import static com.kneelawk.krender.engine.api.util.DirectionIds.DIRECTION_BIT_CO
  * Static values useful for encoding and decoding quads when using the base implementations.
  */
 public final class BaseQuadFormat {
-    private static final Cache<MaterialManager, BaseQuadFormat> cache =
+    private static final Cache<MaterialTextureManager, BaseQuadFormat> cache =
         CacheBuilder.newBuilder().weakKeys().build();
 
     /**
@@ -36,7 +37,7 @@ public final class BaseQuadFormat {
      * @param manager the manager to get the quad format for.
      * @return the quad format for the given material manager.
      */
-    public static BaseQuadFormat get(MaterialManager manager) {
+    public static BaseQuadFormat get(MaterialTextureManager manager) {
         try {
             return cache.get(manager, () -> new BaseQuadFormat(Mth.ceillog2(manager.maxIntId())));
         } catch (ExecutionException e) {
@@ -52,29 +53,8 @@ public final class BaseQuadFormat {
      * @return the material format for the given renderer.
      */
     public static BaseQuadFormat get(KRenderer renderer) {
-        return get(renderer.materialManager());
+        return get(renderer.textureManager());
     }
-
-    /**
-     * The int index of the bits in the header.
-     */
-    public static final int HEADER_BITS = 0;
-    /**
-     * The int index of the face normal in the header.
-     */
-    public static final int HEADER_FACE_NORMAL = 1;
-    /**
-     * The int index of the color index in the header.
-     */
-    public static final int HEADER_TINT_INDEX = 2;
-    /**
-     * The int index of the tag in the header.
-     */
-    public static final int HEADER_TAG = 3;
-    /**
-     * The number of ints in the header.
-     */
-    public static final int HEADER_STRIDE = 4; // 4 ints
 
     /**
      * The int index of the x position in the vertex.
@@ -121,15 +101,6 @@ public final class BaseQuadFormat {
      * The number of bytes in a quad.
      */
     public static final int QUAD_STRIDE_BYTES = QUAD_STRIDE * 4;
-    /**
-     * The number of ints in a quad, including the quad's header.
-     */
-    public static final int TOTAL_STRIDE = HEADER_STRIDE + QUAD_STRIDE;
-
-    /**
-     * Empty vertex data.
-     */
-    public static final int[] EMPTY = new int[TOTAL_STRIDE];
 
     /**
      * The number of bits in the normal presence flags.
@@ -146,11 +117,11 @@ public final class BaseQuadFormat {
     /**
      * The cull direction.
      */
-    public final IntBits cull;
+    public final EnumBits<@Nullable Direction> cull;
     /**
      * The light direction.
      */
-    public final IntBits light;
+    public final EnumBits<Direction> light;
     /**
      * The normal presence flags.
      */
@@ -164,16 +135,72 @@ public final class BaseQuadFormat {
      */
     public final IntBits geometry;
     /**
+     * The terrain render layer.
+     */
+    public final EnumBits<@Nullable ChunkSectionLayer> renderLayer;
+    /**
+     * Whether the quad is emissive.
+     */
+    public final BooleanBits emissive;
+    /**
+     * Whether the quad has diffuse shading disabled.
+     */
+    public final BooleanBits diffuseDisabled;
+    /**
+     * Whether the quad has ambient occlusion shading.
+     */
+    public final EnumBits<TriState> ambientOcclusion;
+    /**
+     * The foil type quad's foil type.
+     */
+    public final EnumBits<ItemStackRenderState.@Nullable FoilType> foilType;
+    /**
      * The material for a given quad.
      */
-    public final IntBits material;
+    public final IntBits texture;
 
-    private BaseQuadFormat(int materialBits) {
-        cull = IntBits.of(DIRECTION_BIT_COUNT);
-        light = IntBits.ofNoSplitI(cull, DIRECTION_BIT_COUNT);
-        normalsInt = IntBits.ofNoSplitI(light, 4);
-        geometry = IntBits.ofNoSplitI(normalsInt, GeometryHelper.FLAG_BIT_COUNT);
-        material = IntBits.ofNoSplitI(geometry, materialBits);
+    /**
+     * The int index of the bits in the header.
+     */
+    public final int headerBits;
+    /**
+     * The int index of the face normal in the header.
+     */
+    public final int headerFaceNormal;
+    /**
+     * The int index of the color index in the header.
+     */
+    public final int headerTintIndex;
+    /**
+     * The int index of the tag in the header.
+     */
+    public final int headerTag;
+    /**
+     * The number of ints in the header.
+     */
+    public final int headerStride;
+
+    /**
+     * The number of ints in a quad, including the quad's header.
+     */
+    public final int totalStride;
+
+    /**
+     * Empty vertex data.
+     */
+    public final int[] empty;
+
+    private BaseQuadFormat(int textureBits) {
+        cull = EnumBits.of(Direction.class, true);
+        light = EnumBits.ofI(cull, Direction.class, false);
+        normalsInt = IntBits.ofI(light, NORMALS_COUNT);
+        geometry = IntBits.ofI(normalsInt, GeometryHelper.FLAG_BIT_COUNT);
+        renderLayer = EnumBits.ofI(geometry, ChunkSectionLayer.class, true);
+        emissive = BooleanBits.ofI(renderLayer);
+        ambientOcclusion = EnumBits.ofI(emissive, TriState.class, false);
+        diffuseDisabled = BooleanBits.ofI(ambientOcclusion);
+        foilType = EnumBits.ofI(diffuseDisabled, ItemStackRenderState.FoilType.class, true);
+        texture = IntBits.ofI(foilType, textureBits);
 
         normals = new BooleanBits[NORMALS_COUNT];
         Bits prev = light;
@@ -181,60 +208,14 @@ public final class BaseQuadFormat {
             prev = normals[i] = BooleanBits.ofI(prev);
         }
 
-        // Check that there are enough bits in the header to hold everything
-        Preconditions.checkState(getHeaderBitCount() <= 32,
-            "KRender Engine base quad format header bit count (%s) has exceeded 32 bits", getHeaderBitCount());
-    }
+        headerBits = 0;
+        headerFaceNormal = headerBits + texture.unitIndex() + 1;
+        headerTintIndex = headerFaceNormal + 1;
+        headerTag = headerTintIndex + 1;
+        headerStride = headerTag + 1;
 
-    /**
-     * {@return the number of bits in the header}
-     */
-    public int getHeaderBitCount() {
-        return material.fullShift() + material.bitCount();
-    }
-
-    /**
-     * Gets the direction cull face when given header bits.
-     *
-     * @param bits the header bits.
-     * @return the direction cull face.
-     */
-    public @Nullable Direction getCullFace(int bits) {
-        return DirectionIds.idToDirection(cull.getI(bits));
-    }
-
-    /**
-     * Sets the cull face when given existing header bits and the new cull face direction.
-     *
-     * @param bits the existing header bits.
-     * @param face the new cull face direction.
-     * @return the header bits with the new cull face.
-     */
-    public int setCullFace(int bits, @Nullable Direction face) {
-        return cull.setI(bits, DirectionIds.directionToId(face));
-    }
-
-    /**
-     * Gets the light face when given header bits.
-     *
-     * @param bits the header bits.
-     * @return the light face.
-     */
-    public Direction getLightFace(int bits) {
-        final Direction direction = DirectionIds.idToDirection(light.getI(bits));
-        assert direction != null;
-        return direction;
-    }
-
-    /**
-     * Sets the light face when given existing header bits and the new light face direction.
-     *
-     * @param bits the existing header bits.
-     * @param face the new light face direction.
-     * @return the header bits with the new light face.
-     */
-    public int setLightFace(int bits, Direction face) {
-        return light.setI(bits, DirectionIds.directionToId(face));
+        totalStride = headerStride + QUAD_STRIDE;
+        empty = new int[totalStride];
     }
 
     /**
@@ -269,48 +250,5 @@ public final class BaseQuadFormat {
      */
     public int setNormalPresent(int bits, int vertexIndex, boolean present) {
         return normals[vertexIndex].setI(bits, present);
-    }
-
-    /**
-     * Gets the geometry flags from the header bits.
-     *
-     * @param bits the header bits.
-     * @return the geometry flags.
-     */
-    public int getGeometryFlags(int bits) {
-        return geometry.getI(bits);
-    }
-
-    /**
-     * Sets the geometry flags when given existing header bits and the new geometry flags.
-     *
-     * @param bits          the existing header bits.
-     * @param geometryFlags the new geometry flags.
-     * @return the new header bits.
-     */
-    public int setGeometryFlags(int bits, int geometryFlags) {
-        return geometry.setI(bits, geometryFlags);
-    }
-
-    /**
-     * Gets the render material from the given manager when given header bits.
-     *
-     * @param bits    the header bits.
-     * @param manager the material manager.
-     * @return the render material.
-     */
-    public RenderMaterial getMaterial(int bits, MaterialManager manager) {
-        return manager.materialByIntId(material.getI(bits));
-    }
-
-    /**
-     * Sets the render material when given existing header bits and the new render material.
-     *
-     * @param bits     the existing header bits.
-     * @param material the new render material.
-     * @return the new header bits.
-     */
-    public int setMaterial(int bits, RenderMaterial material) {
-        return this.material.setI(bits, material.intId());
     }
 }

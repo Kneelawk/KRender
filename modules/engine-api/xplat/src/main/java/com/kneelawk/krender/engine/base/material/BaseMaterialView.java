@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.RenderType;
 import com.kneelawk.krender.engine.api.material.BlendMode;
 import com.kneelawk.krender.engine.api.material.GlintMode;
 import com.kneelawk.krender.engine.api.material.MaterialView;
-import com.kneelawk.krender.engine.api.util.TriState;
 
 /**
  * Base implementation of {@link MaterialView} that can be used for platforms that don't have an existing implementation.

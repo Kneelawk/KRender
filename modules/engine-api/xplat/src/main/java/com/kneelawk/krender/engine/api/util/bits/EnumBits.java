@@ -1,7 +1,10 @@
 package com.kneelawk.krender.engine.api.util.bits;
 
+import java.util.Arrays;
 import java.util.function.IntFunction;
 import java.util.function.ToIntFunction;
+
+import org.jspecify.annotations.Nullable;
 
 import net.minecraft.util.Mth;
 
@@ -10,7 +13,7 @@ import net.minecraft.util.Mth;
  *
  * @param <E> the type of enum this bit mask handles.
  */
-public class EnumBits<E extends Enum<E>> implements Bits {
+public class EnumBits<E extends @Nullable Enum<E>> implements Bits {
     private final IntBits bits;
     private final IntFunction<E> fromIndex;
     private final ToIntFunction<E> toIndex;
@@ -19,11 +22,19 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      * Create an enum bit mask with no shift.
      *
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> of(Class<E> enumClass) {
-        E[] values = enumClass.getEnumConstants();
+    public static <E extends @Nullable Enum<E>> EnumBits<E> of(Class<E> enumClass, boolean nullable) {
+        E[] values;
+        if (nullable) {
+            E[] valuesTemp = enumClass.getEnumConstants();
+            values = Arrays.copyOf(valuesTemp, valuesTemp.length + 1);
+        } else {
+            values = enumClass.getEnumConstants();
+        }
+
         int valuesLen = values.length;
         int bitCount = Mth.ceillog2(valuesLen);
 
@@ -32,7 +43,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
             if (i >= valuesLen) return values[valuesLen - 1];
             return values[i];
         };
-        ToIntFunction<E> toIndex = E::ordinal;
+        ToIntFunction<E> toIndex;
+        if (nullable) {
+            toIndex = e -> e == null ? valuesLen - 1 : e.ordinal();
+        } else {
+            toIndex = E::ordinal;
+        }
 
         return new EnumBits<>(IntBits.of(bitCount), fromIndex, toIndex);
     }
@@ -42,12 +58,21 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift      the number of bits to shift the data.
      * @param enumClass  the class of the enum.
+     * @param nullable   whether the enum value is nullable.
      * @param unitLength the number of bits in a unit (32 for int units, 64 for long units).
      * @param <E>        the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> of(int shift, Class<E> enumClass, int unitLength) {
-        E[] values = enumClass.getEnumConstants();
+    public static <E extends @Nullable Enum<E>> EnumBits<E> of(int shift, Class<E> enumClass, boolean nullable,
+                                                               int unitLength) {
+        E[] values;
+        if (nullable) {
+            E[] valuesTemp = enumClass.getEnumConstants();
+            values = Arrays.copyOf(valuesTemp, valuesTemp.length + 1);
+        } else {
+            values = enumClass.getEnumConstants();
+        }
+
         int valuesLen = values.length;
         int bitCount = Mth.ceillog2(valuesLen);
 
@@ -56,7 +81,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
             if (i >= valuesLen) return values[valuesLen - 1];
             return values[i];
         };
-        ToIntFunction<E> toIndex = E::ordinal;
+        ToIntFunction<E> toIndex;
+        if (nullable) {
+            toIndex = e -> e == null ? valuesLen - 1 : e.ordinal();
+        } else {
+            toIndex = E::ordinal;
+        }
 
         return new EnumBits<>(IntBits.of(shift, bitCount, unitLength), fromIndex, toIndex);
     }
@@ -66,11 +96,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofI(int shift, Class<E> enumClass) {
-        return of(shift, enumClass, 32);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofI(int shift, Class<E> enumClass, boolean nullable) {
+        return of(shift, enumClass, nullable, 32);
     }
 
     /**
@@ -78,11 +109,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofJ(int shift, Class<E> enumClass) {
-        return of(shift, enumClass, 64);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofJ(int shift, Class<E> enumClass, boolean nullable) {
+        return of(shift, enumClass, nullable, 64);
     }
 
     /**
@@ -90,12 +122,21 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift      the number of bits to shift the data.
      * @param enumClass  the class of the enum.
+     * @param nullable   whether the enum value is nullable.
      * @param unitLength the number of bits in a unit (32 for int units, 64 for long units).
      * @param <E>        the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplit(int shift, Class<E> enumClass, int unitLength) {
-        E[] values = enumClass.getEnumConstants();
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplit(int shift, Class<E> enumClass, boolean nullable,
+                                                                      int unitLength) {
+        E[] values;
+        if (nullable) {
+            E[] valuesTemp = enumClass.getEnumConstants();
+            values = Arrays.copyOf(valuesTemp, valuesTemp.length + 1);
+        } else {
+            values = enumClass.getEnumConstants();
+        }
+
         int valuesLen = values.length;
         int bitCount = Mth.ceillog2(valuesLen);
 
@@ -104,7 +145,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
             if (i >= valuesLen) return values[valuesLen - 1];
             return values[i];
         };
-        ToIntFunction<E> toIndex = E::ordinal;
+        ToIntFunction<E> toIndex;
+        if (nullable) {
+            toIndex = e -> e == null ? valuesLen - 1 : e.ordinal();
+        } else {
+            toIndex = E::ordinal;
+        }
 
         return new EnumBits<>(IntBits.ofNoSplit(shift, bitCount, unitLength), fromIndex, toIndex);
     }
@@ -114,11 +160,13 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplitI(int shift, Class<E> enumClass) {
-        return of(shift, enumClass, 32);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplitI(int shift, Class<E> enumClass,
+                                                                       boolean nullable) {
+        return of(shift, enumClass, nullable, 32);
     }
 
     /**
@@ -126,11 +174,13 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplitJ(int shift, Class<E> enumClass) {
-        return of(shift, enumClass, 64);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplitJ(int shift, Class<E> enumClass,
+                                                                       boolean nullable) {
+        return of(shift, enumClass, nullable, 64);
     }
 
     /**
@@ -138,12 +188,14 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift      the number of bits to shift the data.
      * @param enumClass  the class of the enum.
+     * @param nullable   whether the enum value is nullable.
      * @param unitLength the number of bits in a unit (32 for int units, 64 for long units).
      * @param <E>        the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> of(Bits shift, Class<E> enumClass, int unitLength) {
-        return of(shift.fullShift() + shift.bitCount(), enumClass, unitLength);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> of(Bits shift, Class<E> enumClass, boolean nullable,
+                                                               int unitLength) {
+        return of(shift.fullShift() + shift.bitCount(), enumClass, nullable, unitLength);
     }
 
     /**
@@ -151,11 +203,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofI(Bits shift, Class<E> enumClass) {
-        return of(shift.fullShift() + shift.bitCount(), enumClass, 32);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofI(Bits shift, Class<E> enumClass, boolean nullable) {
+        return of(shift.fullShift() + shift.bitCount(), enumClass, nullable, 32);
     }
 
     /**
@@ -163,11 +216,12 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofJ(Bits shift, Class<E> enumClass) {
-        return of(shift.fullShift() + shift.bitCount(), enumClass, 64);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofJ(Bits shift, Class<E> enumClass, boolean nullable) {
+        return of(shift.fullShift() + shift.bitCount(), enumClass, nullable, 64);
     }
 
     /**
@@ -175,12 +229,14 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift      the number of bits to shift the data.
      * @param enumClass  the class of the enum.
+     * @param nullable   whether the enum value is nullable.
      * @param unitLength the number of bits in a unit (32 for int units, 64 for long units).
      * @param <E>        the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplit(Bits shift, Class<E> enumClass, int unitLength) {
-        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, unitLength);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplit(Bits shift, Class<E> enumClass, boolean nullable,
+                                                                      int unitLength) {
+        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, nullable, unitLength);
     }
 
     /**
@@ -188,11 +244,13 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplitI(Bits shift, Class<E> enumClass) {
-        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, 32);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplitI(Bits shift, Class<E> enumClass,
+                                                                       boolean nullable) {
+        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, nullable, 32);
     }
 
     /**
@@ -200,11 +258,13 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      *
      * @param shift     the number of bits to shift the data.
      * @param enumClass the class of the enum.
+     * @param nullable  whether the enum value is nullable.
      * @param <E>       the type of enum managed.
      * @return a new {@link EnumBits} for the given bits.
      */
-    public static <E extends Enum<E>> EnumBits<E> ofNoSplitJ(Bits shift, Class<E> enumClass) {
-        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, 64);
+    public static <E extends @Nullable Enum<E>> EnumBits<E> ofNoSplitJ(Bits shift, Class<E> enumClass,
+                                                                       boolean nullable) {
+        return ofNoSplit(shift.fullShift() + shift.bitCount(), enumClass, nullable, 64);
     }
 
     private EnumBits(IntBits bits, IntFunction<E> fromIndex, ToIntFunction<E> toIndex) {
@@ -255,6 +315,17 @@ public class EnumBits<E extends Enum<E>> implements Bits {
     }
 
     /**
+     * Gets an enum from an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @return the read enum.
+     */
+    public E getI(int[] bits, int offset) {
+        return fromIndex.apply(this.bits.getI(bits, offset));
+    }
+
+    /**
      * Gets an enum from 64 bits of data.
      *
      * @param bits the bits to get the enum from.
@@ -273,6 +344,17 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      */
     public E getJ(long bits1, long bits2) {
         return fromIndex.apply(bits.getJ(bits1, bits2));
+    }
+
+    /**
+     * Gets an enum from an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @return the read enum.
+     */
+    public E getJ(long[] bits, int offset) {
+        return fromIndex.apply(this.bits.getJ(bits, offset));
     }
 
     /**
@@ -298,6 +380,17 @@ public class EnumBits<E extends Enum<E>> implements Bits {
     }
 
     /**
+     * Sets an enum within an array of 32-bit units.
+     *
+     * @param bits   the array of 32-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setI(int[] bits, int offset, E value) {
+        this.bits.setI(bits, offset, toIndex.applyAsInt(value));
+    }
+
+    /**
      * Sets an enum within 64 bits of data.
      *
      * @param bits  the bits to set the enum within.
@@ -317,5 +410,16 @@ public class EnumBits<E extends Enum<E>> implements Bits {
      */
     public long setJHigh(long bits2, E value) {
         return bits.setJHigh(bits2, toIndex.applyAsInt(value));
+    }
+
+    /**
+     * Sets an enum within an array of 64-bit units.
+     *
+     * @param bits   the array of 64-bit units.
+     * @param offset the unit offset into the array that all bits (not just these bits) start at.
+     * @param value  the value to set.
+     */
+    public void setJ(long[] bits, int offset, E value) {
+        this.bits.setJ(bits, offset, toIndex.applyAsInt(value));
     }
 }
